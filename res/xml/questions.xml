@@ -15,6 +15,10 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
+<!--
+	The questions are represented as entry tags with attributes. The attributes have to be in format:
+	<entry question="THE QUESTION" answer1..N="THE ANSWER NUMBER 1..N"></entry> 
+-->
 <questions>
     <entry question="Did you drink last night?" answer1="No" answer2="Yes"></entry>
     <entry question="Was the amount you drank ok?" answer1="No" answer2="Yes" answer3="I don't know"></entry>

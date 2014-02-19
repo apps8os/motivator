@@ -115,7 +115,7 @@ public class MotivatorDatabase {
 			ContentValues values = new ContentValues();
 			Resources res = mContext.getResources();
 			
-			// Parsing the questions from XML-file
+			// Parsing the questions from XML-file questions
 			XmlResourceParser xml = res.getXml(R.xml.questions);
 			try {
 				int eventType = xml.getEventType();
@@ -137,11 +137,12 @@ public class MotivatorDatabase {
 					}
 					eventType = xml.next();
 				}
-				
 			} catch (XmlPullParserException e) {       
-	            Log.e("XmlParserException", e.getMessage(), e);
+				// Throw unchecked RuntimeException since we can not do anything if the XML does not follow the format
+	            throw new RuntimeException(e);
 	        } catch (IOException e) {
-				Log.e("IOException", e.getMessage(), e);
+	        	// Throw unchecked RuntimeException since we can not do anything if the XML does not follow the format
+				throw new RuntimeException(e);
 			}finally {
 				xml.close();
 			}
@@ -233,7 +234,7 @@ public class MotivatorDatabase {
     
     /**
 	 * 
-	 * @return				This class
+	 * @return This class
 	 * @throws SQLException
 	 */
 	public MotivatorDatabase open() throws SQLException {
