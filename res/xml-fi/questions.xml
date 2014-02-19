@@ -16,6 +16,6 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <questions>
-    <record question="Joitko eilenä?" answer1="En" answer2="Join"></record>
-    <record question="Oliko juomisesi mielestäsi ok?" answer1="Ei" answer2="Oli" answer3="En tiedä"></record>
+    <entry question="Joitko eilenä?" answer1="En" answer2="Join"></entry>
+    <entry question="Oliko juomisesi mielestäsi ok?" answer1="Ei" answer2="Oli" answer3="En tiedä"></entry>
 </questions>

@@ -121,25 +121,19 @@ public class MotivatorDatabase {
 				int eventType = xml.getEventType();
 				while (eventType != XmlPullParser.END_DOCUMENT) {
 					if ((eventType == XmlPullParser.START_TAG) && (xml.getName().equals("entry"))) {
-						String question = xml.getAttributeValue(null, KEY_QUESTION);
+						int index = 0;
+						String question = xml.getAttributeValue(index);
+						index++;
 						
 						// Collecting all answers from the entry to a single parse-able String
-						String answerIter = "answer";
 						String answers = "";
-						int answerEnum = 1;
-						boolean end = false;
-						while (!end) {
-							// Check if there are still answers to be parsed
-							if (xml.getAttributeValue(null, answerIter + answerEnum) != null) {
-								answers = answers + xml.getAttributeValue(null, answerIter + answerEnum) + "; ";
-								answerEnum += 1;
-							} else {
-								end = true;
-							}
+						for (int i = index; i < xml.getAttributeCount(); i++) {
+							answers = answers + xml.getAttributeValue(i) + "; ";
 						}
 						values.put(KEY_QUESTION, question);
 						values.put(KEY_ANSWERS, answers);
 						db.insert(QUESTIONS_TABLE_NAME, null, values);
+						values.clear();
 					}
 					eventType = xml.next();
 				}
