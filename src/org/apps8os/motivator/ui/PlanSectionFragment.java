@@ -18,7 +18,6 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -29,12 +28,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 /**
- * Represents the today section in the UI.
+ * Represents the planning section in the UI.
  * TODO: Rewrite to do correct behavior
  */
-public class TodaySectionFragment extends Fragment {
+public class PlanSectionFragment extends Fragment {
 	
-	public TodaySectionFragment() {
+	public PlanSectionFragment() {
 	}
 
 	@Override
@@ -44,28 +43,18 @@ public class TodaySectionFragment extends Fragment {
 				R.layout.fragment_main_activity, container, false);
 		LinearLayout buttonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_fragmenet_layout);
 		
-		Button moodButton = (Button) inflater.inflate(R.layout.element_main_activity_mood_button, buttonLayout, false);
+		Button moodButton = (Button) inflater.inflate(R.layout.element_main_activity_add_event_button, buttonLayout, false);
 		buttonLayout.addView(moodButton);
 		moodButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), MoodQuestionActivity.class);
-				startActivity(intent);
+				//TODO
 			}
 		});
 		
 		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
 		buttonLayout.addView(separator);
 		
-		Button mLocationButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
-		mLocationButton.setText(R.string.today_screen_save_location);
-		mLocationButton.setTextColor(getResources().getColor(R.color.blue));
-		buttonLayout.addView(mLocationButton);
-		mLocationButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			}
-		});
 		return rootView;
 	}
 }

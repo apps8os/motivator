@@ -34,5 +34,7 @@
     <string name="energy_level1">Tired</string>
     <string name="energy_level2">Relaxed</string>
     <string name="energy_level3">Super</string>
+    <string name="add_event">Add event</string>
+    <string name="show_mood_history">Your moods</string>
 
 </resources>

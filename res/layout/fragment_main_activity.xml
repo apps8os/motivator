@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   Copyright (c) 2014 Helsingin Diakonissalaitos and the authors
    
@@ -15,26 +14,26 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<resources>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_fragment_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-    <string name="app_name">Motivaattori</string>
-    <string name="action_settings">Asetukset</string>
-    <string name="title_section1">Miten mennyt</string>
-    <string name="title_section2">Tänään</string>
-    <string name="title_section3">Suunnittele</string>
-    <string name="today_screen_mood">Mikä fiilis?</string>
-    <string name="today_screen_save_location">Merkkaa paikka</string>
-    <string name="action_info">Info</string>
-    <string name="next">Seuraava</string>
-    <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
-    <string name="prompt_selection">Valitse vastaus</string>
-    <string name="mood_level1">Masentunut</string>
-    <string name="mood_level2">Ok</string>
-    <string name="mood_level3">Onnellinen</string>
-    <string name="energy_level1">Väsynyt</string>
-    <string name="energy_level2">Rentoutunut</string>
-    <string name="energy_level3">Energinen</string>
-    <string name="add_event">Lisää tapahtuma</string>
-    <string name="show_mood_history">Fiiliksesi</string>
+    <LinearLayout
+        android:id="@+id/main_activity_fragmenet_layout"
+        style="@style/MainScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".MainScreen$TodaySectionFragment" >      
 
-</resources>
+
+    </LinearLayout>
+
+</ScrollView>

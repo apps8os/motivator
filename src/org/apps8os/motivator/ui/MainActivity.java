@@ -98,21 +98,19 @@ public class MainActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			// getItem is called to instantiate the fragment for the given page.
-			// Return a DummySectionFragment (defined as a static inner class
-			// below) with the page number as its lone argument.
-			
+
+			Fragment fragment;
 			// Set the second tab as today fragment
 			if (position == 1) {
-				Fragment fragment = new TodaySectionFragment();
-				return fragment;
+				fragment = new TodaySectionFragment();
+			} else if(position == 2) {
+				fragment = new PlanSectionFragment();
+			} else if (position == 0) {
+				fragment = new HistorySectionFragment();
 			} else {
-			
-				Fragment fragment = new DummySectionFragment();
-				Bundle args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
-				fragment.setArguments(args);
-				return fragment;
+				return null;
 			}
+			return fragment;
 		}
 
 		@Override

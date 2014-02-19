@@ -15,26 +15,11 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<resources>
-
-    <string name="app_name">Motivaattori</string>
-    <string name="action_settings">Asetukset</string>
-    <string name="title_section1">Miten mennyt</string>
-    <string name="title_section2">Tänään</string>
-    <string name="title_section3">Suunnittele</string>
-    <string name="today_screen_mood">Mikä fiilis?</string>
-    <string name="today_screen_save_location">Merkkaa paikka</string>
-    <string name="action_info">Info</string>
-    <string name="next">Seuraava</string>
-    <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
-    <string name="prompt_selection">Valitse vastaus</string>
-    <string name="mood_level1">Masentunut</string>
-    <string name="mood_level2">Ok</string>
-    <string name="mood_level3">Onnellinen</string>
-    <string name="energy_level1">Väsynyt</string>
-    <string name="energy_level2">Rentoutunut</string>
-    <string name="energy_level3">Energinen</string>
-    <string name="add_event">Lisää tapahtuma</string>
-    <string name="show_mood_history">Fiiliksesi</string>
-
-</resources>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:text="@string/add_event"
+    android:textColor="@color/blue"
+    android:visibility="visible"
+    style="?android:attr/borderlessButtonStyle" >
+</Button>
