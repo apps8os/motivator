@@ -63,6 +63,7 @@ public class MoodQuestionActivity extends Activity {
 	
 	private static final int MARGIN_DP = 100;
 	private static final int DEFAULT_MOOD_SELECTION = 1;
+	public static final String GOODMOOD = "good_mood";
 	
 
 	/** Called when the activity is first created. */
@@ -75,59 +76,25 @@ public class MoodQuestionActivity extends Activity {
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
         
-        // Convert the margin from dp to px
-        final float scale = getResources().getDisplayMetrics().density;
-        int margin = (int) (MARGIN_DP * scale + 0.5f);
-        // Set the page margin to negative to show pages next to the selected on the screen
-        mCardsViewPagerEnergy.setPageMargin(-margin);
-        mCardsViewPagerEnergy.setOffscreenPageLimit(3);
-        // Set default item
-        mCardsViewPagerEnergy.setCurrentItem(DEFAULT_MOOD_SELECTION);
+        setViewPager(mCardsViewPagerEnergy);
         
         mEnergyLevelText = (TextView) findViewById(R.id.mood_question_energylevel_textview);
         mEnergyLevelText.setText(mCardsViewPagerEnergy.getAdapter().getPageTitle(DEFAULT_MOOD_SELECTION));
         
         // Set an OnPageChangeListener to the ViewPager, change the text when a page is selected
-        mCardsViewPagerEnergy.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-			@Override
-			public void onPageScrollStateChanged(int arg0) {	
-			}
-			@Override
-			public void onPageSelected(int arg0) {
-				mEnergyLevelText.setText(mCardsViewPagerEnergy.getAdapter().getPageTitle(arg0));
-			}
-        });
+        mCardsViewPagerEnergy.setOnPageChangeListener(new ViewPageChangeListener(mCardsViewPagerEnergy, mEnergyLevelText));
        
-        
         mCardsViewPagerMood = (ViewPager) findViewById(R.id.mood_question_viewpager_cards2);
         mCardsViewPagerMood.setAdapter(new ImagesPagerAdapter(mImages2, mTitles2, this));
         
-        // Set the page margin to negative to show pages next to the selected on the screen
-        mCardsViewPagerMood.setPageMargin(-margin);
-        mCardsViewPagerMood.setOffscreenPageLimit(3);
-        // Set default item
-        mCardsViewPagerMood.setCurrentItem(DEFAULT_MOOD_SELECTION);
+        setViewPager(mCardsViewPagerMood);
         
         // Get the textfield for energy level
         mMoodLevelText = (TextView) findViewById(R.id.mood_question_moodlevel_textview);
         mMoodLevelText.setText(mCardsViewPagerMood.getAdapter().getPageTitle(DEFAULT_MOOD_SELECTION));
         
         // Set an OnPageChangeListener to the ViewPager, change the text when a page is selected
-        mCardsViewPagerMood.setOnPageChangeListener(new OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-			@Override
-			public void onPageScrollStateChanged(int arg0) {	
-			}
-			@Override
-			public void onPageSelected(int arg0) {
-				mMoodLevelText.setText(mCardsViewPagerMood.getAdapter().getPageTitle(arg0));
-			}
-        });
+        mCardsViewPagerMood.setOnPageChangeListener(new ViewPageChangeListener(mCardsViewPagerMood, mMoodLevelText));
         
         // Set up the next button and save the mood
         Button nextButton = (Button) findViewById(R.id.mood_question_next_button);
@@ -140,18 +107,69 @@ public class MoodQuestionActivity extends Activity {
         
         
 	}
+	
+	/**
+	 * Set up for the viewpager.
+	 * @param viewPager
+	 */
+	private void setViewPager(ViewPager viewPager) {
+		
+		// Convert the margin from dp to px
+        final float scale = getResources().getDisplayMetrics().density;
+        int margin = (int) (MARGIN_DP * scale + 0.5f);
+        // Set the page margin to negative to show pages next to the selected on the screen
+        viewPager.setPageMargin(-margin);
+        viewPager.setOffscreenPageLimit(3);
+        // Set default item
+        viewPager.setCurrentItem(DEFAULT_MOOD_SELECTION);
+	}
 
 	// Saves the mood to the database.
 	public void saveMood(View v) {
 		mDatabase.open();
 		
 		// Add 1 to make the answers start from 1 not 0.
-		mDatabase.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mCardsViewPagerMood.getCurrentItem() + 1);
+		int mood = mCardsViewPagerMood.getCurrentItem() + 1;
+		mDatabase.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
 		mDatabase.close();
 		Intent intent = new Intent(this, QuestionnaireActivity.class);
+		if (mood < 2) {
+			intent.putExtra(GOODMOOD, false);
+		} else {
+			intent.putExtra(GOODMOOD, true);
+		}
 		startActivity(intent);
 		finish();
 	}
 	
+	/**
+	 * Inner class for changing text when the user scrolls the viewpager.
+	 * @author Toni JŠrvinen
+	 *
+	 */
+	private class ViewPageChangeListener implements OnPageChangeListener {
+		
+		private ViewPager mViewPager;
+		private TextView mTextView;
+		
+		public ViewPageChangeListener(ViewPager viewPager, TextView textView) {
+			mViewPager = viewPager;
+			mTextView = textView;
+		}
+		
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+		}
 
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+		}
+
+		@Override
+		public void onPageSelected(int arg0) {
+			mTextView.setText(mViewPager.getAdapter().getPageTitle(arg0));
+		}
+		
+	}
+	
 }

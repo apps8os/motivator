@@ -21,11 +21,9 @@ import org.apps8os.motivator.io.MotivatorDatabase;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -127,6 +125,9 @@ public class AddingEventActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
+			mDatabase.open();
+			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
+			mDatabase.close();
 		} else {
 			super.onBackPressed();
 		}
@@ -148,12 +149,13 @@ public class AddingEventActivity extends Activity {
 
 		@Override
 		public void onClick(View v) {
-			
 			int answer = mAnswerGroup.getCheckedRadioButtonId();
 			
 			// Check if the user has selected an answer
 			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
-				
+				mDatabase.open();
+				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
+				mDatabase.close();
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);

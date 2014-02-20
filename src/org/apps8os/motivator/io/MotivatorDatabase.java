@@ -18,13 +18,10 @@ package org.apps8os.motivator.io;
 
 
 
-import org.apps8os.motivator.R;
+
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.Resources.NotFoundException;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -44,10 +41,10 @@ public class MotivatorDatabase {
 	private static final String KEY_ENERGYLEVEL = "energylevel";
 
 	private static final String KEY_MOODLEVEL = "moodlevel";
-	private static final String MOOD_TABLE_NAME = "mood_table";
+	private static final String TABLE_NAME_MOOD_LEVELS = "mood_table";
 				
- 	private static final String MOOD_TABLE_CREATE =
-				"CREATE TABLE " + MOOD_TABLE_NAME + " (" +
+ 	private static final String TABLE_CREATE_MOOD_LEVELS =
+				"CREATE TABLE " + TABLE_NAME_MOOD_LEVELS + " (" +
 				"id INTEGER PRIMARY KEY, " +
 				KEY_ENERGYLEVEL + " INTEGER, " +
 				KEY_MOODLEVEL + " INTEGER, " +
@@ -57,25 +54,25 @@ public class MotivatorDatabase {
 	private static final String KEY_ID_QUESTION = "question_id"; // The question which the answers belongs to.
 	
 	private static final String KEY_ANSWER = "answer";
-	private static final String QUESTIONNAIRE_TABLE_SHORT_NAME = "short_mood_answers";
 	
-	private static final String QUESTIONAIRE_SHORT_ANSWERS_TABLE_CREATE =
-				"CREATE TABLE " + QUESTIONNAIRE_TABLE_SHORT_NAME + " (" +
+	public static final String TABLE_NAME_QUESTIONNAIRE_ANSWERS = "mood_answers";
+	public static final String TABLE_NAME_EVENT_ANSWERS = "adding_event_answers";
+	
+	private static final String TABLE_CREATE_QUESTIONNAIRE_ANSWERS =
+				"CREATE TABLE " + TABLE_NAME_QUESTIONNAIRE_ANSWERS + " (" +
 				"id INTEGER PRIMARY KEY, " +
 				KEY_ID_ANSWERS + " INTEGER, " +
 				KEY_ID_QUESTION + " INTEGER, " +
 				KEY_ANSWER + " INTEGER, " +
 				"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
-	private static final String KEY_QUESTION = "question";  // questions
 	
-	private static final String KEY_ANSWERS = "answers";  // possible answers
-	private static final String QUESTIONS_TABLE_NAME = "mood_questions";
-	
-	private static final String QUESTIONS_TABLE_CREATE = 
-				"CREATE TABLE " + QUESTIONS_TABLE_NAME + " (" +
-				"id INTEGER PRIMARY KEY, " +
-				KEY_QUESTION + " TEXT, " +
-				KEY_ANSWERS + " TEXT);";
+	private static final String TABLE_CREATE_EVENT_ANSWERS =
+			"CREATE TABLE " + TABLE_NAME_EVENT_ANSWERS + " (" +
+			"id INTEGER PRIMARY KEY, " +
+			KEY_ID_ANSWERS + " INTEGER, " +
+			KEY_ID_QUESTION + " INTEGER, " +
+			KEY_ANSWER + " INTEGER, " +
+			"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
 	
 	private static MotivatorDatabase mMyDatabase;
 	public static MotivatorDatabase getInstance(Context context) {
@@ -105,39 +102,16 @@ public class MotivatorDatabase {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			// Create the tables.
-			db.execSQL(QUESTIONAIRE_SHORT_ANSWERS_TABLE_CREATE);
-			db.execSQL(QUESTIONS_TABLE_CREATE);
-			db.execSQL(MOOD_TABLE_CREATE);
-			
-			
-			ContentValues values = new ContentValues();
-			Resources res = mContext.getResources();
-			
-			// Populate a table to the database with the questions.
-			for (int i = 1; i <= res.getInteger(R.integer.mood_question_amount); i++) {
-				try {
-					String[] question = res.getStringArray(res.getIdentifier("mood_question" + i, "array" , mContext.getPackageName()));
-					values.put(KEY_QUESTION, question[0]);
-					
-					String answers = "";
-					for (int j = 1; j < question.length; j++) {
-						answers = answers + question[j] + "; ";
-					}
-					values.put(KEY_ANSWERS, answers);
-					db.insert(QUESTIONS_TABLE_NAME, null, values);
-					values.clear();
-				} catch (NotFoundException e) {
-					break;
-				}
-			}
+			db.execSQL(TABLE_CREATE_QUESTIONNAIRE_ANSWERS);
+			db.execSQL(TABLE_CREATE_EVENT_ANSWERS);
+			db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		}
 	
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 	
-			db.execSQL("DROP TABLE IF EXISTS " + MOOD_TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + QUESTIONS_TABLE_NAME);
-			db.execSQL("DROP TABLE IF EXISTS " + QUESTIONNAIRE_TABLE_SHORT_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_MOOD_LEVELS);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_QUESTIONNAIRE_ANSWERS);
 			
 			this.onCreate(db);
 		}
@@ -147,44 +121,12 @@ public class MotivatorDatabase {
 		mDbHelper.close();
 	}
 	
-	public void deleteLastAnswer() {
-    	mDb.delete(QUESTIONNAIRE_TABLE_SHORT_NAME, "id = (SELECT MAX(id) FROM " + QUESTIONNAIRE_TABLE_SHORT_NAME + ")", null);
-    }
-	
-    /**
-     * Gets the desired question from the question database.
-     * @param questionId	 represents which question to get
-     * @return				 return the question
-     */
-    public String getAnswers(int questionId) {
-    	// Get a cursor to the desired row in database.
-    	String[] columns = {KEY_ANSWERS};
-    	Cursor cursor = mDb.query(QUESTIONS_TABLE_NAME, columns, "id = " + questionId, null, null, null, null);
-    	
-    	// Need to move it to first to get the desired row. Close the cursor before returning.
-    	cursor.moveToFirst();
-    	String answers = cursor.getString(0);
-    	cursor.close();
-    	
-    	return answers;
-    }
-    
-    /**
-     * Gets the desired question from the question database.
-     * @param questionId	 represents which question to get
-     * @return				 return the question
-     */
-    public String getQuestion(int questionId) {
-    	// Get a cursor to the desired row in database.
-    	String[] columns = {KEY_QUESTION};
-    	Cursor cursor = mDb.query(QUESTIONS_TABLE_NAME, columns, "id = " + questionId, null, null, null, null);
-    	
-    	// Need to move it to first to get the desired row. Close the cursor before returning.
-    	cursor.moveToFirst();
-    	String question = cursor.getString(0);
-    	cursor.close();
-    	
-    	return question;
+	/**
+	 * 
+	 * @param tableName
+	 */
+	public void deleteLastAnswer(String tableName) {
+    	mDb.delete(tableName, "id = (SELECT MAX(id) FROM " + tableName + ")", null);
     }
     
     /**
@@ -192,14 +134,15 @@ public class MotivatorDatabase {
      * @param answer		 answer in integer form, determined from the possible answers for the question
      * @param questionId	 represents the question id, used to determine for which question the answer belongs to
      * @param answersId		 represents one answering instance
+     * @param tableName		 the table to insert the answer to, use static names from this class
      */
     
-    public void insertAnswer(int answer, int questionId, int answersId) {
+    public void insertAnswer(int answer, int questionId, int answersId, String tableName) {
     	ContentValues values = new ContentValues();
     	values.put(KEY_ANSWER, answer);
     	values.put(KEY_ID_QUESTION, questionId);
     	values.put(KEY_ID_ANSWERS, answersId);
-    	mDb.insert(QUESTIONNAIRE_TABLE_SHORT_NAME, null, values);
+    	mDb.insert(tableName, null, values);
     }
     
     /**
@@ -211,7 +154,7 @@ public class MotivatorDatabase {
     	ContentValues values = new ContentValues();
     	values.put(KEY_ENERGYLEVEL, energyLevel);
     	values.put(KEY_MOODLEVEL, moodLevel);
-    	mDb.insert(MOOD_TABLE_NAME, null, values);
+    	mDb.insert(TABLE_NAME_MOOD_LEVELS, null, values);
     	
     	Log.d("mood levels", ""+ energyLevel + moodLevel);
     }

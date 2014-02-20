@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -127,7 +126,7 @@ public class QuestionnaireActivity extends Activity {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
 			mDatabase.open();
-			mDatabase.deleteLastAnswer();
+			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_QUESTIONNAIRE_ANSWERS);
 			mDatabase.close();
 		} else {
 			super.onBackPressed();
@@ -156,7 +155,7 @@ public class QuestionnaireActivity extends Activity {
 			// Check if the user has selected an answer
 			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
 				mDatabase.open();
-				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId);
+				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_QUESTIONNAIRE_ANSWERS);
 				mDatabase.close();
 				
 				// Determine if we have already asked enough questions
@@ -164,7 +163,13 @@ public class QuestionnaireActivity extends Activity {
 					incrementQuestion(true);
 				} else {								
 					// Questionnaire is done
-					Toast questionnaireDone = Toast.makeText(getApplicationContext(), "Questionnaire done", Toast.LENGTH_SHORT);
+					String toastMsg;
+					if ( getIntent().getBooleanExtra(MoodQuestionActivity.GOODMOOD, false) ) {
+						toastMsg = "woot";
+					} else {
+						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
+					}
+					Toast questionnaireDone = Toast.makeText(getApplicationContext(), toastMsg, Toast.LENGTH_SHORT);
 					questionnaireDone.show();
 					finish();
 				}

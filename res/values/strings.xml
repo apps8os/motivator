@@ -36,5 +36,6 @@
     <string name="energy_level3">Super</string>
     <string name="add_event">Add event</string>
     <string name="show_mood_history">Your moods</string>
+    <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
 
 </resources>

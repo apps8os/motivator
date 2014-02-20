@@ -7,11 +7,12 @@
         <item >Next weekend</item>
     </string-array>
     <string-array name="adding_event2">
-        <item >Where?</item>
+        <item name="question">Where?</item>
         <item >Home</item>
         <item >Friends home</item>
         <item >Bar</item>
     </string-array>
+    
     
     <integer name ="adding_event_amount">2</integer>
 </resources>
