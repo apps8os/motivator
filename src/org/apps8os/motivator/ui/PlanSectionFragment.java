@@ -44,9 +44,9 @@ public class PlanSectionFragment extends Fragment {
 				R.layout.fragment_main_activity, container, false);
 		LinearLayout buttonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_fragmenet_layout);
 		
-		Button moodButton = (Button) inflater.inflate(R.layout.element_main_activity_add_event_button, buttonLayout, false);
-		buttonLayout.addView(moodButton);
-		moodButton.setOnClickListener(new OnClickListener() {
+		Button addEventButton = (Button) inflater.inflate(R.layout.element_main_activity_add_event_button, buttonLayout, false);
+		buttonLayout.addView(addEventButton);
+		addEventButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), AddingEventActivity.class);
@@ -55,6 +55,19 @@ public class PlanSectionFragment extends Fragment {
 		});
 		
 		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
+		buttonLayout.addView(separator);
+		
+		Button addGoalButton = (Button) inflater.inflate(R.layout.element_main_activity_add_goal_button, buttonLayout, false);
+		buttonLayout.addView(addGoalButton);
+		addGoalButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), AddingGoalActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		separator = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
 		buttonLayout.addView(separator);
 		
 		return rootView;

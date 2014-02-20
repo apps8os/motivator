@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="adding_goal1">
+        <item >What do you want to achieve?</item>
+        <item >Drink less beer</item>
+        <item >Don\'t go to bars</item>
+        <item >Drink water</item>
+    </string-array>
+    <string-array name="adding_goal2">
+        <item name="question">How much?</item>
+        <item >Less than 3</item>
+        <item >5 to 10</item>
+        <item >10 to 15</item>
+    </string-array>
+    
+    
+    <integer name ="adding_goal_amount">2</integer>
+</resources>

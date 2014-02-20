@@ -34,29 +34,20 @@ import android.util.Log;
  */
 public class MotivatorDatabase {
 
-
-	private static final String DATABASE_NAME = "MotivatorDB";
-	
 	private static final int DATABASE_VERSION = 1;
+	private static final String DATABASE_NAME = "MotivatorDB";
 	private static final String KEY_ENERGYLEVEL = "energylevel";
-
 	private static final String KEY_MOODLEVEL = "moodlevel";
 	private static final String TABLE_NAME_MOOD_LEVELS = "mood_table";
-				
- 	private static final String TABLE_CREATE_MOOD_LEVELS =
-				"CREATE TABLE " + TABLE_NAME_MOOD_LEVELS + " (" +
-				"id INTEGER PRIMARY KEY, " +
-				KEY_ENERGYLEVEL + " INTEGER, " +
-				KEY_MOODLEVEL + " INTEGER, " +
-				"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
+ 	
 	//represents a single answering instance, same for all answers in the same instance of a questionnaire.
 	private static final String KEY_ID_ANSWERS = "answers_id";
 	private static final String KEY_ID_QUESTION = "question_id"; // The question which the answers belongs to.
-	
 	private static final String KEY_ANSWER = "answer";
 	
 	public static final String TABLE_NAME_QUESTIONNAIRE_ANSWERS = "mood_answers";
 	public static final String TABLE_NAME_EVENT_ANSWERS = "adding_event_answers";
+	public static final String TABLE_NAME_GOAL_ANSWERS = "adding_goal_answers";
 	
 	private static final String TABLE_CREATE_QUESTIONNAIRE_ANSWERS =
 				"CREATE TABLE " + TABLE_NAME_QUESTIONNAIRE_ANSWERS + " (" +
@@ -72,6 +63,21 @@ public class MotivatorDatabase {
 			KEY_ID_ANSWERS + " INTEGER, " +
 			KEY_ID_QUESTION + " INTEGER, " +
 			KEY_ANSWER + " INTEGER, " +
+			"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
+	
+	private static final String TABLE_CREATE_GOAL_ANSWERS =
+			"CREATE TABLE " + TABLE_NAME_GOAL_ANSWERS + " (" +
+			"id INTEGER PRIMARY KEY, " +
+			KEY_ID_ANSWERS + " INTEGER, " +
+			KEY_ID_QUESTION + " INTEGER, " +
+			KEY_ANSWER + " INTEGER, " +
+			"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
+	
+	private static final String TABLE_CREATE_MOOD_LEVELS =
+			"CREATE TABLE " + TABLE_NAME_MOOD_LEVELS + " (" +
+			"id INTEGER PRIMARY KEY, " +
+			KEY_ENERGYLEVEL + " INTEGER, " +
+			KEY_MOODLEVEL + " INTEGER, " +
 			"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
 	
 	private static MotivatorDatabase mMyDatabase;
@@ -104,6 +110,7 @@ public class MotivatorDatabase {
 			// Create the tables.
 			db.execSQL(TABLE_CREATE_QUESTIONNAIRE_ANSWERS);
 			db.execSQL(TABLE_CREATE_EVENT_ANSWERS);
+			db.execSQL(TABLE_CREATE_GOAL_ANSWERS);
 			db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		}
 	

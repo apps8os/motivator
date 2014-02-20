@@ -36,5 +36,7 @@
     <string name="energy_level3">Energinen</string>
     <string name="add_event">Lisää tapahtuma</string>
     <string name="show_mood_history">Fiiliksesi</string>
+    <string name="questionnaire_done_toast_bad_mood">Tsemppiä</string>
+    <string name="add_goal">Lisää tavoite</string>
 
 </resources>

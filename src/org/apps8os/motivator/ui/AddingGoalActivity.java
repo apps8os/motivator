@@ -33,12 +33,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 /**
- * Represents the adding event activity
+ * Represents the adding goal activity
  * @author Toni JŠrvinen
  *
  */
 
-public class AddingEventActivity extends Activity {
+public class AddingGoalActivity extends Activity {
 	
 	private MotivatorDatabase mDatabase;
 	private int mQuestionId;
@@ -98,7 +98,7 @@ public class AddingEventActivity extends Activity {
 		
 		// Fetching the question from resources
 		Resources res = getResources();
-		String[] question = res.getStringArray(res.getIdentifier("adding_event" + mQuestionId, "array" , this.getPackageName()));
+		String[] question = res.getStringArray(res.getIdentifier("adding_goal" + mQuestionId, "array" , this.getPackageName()));
 		mQuestion.setText(question[0]);
 		
 		// Clear previous views and selections
@@ -126,7 +126,7 @@ public class AddingEventActivity extends Activity {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
 			mDatabase.open();
-			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
+			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_GOAL_ANSWERS);
 			mDatabase.close();
 		} else {
 			super.onBackPressed();
@@ -154,7 +154,7 @@ public class AddingEventActivity extends Activity {
 			// Check if the user has selected an answer
 			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
 				mDatabase.open();
-				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
+				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_GOAL_ANSWERS);
 				mDatabase.close();
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
