@@ -45,6 +45,9 @@
         <activity 
             android:name="org.apps8os.motivator.ui.QuestionnaireActivity"
             android:parentActivityName="org.apps8os.motivator.ui.MainActivity" ></activity>
+        <activity 
+            android:name="org.apps8os.motivator.ui.AddingEventActivity"
+            android:parentActivityName="org.apps8os.motivator.ui.MainActivity" ></activity>
     </application>
 
 </manifest>

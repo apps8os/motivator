@@ -21,6 +21,7 @@ import org.apps8os.motivator.io.MotivatorDatabase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ import android.widget.TextView;
  *
  */
 
-public class QuestionnaireActivity extends Activity {
+public class AddingEventActivity extends Activity {
 	
 	private MotivatorDatabase mDatabase;
 	private int mQuestionId;
@@ -97,19 +98,20 @@ public class QuestionnaireActivity extends Activity {
 			mNumberOfQuestions += 1;
 		}
 		
+		// Fetching the question from resources
 		Resources res = getResources();
-		String[] questionAndAnswers = res.getStringArray(res.getIdentifier("mood_question" + mQuestionId, "array" , this.getPackageName()));
-		mQuestion.setText(questionAndAnswers[0]);
+		String[] question = res.getStringArray(res.getIdentifier("adding_event" + mQuestionId, "array" , this.getPackageName()));
+		mQuestion.setText(question[0]);
 		
 		// Clear previous views and selections
 		mAnswerGroup.removeAllViews();
 		mAnswerGroup.clearCheck();
 		
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
-		for (int i = 1; i < questionAndAnswers.length; i++) {
+		for (int i = 1; i < question.length; i++) {
 			RadioButton radioButton = (RadioButton) mInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroup, false);
 			radioButton.setId(i);
-			radioButton.setText(questionAndAnswers[i]);
+			radioButton.setText(question[i]);
 			mAnswerGroup.addView(radioButton);
 		}
 		
@@ -125,9 +127,6 @@ public class QuestionnaireActivity extends Activity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK && mQuestionId > 1) {
 			incrementQuestion(false);
-			mDatabase.open();
-			mDatabase.deleteLastAnswer();
-			mDatabase.close();
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
@@ -154,9 +153,6 @@ public class QuestionnaireActivity extends Activity {
 			
 			// Check if the user has selected an answer
 			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
-				mDatabase.open();
-				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId);
-				mDatabase.close();
 				
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {

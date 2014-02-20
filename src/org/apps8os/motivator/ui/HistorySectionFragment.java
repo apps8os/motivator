@@ -28,7 +28,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 /**
- * Represents the planning section in the UI.
+ * Represents the history section in the UI.
  * TODO: Rewrite to do correct behavior
  */
 public class HistorySectionFragment extends Fragment {

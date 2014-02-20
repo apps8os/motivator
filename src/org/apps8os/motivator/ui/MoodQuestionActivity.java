@@ -144,10 +144,13 @@ public class MoodQuestionActivity extends Activity {
 	// Saves the mood to the database.
 	public void saveMood(View v) {
 		mDatabase.open();
-		mDatabase.insertMood(mCardsViewPagerEnergy.getCurrentItem(), mCardsViewPagerMood.getCurrentItem());
+		
+		// Add 1 to make the answers start from 1 not 0.
+		mDatabase.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mCardsViewPagerMood.getCurrentItem() + 1);
 		mDatabase.close();
 		Intent intent = new Intent(this, QuestionnaireActivity.class);
 		startActivity(intent);
+		finish();
 	}
 	
 

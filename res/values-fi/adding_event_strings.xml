@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="adding_event1">
+        <item >Milloin?</item>
+        <item >Tänään</item>
+        <item >Huomenna</item>
+        <item >Ensi viikonloppuna</item>
+    </string-array>
+    <string-array name="adding_event2">
+        <item >Missä?</item>
+        <item >Kotona</item>
+        <item >Kaverilla</item>
+        <item >Baarissa</item>
+    </string-array>
+    
+    <integer name ="adding_event_amount">2</integer>
+</resources>

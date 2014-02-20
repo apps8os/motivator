@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mood_question1">
+        <item >Joitko eilenä?</item>
+        <item >En</item>
+        <item >Kyllä</item>
+    </string-array>
+    <string-array name="mood_question2">
+        <item >Oliko juomisesi ok?</item>
+        <item >Ei</item>
+        <item >Kyllä</item>
+        <item >En tiedä</item>
+    </string-array>
+    
+    <integer name ="mood_question_amount">2</integer>
+</resources>

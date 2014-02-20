@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="adding_event1">
+        <item >When?</item>
+        <item >Today</item>
+        <item >Tomorrow</item>
+        <item >Next weekend</item>
+    </string-array>
+    <string-array name="adding_event2">
+        <item >Where?</item>
+        <item >Home</item>
+        <item >Friends home</item>
+        <item >Bar</item>
+    </string-array>
+    
+    <integer name ="adding_event_amount">2</integer>
+</resources>

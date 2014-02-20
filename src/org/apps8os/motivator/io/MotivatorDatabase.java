@@ -17,16 +17,13 @@
 package org.apps8os.motivator.io;
 
 
-import java.io.IOException;
 
 import org.apps8os.motivator.R;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
+import android.content.res.Resources.NotFoundException;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -94,7 +91,8 @@ public class MotivatorDatabase {
 	private SQLiteDatabase mDb;
 	
 	private MotivatorDatabase(Context context) {
-		mContext = context;
+		// Use application context for the singleton
+		mContext = context.getApplicationContext();
 		mDbHelper = new MyDatabaseOpenHelper(context);
 	}
 	
@@ -115,36 +113,22 @@ public class MotivatorDatabase {
 			ContentValues values = new ContentValues();
 			Resources res = mContext.getResources();
 			
-			// Parsing the questions from XML-file questions
-			XmlResourceParser xml = res.getXml(R.xml.questions);
-			try {
-				int eventType = xml.getEventType();
-				while (eventType != XmlPullParser.END_DOCUMENT) {
-					if ((eventType == XmlPullParser.START_TAG) && (xml.getName().equals("entry"))) {
-						int index = 0;
-						String question = xml.getAttributeValue(index);
-						index++;
-						
-						// Collecting all answers from the entry to a single parse-able String
-						String answers = "";
-						for (int i = index; i < xml.getAttributeCount(); i++) {
-							answers = answers + xml.getAttributeValue(i) + "; ";
-						}
-						values.put(KEY_QUESTION, question);
-						values.put(KEY_ANSWERS, answers);
-						db.insert(QUESTIONS_TABLE_NAME, null, values);
-						values.clear();
+			// Populate a table to the database with the questions.
+			for (int i = 1; i <= res.getInteger(R.integer.mood_question_amount); i++) {
+				try {
+					String[] question = res.getStringArray(res.getIdentifier("mood_question" + i, "array" , mContext.getPackageName()));
+					values.put(KEY_QUESTION, question[0]);
+					
+					String answers = "";
+					for (int j = 1; j < question.length; j++) {
+						answers = answers + question[j] + "; ";
 					}
-					eventType = xml.next();
+					values.put(KEY_ANSWERS, answers);
+					db.insert(QUESTIONS_TABLE_NAME, null, values);
+					values.clear();
+				} catch (NotFoundException e) {
+					break;
 				}
-			} catch (XmlPullParserException e) {       
-				// Throw unchecked RuntimeException since we can not do anything if the XML does not follow the format
-	            throw new RuntimeException(e);
-	        } catch (IOException e) {
-	        	// Throw unchecked RuntimeException since we can not do anything if the XML does not follow the format
-				throw new RuntimeException(e);
-			}finally {
-				xml.close();
 			}
 		}
 	

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mood_question1">
+        <item >Did you drink last night?</item>
+        <item >No</item>
+        <item >Yes</item>
+    </string-array>
+    <string-array name="mood_question2">
+        <item >Was the amount you drank ok?</item>
+        <item >No</item>
+        <item >Yes</item>
+        <item >I don\'t know</item>
+    </string-array>
+    
+    <integer name ="mood_question_amount">2</integer>
+</resources>
