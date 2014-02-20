@@ -124,12 +124,12 @@ public class AddingEventActivity extends Activity {
 	 * by going back on questions if the user has already answered to a question. If the user has not answered, do default action.
 	 */
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && mQuestionId > 1) {
+	public void onBackPressed() {
+		if (mQuestionId > 1) {
 			incrementQuestion(false);
-			return true;
+		} else {
+			super.onBackPressed();
 		}
-		return super.onKeyDown(keyCode, event);
 	}
 	
 	/**

@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents the questionnaire activity
@@ -122,15 +123,15 @@ public class QuestionnaireActivity extends Activity {
 	 * by going back on questions if the user has already answered to a question. If the user has not answered, do default action.
 	 */
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && mQuestionId > 1) {
+	public void onBackPressed() {
+		if (mQuestionId > 1) {
 			incrementQuestion(false);
 			mDatabase.open();
 			mDatabase.deleteLastAnswer();
 			mDatabase.close();
-			return true;
+		} else {
+			super.onBackPressed();
 		}
-		return super.onKeyDown(keyCode, event);
 	}
 	
 	/**
@@ -163,6 +164,8 @@ public class QuestionnaireActivity extends Activity {
 					incrementQuestion(true);
 				} else {								
 					// Questionnaire is done
+					Toast questionnaireDone = Toast.makeText(getApplicationContext(), "Questionnaire done", Toast.LENGTH_SHORT);
+					questionnaireDone.show();
 					finish();
 				}
 			} else {
