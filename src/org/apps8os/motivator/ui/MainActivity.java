@@ -20,6 +20,7 @@ package org.apps8os.motivator.ui;
 import java.util.Locale;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.io.MotivatorDatabase;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -68,6 +69,9 @@ public class MainActivity extends FragmentActivity {
 		
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
+		
+		MotivatorDatabase.getInstance(this).open();
+		MotivatorDatabase.getInstance(this).close();
 		
 	}
 

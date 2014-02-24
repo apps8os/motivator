@@ -18,6 +18,8 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.io.MotivatorDatabase;
+import org.apps8os.motivator.io.Question;
+import org.apps8os.motivator.io.QuestionSet;
 
 import android.app.Activity;
 import android.content.Context;
@@ -43,15 +45,16 @@ public class QuestionnaireActivity extends Activity {
 	
 	private MotivatorDatabase mDatabase;
 	private int mQuestionId;
-	private TextView mQuestion;
-	private RadioGroup mAnswerGroup;
-	private TextView mPromptMessage;
+	private TextView mQuestionTextView;
+	private RadioGroup mAnswerGroupView;
+	private TextView mPromptMessageTextView;
 	private int mNumberOfQuestions = 2;
 	private LayoutInflater mInflater;
 	
+	private QuestionSet mQuestionSet;
+	
 	private int mAnswerId;
 	private static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
-	
 	private static final String ANSWER_ID = "incrementing_id";
 	
 	/** Called when the activity is first created. */
@@ -62,9 +65,10 @@ public class QuestionnaireActivity extends Activity {
 		
 		mInflater = getLayoutInflater();
 		mDatabase = MotivatorDatabase.getInstance(this);
-		mAnswerGroup = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
-		mQuestion = (TextView) findViewById(R.id.questionnaire_question);
-		mPromptMessage = (TextView) findViewById(R.id.questionnaire_prompt_message);
+		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
+		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
+		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
+		mQuestionSet = QuestionSet.getInstance(this);
 		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
 		nextButton.setOnClickListener(new NextButtonOnClickListener(this));
@@ -74,6 +78,10 @@ public class QuestionnaireActivity extends Activity {
 		incrementQuestion(true);
 	}
 	
+	/**
+	 * Incrementing the running id for an answering instance.
+	 * @return
+	 */
 	private int incrementAnswersId() {
 		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
 		SharedPreferences answerIdIncrement = getSharedPreferences(ANSWER_ID_INCREMENT_PREFS, 0);
@@ -97,24 +105,23 @@ public class QuestionnaireActivity extends Activity {
 			mNumberOfQuestions += 1;
 		}
 		
-		Resources res = getResources();
-		String[] questionAndAnswers = res.getStringArray(res.getIdentifier("mood_question" + mQuestionId, "array" , this.getPackageName()));
-		mQuestion.setText(questionAndAnswers[0]);
+		Question question = mQuestionSet.getMoodQuestion(mQuestionId);
+		mQuestionTextView.setText(question.getQuestion());
 		
 		// Clear previous views and selections
-		mAnswerGroup.removeAllViews();
-		mAnswerGroup.clearCheck();
+		mAnswerGroupView.removeAllViews();
+		mAnswerGroupView.clearCheck();
 		
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
-		for (int i = 1; i < questionAndAnswers.length; i++) {
-			RadioButton radioButton = (RadioButton) mInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroup, false);
+		for (int i = 0; i < question.getAnswerCount(); i++) {
+			RadioButton radioButton = (RadioButton) mInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroupView, false);
 			radioButton.setId(i);
-			radioButton.setText(questionAndAnswers[i]);
-			mAnswerGroup.addView(radioButton);
+			radioButton.setText(question.getAnswer(i));
+			mAnswerGroupView.addView(radioButton);
 		}
 		
 		// Remove the prompt text
-		mPromptMessage.setText("");
+		mPromptMessageTextView.setText("");
 	}
 	
 	/**
@@ -134,7 +141,7 @@ public class QuestionnaireActivity extends Activity {
 	}
 	
 	/**
-	 * Inner class for handling next button clicks.
+	 * Inner class for handling next button clicks. Inserts the answer and gets the next question if there is one.
 	 * @author Toni JŠrvinen
 	 *
 	 */
@@ -150,10 +157,10 @@ public class QuestionnaireActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			
-			int answer = mAnswerGroup.getCheckedRadioButtonId();
+			int answer = mAnswerGroupView.getCheckedRadioButtonId();
 			
 			// Check if the user has selected an answer
-			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
+			if (mAnswerGroupView.getCheckedRadioButtonId() != -1) {
 				mDatabase.open();
 				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_QUESTIONNAIRE_ANSWERS);
 				mDatabase.close();
@@ -175,7 +182,7 @@ public class QuestionnaireActivity extends Activity {
 				}
 			} else {
 				// Message the user that he has to select something
-				mPromptMessage.setText(R.string.prompt_selection);
+				mPromptMessageTextView.setText(R.string.prompt_selection);
 			}
 			
 		}

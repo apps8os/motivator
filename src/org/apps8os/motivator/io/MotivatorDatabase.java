@@ -20,8 +20,11 @@ package org.apps8os.motivator.io;
 
 
 
+import java.util.Calendar;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -44,6 +47,8 @@ public class MotivatorDatabase {
 	private static final String KEY_ID_ANSWERS = "answers_id";
 	private static final String KEY_ID_QUESTION = "question_id"; // The question which the answers belongs to.
 	private static final String KEY_ANSWER = "answer";
+	private static final String KEY_TIMESTAMP = "timestamp";
+	private static final String SQL_TIMESTAMP = "strftime('%s','now')";
 	
 	public static final String TABLE_NAME_QUESTIONNAIRE_ANSWERS = "mood_answers";
 	public static final String TABLE_NAME_EVENT_ANSWERS = "adding_event_answers";
@@ -55,7 +60,7 @@ public class MotivatorDatabase {
 				KEY_ID_ANSWERS + " INTEGER, " +
 				KEY_ID_QUESTION + " INTEGER, " +
 				KEY_ANSWER + " INTEGER, " +
-				"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
+				KEY_TIMESTAMP + " INTEGER);";
 	
 	private static final String TABLE_CREATE_EVENT_ANSWERS =
 			"CREATE TABLE " + TABLE_NAME_EVENT_ANSWERS + " (" +
@@ -81,6 +86,7 @@ public class MotivatorDatabase {
 			"timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
 	
 	private static MotivatorDatabase mMyDatabase;
+	
 	public static MotivatorDatabase getInstance(Context context) {
 		if (mMyDatabase == null) {
 			mMyDatabase = new MotivatorDatabase(context.getApplicationContext());
@@ -149,6 +155,7 @@ public class MotivatorDatabase {
     	values.put(KEY_ANSWER, answer);
     	values.put(KEY_ID_QUESTION, questionId);
     	values.put(KEY_ID_ANSWERS, answersId);
+    	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
     	mDb.insert(tableName, null, values);
     }
     
@@ -174,6 +181,19 @@ public class MotivatorDatabase {
 	public MotivatorDatabase open() throws SQLException {
 		mDb = mDbHelper.getWritableDatabase();
 		return this;
+	}
+	
+	/**
+	 * Used to get events after the specified calendar date.
+	 * @param calendar
+	 * @return	Cursor over the results
+	 */
+	public Cursor getEventsAfter(Calendar calendar) {
+		Cursor query = null;
+		String selection = KEY_TIMESTAMP + " > " + calendar.getTimeInMillis();
+		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_TIMESTAMP};
+		query = mDb.query(TABLE_NAME_EVENT_ANSWERS, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		return query;
 	}
 
 }
