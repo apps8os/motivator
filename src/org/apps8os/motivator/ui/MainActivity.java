@@ -8,7 +8,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *  
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *   
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
  * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
@@ -20,7 +20,6 @@ package org.apps8os.motivator.ui;
 import java.util.Locale;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.MotivatorDatabase;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,7 +32,7 @@ import android.view.Menu;
 
 /**
  * Represents the main activity where the user can choose different parts of the application
- * @author Toni JŠrvinen
+ * @author Toni JÃ¤rvinen
  *
  */
 public class MainActivity extends FragmentActivity {
@@ -69,9 +68,6 @@ public class MainActivity extends FragmentActivity {
 		
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
-		
-		MotivatorDatabase.getInstance(this).open();
-		MotivatorDatabase.getInstance(this).close();
 		
 	}
 
@@ -120,12 +116,15 @@ public class MainActivity extends FragmentActivity {
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
 			switch (position) {
-			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
-			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
-			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+				case 0: {
+					return getString(R.string.title_section1).toUpperCase(l);
+				}
+				case 1: {
+					return getString(R.string.title_section2).toUpperCase(l);
+				}
+				case 2: {
+					return getString(R.string.title_section3).toUpperCase(l);
+				}
 			}
 			return null;
 		}

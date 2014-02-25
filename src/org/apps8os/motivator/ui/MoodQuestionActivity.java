@@ -8,7 +8,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *  
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *   
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
  * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
@@ -17,7 +17,7 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.MotivatorDatabase;
+import org.apps8os.motivator.io.MoodDataHandler;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,13 +31,13 @@ import android.widget.TextView;
 
 /**
  * Represents the mood question activity.
- * @author Toni JŠrvinen
+ * @author Toni JÃ¤rvinen
  *
  */
 
 public class MoodQuestionActivity extends Activity {
 	
-	private MotivatorDatabase mDatabase;					// Database access object
+	private MoodDataHandler mDataHandler;					// Database access object
 	private ViewPager mCardsViewPagerEnergy;				// Upper half of the carousel
 	private ViewPager mCardsViewPagerMood;				// Lower half of the carousel
 	private TextView mEnergyLevelText;
@@ -71,7 +71,8 @@ public class MoodQuestionActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mood_question);
-		mDatabase = MotivatorDatabase.getInstance(this);
+		mDataHandler = new MoodDataHandler(this);
+		mDataHandler.open();
 		
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
@@ -104,8 +105,12 @@ public class MoodQuestionActivity extends Activity {
         		saveMood(v);
         	}
         });
-        
-        
+	}
+	
+	@Override
+	public void onDestroy() {
+		mDataHandler.close();
+		super.onDestroy();
 	}
 	
 	/**
@@ -126,12 +131,8 @@ public class MoodQuestionActivity extends Activity {
 
 	// Saves the mood to the database.
 	public void saveMood(View v) {
-		mDatabase.open();
-		
-		// Add 1 to make the answers start from 1 not 0.
-		int mood = mCardsViewPagerMood.getCurrentItem() + 1;
-		mDatabase.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
-		mDatabase.close();
+		int mood = mCardsViewPagerMood.getCurrentItem();
+		mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
 		Intent intent = new Intent(this, QuestionnaireActivity.class);
 		if (mood < 2) {
 			intent.putExtra(GOODMOOD, false);
@@ -144,7 +145,7 @@ public class MoodQuestionActivity extends Activity {
 	
 	/**
 	 * Inner class for changing text when the user scrolls the viewpager.
-	 * @author Toni JŠrvinen
+	 * @author Toni JÃ¤rvinen
 	 *
 	 */
 	private class ViewPageChangeListener implements OnPageChangeListener {

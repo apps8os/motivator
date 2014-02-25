@@ -8,7 +8,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *  
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *   
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
  * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
@@ -17,12 +17,13 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.io.AnswerCase;
-import org.apps8os.motivator.io.MotivatorDatabase;
+import org.apps8os.motivator.io.EventDataHandler;
+import org.apps8os.motivator.io.Question;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,11 +39,13 @@ import android.widget.LinearLayout;
 
 /**
  * Represents the planning section in the UI.
- * TODO: Rewrite to do correct behavior
+ * The planned events are drawn in the onResume function.
+ * @author Toni Järvinen
+ *
  */
 public class PlanSectionFragment extends Fragment {
 	
-	private MotivatorDatabase mDatabase;
+	private EventDataHandler mDataHandler;
 	private LinearLayout mButtonLayout;
 	private LayoutInflater mInflater;
 	
@@ -85,7 +88,8 @@ public class PlanSectionFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mDatabase = MotivatorDatabase.getInstance(getActivity());
+		mDataHandler = new EventDataHandler(getActivity());
+		mDataHandler.open();
 	}
 	
 	/**
@@ -97,9 +101,15 @@ public class PlanSectionFragment extends Fragment {
 		super.onResume();
 	}
 	
+	@Override
+	public void onDestroy() {
+		mDataHandler.close();
+		super.onDestroy();
+	}
+	
 	/**
 	 * Inner class for loading the plans to the plan section asynchronously.
-	 * @author Toni J�rvinen
+	 * @author Toni Järvinen
 	 *
 	 */
 	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<AnswerCase>> {
@@ -109,22 +119,17 @@ public class PlanSectionFragment extends Fragment {
 		 */
 		@Override
 		protected ArrayList<AnswerCase> doInBackground(Void... arg0) {
-			GregorianCalendar calendar = new GregorianCalendar();
-			// set the calendar to 7 days before
-			calendar.setTimeInMillis(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS));
 			ArrayList<AnswerCase> result = new ArrayList<AnswerCase>();
-			
-			mDatabase.open();
- 			Cursor cursor = mDatabase.getEventsAfter(calendar);
+ 			Cursor cursor = mDataHandler.getEventsAfterToday();
  			cursor.moveToFirst();
- 			int lastAnswerId = -1;
- 			
+ 			int lastAnswerId = -1;		
  			// Looping through the cursor.
 			while (!cursor.isClosed() && cursor.getCount() > 0) {
-				// Check if we already made AnswerCase object for the answering instance
+				// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
 				if (lastAnswerId != cursor.getInt(0)) {	
-					String[] questionAndAnswers = getResources().getStringArray(getResources().getIdentifier("adding_event" + cursor.getInt(1), "array" , getActivity().getPackageName()));
-					AnswerCase event = new AnswerCase(cursor.getInt(0), questionAndAnswers[cursor.getInt(2)]);
+					Question question = mDataHandler.getQuestion(cursor.getInt(1));
+					// Sorting helper can be the answer in this case as the answers are in ascending order timewise
+					AnswerCase event = new AnswerCase(cursor.getInt(0), question.getAnswer(cursor.getInt(2)), cursor.getInt(2));
 					result.add(event);
 				}
 				lastAnswerId = cursor.getInt(0);
@@ -135,8 +140,22 @@ public class PlanSectionFragment extends Fragment {
 				}
 				
 			}
-			mDatabase.close();
 			
+			// sort the list with the sorting helper
+			Collections.sort(result, new Comparator<AnswerCase>() {
+				@Override
+				public int compare(AnswerCase case1, AnswerCase case2) {
+					int case1Sorter = case1.getSortingHelper();
+					int case2Sorter = case2.getSortingHelper();
+					if (case1Sorter > case2Sorter) {
+						return 1;
+					} else if (case1Sorter == case2Sorter) {
+						return 0;
+					} else {
+						return -1;
+					}
+				}
+			});
 			return result;
 		}
 		

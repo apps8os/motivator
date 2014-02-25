@@ -8,7 +8,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *  
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *   
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
  * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
@@ -17,12 +17,11 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.MotivatorDatabase;
+import org.apps8os.motivator.io.EventDataHandler;
+import org.apps8os.motivator.io.Question;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,23 +33,22 @@ import android.widget.TextView;
 
 /**
  * Represents the adding event activity
- * @author Toni JŠrvinen
+ * @author Toni JÃ¤rvinen
  *
  */
 
 public class AddingEventActivity extends Activity {
 	
-	private MotivatorDatabase mDatabase;
+	private EventDataHandler mDataHandler;
 	private int mQuestionId;
-	private TextView mQuestion;
-	private RadioGroup mAnswerGroup;
-	private TextView mPromptMessage;
+	private TextView mQuestionTextView;
+	private RadioGroup mAnswerGroupView;
+	private TextView mPromptMessageTextView;
 	private int mNumberOfQuestions = 2;
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
 	private static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
-	
 	private static final String ANSWER_ID = "incrementing_id";
 	
 	/** Called when the activity is first created. */
@@ -60,19 +58,30 @@ public class AddingEventActivity extends Activity {
 		setContentView(R.layout.activity_questionnaire);
 		
 		mInflater = getLayoutInflater();
-		mDatabase = MotivatorDatabase.getInstance(this);
-		mAnswerGroup = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
-		mQuestion = (TextView) findViewById(R.id.questionnaire_question);
-		mPromptMessage = (TextView) findViewById(R.id.questionnaire_prompt_message);
+		mDataHandler = new EventDataHandler(this);
+		mDataHandler.open();
+		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
+		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
+		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
 		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
-		nextButton.setOnClickListener(new NextButtonOnClickListener(this));
+		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
 		mAnswerId = incrementAnswersId();
 		mQuestionId = 0;
 		incrementQuestion(true);
 	}
 	
+	@Override
+	public void onDestroy() {
+		mDataHandler.close();
+		super.onDestroy();
+	}
+	
+	/**
+	 * Incrementing the running id for an answering instance.
+	 * @return
+	 */
 	private int incrementAnswersId() {
 		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
 		SharedPreferences answerIdIncrement = getSharedPreferences(ANSWER_ID_INCREMENT_PREFS, 0);
@@ -96,25 +105,23 @@ public class AddingEventActivity extends Activity {
 			mNumberOfQuestions += 1;
 		}
 		
-		// Fetching the question from resources
-		Resources res = getResources();
-		String[] question = res.getStringArray(res.getIdentifier("adding_event" + mQuestionId, "array" , this.getPackageName()));
-		mQuestion.setText(question[0]);
+		Question question = mDataHandler.getQuestion(mQuestionId);
+		mQuestionTextView.setText(question.getQuestion());
 		
 		// Clear previous views and selections
-		mAnswerGroup.removeAllViews();
-		mAnswerGroup.clearCheck();
+		mAnswerGroupView.removeAllViews();
+		mAnswerGroupView.clearCheck();
 		
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
-		for (int i = 1; i < question.length; i++) {
-			RadioButton radioButton = (RadioButton) mInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroup, false);
+		for (int i = 0; i < question.getAnswerCount(); i++) {
+			RadioButton radioButton = (RadioButton) mInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroupView, false);
 			radioButton.setId(i);
-			radioButton.setText(question[i]);
-			mAnswerGroup.addView(radioButton);
+			radioButton.setText(question.getAnswer(i));
+			mAnswerGroupView.addView(radioButton);
 		}
 		
 		// Remove the prompt text
-		mPromptMessage.setText("");
+		mPromptMessageTextView.setText("");
 	}
 	
 	/**
@@ -125,37 +132,32 @@ public class AddingEventActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
-			mDatabase.open();
-			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
-			mDatabase.close();
+			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
 		}
 	}
 	
 	/**
-	 * Inner class for handling next button clicks.
-	 * @author Toni JŠrvinen
+	 * Inner class for handling next button clicks. Inserts the answer and gets the next question if there is one.
+	 * @author Toni JÃ¤rvinen
 	 *
 	 */
 	private class NextButtonOnClickListener implements OnClickListener {
 		
-		private Context mContext;
-		
-		public NextButtonOnClickListener(Context mContext) {
+		public NextButtonOnClickListener() {
 			super();
-			this.mContext = mContext;
 		}
 
 		@Override
 		public void onClick(View v) {
-			int answer = mAnswerGroup.getCheckedRadioButtonId();
+			int answer = mAnswerGroupView.getCheckedRadioButtonId();
 			
 			// Check if the user has selected an answer
-			if (mAnswerGroup.getCheckedRadioButtonId() != -1) {
-				mDatabase.open();
-				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_EVENT_ANSWERS);
-				mDatabase.close();
+			if (mAnswerGroupView.getCheckedRadioButtonId() != -1) {
+
+				mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId);
+
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
@@ -165,7 +167,7 @@ public class AddingEventActivity extends Activity {
 				}
 			} else {
 				// Message the user that he has to select something
-				mPromptMessage.setText(R.string.prompt_selection);
+				mPromptMessageTextView.setText(R.string.prompt_selection);
 			}
 			
 		}

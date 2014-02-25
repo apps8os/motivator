@@ -8,7 +8,7 @@
  * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  *  
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
+ *   
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
  * THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
@@ -17,14 +17,11 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.MotivatorDatabase;
+import org.apps8os.motivator.io.MoodDataHandler;
 import org.apps8os.motivator.io.Question;
-import org.apps8os.motivator.io.QuestionSet;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,21 +34,19 @@ import android.widget.Toast;
 
 /**
  * Represents the questionnaire activity
- * @author Toni JŠrvinen
+ * @author Toni JÃ¤rvinen
  *
  */
 
 public class QuestionnaireActivity extends Activity {
 	
-	private MotivatorDatabase mDatabase;
+	private MoodDataHandler mDataHandler;
 	private int mQuestionId;
 	private TextView mQuestionTextView;
 	private RadioGroup mAnswerGroupView;
 	private TextView mPromptMessageTextView;
 	private int mNumberOfQuestions = 2;
 	private LayoutInflater mInflater;
-	
-	private QuestionSet mQuestionSet;
 	
 	private int mAnswerId;
 	private static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
@@ -64,18 +59,25 @@ public class QuestionnaireActivity extends Activity {
 		setContentView(R.layout.activity_questionnaire);
 		
 		mInflater = getLayoutInflater();
-		mDatabase = MotivatorDatabase.getInstance(this);
+		mDataHandler = new MoodDataHandler(this);
+		mDataHandler.open();
+		
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
-		mQuestionSet = QuestionSet.getInstance(this);
 		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
-		nextButton.setOnClickListener(new NextButtonOnClickListener(this));
+		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
 		mAnswerId = incrementAnswersId();
 		mQuestionId = 0;
 		incrementQuestion(true);
+	}
+	
+	@Override
+	public void onDestroy() {
+		mDataHandler.close();
+		super.onDestroy();
 	}
 	
 	/**
@@ -105,7 +107,7 @@ public class QuestionnaireActivity extends Activity {
 			mNumberOfQuestions += 1;
 		}
 		
-		Question question = mQuestionSet.getMoodQuestion(mQuestionId);
+		Question question = mDataHandler.getQuestion(mQuestionId);
 		mQuestionTextView.setText(question.getQuestion());
 		
 		// Clear previous views and selections
@@ -132,9 +134,7 @@ public class QuestionnaireActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
-			mDatabase.open();
-			mDatabase.deleteLastAnswer(MotivatorDatabase.TABLE_NAME_QUESTIONNAIRE_ANSWERS);
-			mDatabase.close();
+			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
 		}
@@ -142,16 +142,13 @@ public class QuestionnaireActivity extends Activity {
 	
 	/**
 	 * Inner class for handling next button clicks. Inserts the answer and gets the next question if there is one.
-	 * @author Toni JŠrvinen
+	 * @author Toni JÃ¤rvinen
 	 *
 	 */
 	private class NextButtonOnClickListener implements OnClickListener {
 		
-		private Context mContext;
 		
-		public NextButtonOnClickListener(Context mContext) {
-			super();
-			this.mContext = mContext;
+		public NextButtonOnClickListener() {
 		}
 
 		@Override
@@ -161,9 +158,8 @@ public class QuestionnaireActivity extends Activity {
 			
 			// Check if the user has selected an answer
 			if (mAnswerGroupView.getCheckedRadioButtonId() != -1) {
-				mDatabase.open();
-				mDatabase.insertAnswer(answer, mQuestionId, mAnswerId, MotivatorDatabase.TABLE_NAME_QUESTIONNAIRE_ANSWERS);
-				mDatabase.close();
+				
+				mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId, 010);
 				
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
