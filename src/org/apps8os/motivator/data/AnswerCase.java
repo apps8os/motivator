@@ -14,40 +14,37 @@
  * OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
-package org.apps8os.motivator.io;
-
+package org.apps8os.motivator.data;
 
 /**
- * Represents a Question. Used to store the question information during runtime.
+ * Represents an answering case. Used to draw buttons in UI. Only holds answering id for recognizing the instance
+ * and the text to be written to the button.
  * @author Toni Järvinen
  *
  */
-public class Question {
+public class AnswerCase {
 	
-	private int mId;
-	private String mQuestion;
-	private String[] mAnswers;
+	private int mAnsweringId;
+	private String mButtonText;
+	private int mSortingHelper;
 	
-	public Question(int id, String question, String[] answers) {
-		mId = id;
-		mQuestion = question;
-		mAnswers = answers;
+	public AnswerCase(int answeringId, String buttonText, int sortingHelper) {
+		mAnsweringId = answeringId;
+		mButtonText = buttonText;
+		mSortingHelper = sortingHelper;
+	}
+	
+	public int getAnsweringId() {
+		return mAnsweringId;
+	}
+	
+	public String getButtonText() {
+		return mButtonText;
+	}
+	
+	public int getSortingHelper() {
+		return mSortingHelper;
 	}
 
-	public int getId() {
-		return mId;
-	}
 
-	public String getQuestion() {
-		return mQuestion;
-	}
-
-	public String getAnswer(int number) {
-		return mAnswers[number];
-	}
-	
-	public int getAnswerCount() {
-		return mAnswers.length;
-	}
-	
 }

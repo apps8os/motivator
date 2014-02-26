@@ -24,7 +24,6 @@
     android:paddingBottom="18dp"
     xmlns:app="http://schemas.android.com/tools">
     
-
     <Button
         android:id="@+id/mood_question_next_button"
         android:layout_width="match_parent"
@@ -32,22 +31,32 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:text="@string/next" />
+    
+    
+    <TextView
+        android:id="@+id/mood_question_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="@string/today_screen_mood"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+    </TextView>
 
     <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mood_question_viewpager_cards"
+        android:layout_below="@+id/mood_question_title"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignLeft="@+id/mood_question_next_button"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="24dp"
         android:orientation="vertical"
         app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
     </android.support.v4.view.ViewPager>
 
     <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mood_question_viewpager_cards2"
         android:layout_width="match_parent"
@@ -64,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/mood_question_viewpager_cards2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="48dp"
         android:text=""
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -78,5 +87,4 @@
         android:text=""
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
 </RelativeLayout>

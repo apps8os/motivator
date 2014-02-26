@@ -17,10 +17,18 @@
 package org.apps8os.motivator.ui;
 
 
+import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.services.NotificationService;
+import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -46,6 +54,7 @@ public class MainActivity extends FragmentActivity {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	private int timeToNotify = 12;					// Hours after midnight when to notify the user
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -69,6 +78,18 @@ public class MainActivity extends FragmentActivity {
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
 		
+		// Set up notifying user to answer to the mood question
+		// The time to notify the user
+		GregorianCalendar notificationTime = new GregorianCalendar();
+		UtilityMethods.setToMidnight(notificationTime);
+		notificationTime.add(GregorianCalendar.HOUR, timeToNotify);
+		Intent notificationIntent = new Intent(this, NotificationService.class);
+		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		
+		// An alarm manager for scheduling notifications
+		AlarmManager notificationManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		// Set the notification to repeat over the given time at notificationTime
+		notificationManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS), pendingNotificationIntent);
 	}
 
 	@Override

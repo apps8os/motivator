@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.AnswerCase;
-import org.apps8os.motivator.io.EventDataHandler;
-import org.apps8os.motivator.io.Question;
+import org.apps8os.motivator.data.AnswerCase;
+import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.Question;
 
 import android.content.Intent;
 import android.database.Cursor;

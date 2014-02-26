@@ -17,7 +17,7 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.io.MoodDataHandler;
+import org.apps8os.motivator.data.MoodDataHandler;
 
 import android.app.Activity;
 import android.content.Intent;
