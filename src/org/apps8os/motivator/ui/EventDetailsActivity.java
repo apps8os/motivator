@@ -12,6 +12,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Represents a details activity for an event.
+ * TODO: Only a dummy version, needs to be redesigned
+ * @author Toni Järvinen
+ *
+ */
 public class EventDetailsActivity extends Activity {
 	
 	public final static String KEY_EVENT_ID = "event_id";
@@ -24,9 +30,12 @@ public class EventDetailsActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_event_details);
 	    Bundle extras = getIntent().getExtras();
+	    // is represented as answers id in the database
 	    mEventId = extras.getInt(KEY_EVENT_ID);
 	    mDataHandler = new EventDataHandler(this);
 	    mDataHandler.open();
+	    
+	    // Get the event answers with the id
 	    Cursor eventData = mDataHandler.getEventWithId(mEventId);
 	    eventData.moveToFirst();
 	    
@@ -34,12 +43,25 @@ public class EventDetailsActivity extends Activity {
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
 	    title.setText(question.getAnswer(eventData.getInt(1)));
 	    eventData.moveToNext();
-	    mDataHandler.close();
+	    
+	    // Next answers
+	    TextView text = (TextView) findViewById(R.id.event_detail_text);
+	    question = mDataHandler.getQuestion(eventData.getInt(0));
+	    String textToAdd = question.getAnswer(eventData.getInt(1));
+	    eventData.moveToNext();
+	    question = mDataHandler.getQuestion(eventData.getInt(0));
+	    textToAdd = textToAdd + ", " + question.getAnswer(eventData.getInt(1));
+	    text.setText(textToAdd);
+	    
+	    
+	    
+	    eventData.close();
 	    
 	    Button cancelButton = (Button) findViewById(R.id.event_detail_cancel_button);
 	    cancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				// Delete the answers with the event/answers id
 				mDataHandler.deleteEvent(mEventId);
 			}
 	    	
