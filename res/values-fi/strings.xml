@@ -39,5 +39,7 @@
     <string name="questionnaire_done_toast_bad_mood">Tsemppiä</string>
     <string name="add_goal">Lisää tavoite</string>
     <string name="this_weekend">Tänä viikonloppuna</string>
+    <string name="send_notifications">Lähetä muistutuksia?</string>
+    <string name="minimum_notification_interval">Pienin notifikaatioiden aikaväli</string>
 
 </resources>

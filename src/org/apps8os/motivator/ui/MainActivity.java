@@ -30,12 +30,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 
 
 /**
@@ -54,8 +56,8 @@ public class MainActivity extends FragmentActivity {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
-	private int timeToNotify = 12;					// Hours after midnight when to notify the user
-
+	private int mTimeToNotify;					// Hours after midnight when to notify the user
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -78,18 +80,21 @@ public class MainActivity extends FragmentActivity {
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
 		
-		// Set up notifying user to answer to the mood question
-		// The time to notify the user
-		GregorianCalendar notificationTime = new GregorianCalendar();
-		UtilityMethods.setToMidnight(notificationTime);
-		notificationTime.add(GregorianCalendar.HOUR, timeToNotify);
-		Intent notificationIntent = new Intent(this, NotificationService.class);
-		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		mTimeToNotify = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, "12"));
 		
-		// An alarm manager for scheduling notifications
-		AlarmManager notificationManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		// Set the notification to repeat over the given time at notificationTime
-		notificationManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS), pendingNotificationIntent);
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_SEND_NOTIFICATIONS, true)) {
+			// Set up notifying user to answer to the mood question
+			// The time to notify the user
+			GregorianCalendar notificationTime = new GregorianCalendar();
+			UtilityMethods.setToMidnight(notificationTime);
+			notificationTime.add(GregorianCalendar.HOUR, mTimeToNotify);	
+			// An alarm manager for scheduling notifications
+			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			// Set the notification to repeat over the given time at notificationTime
+			Intent notificationIntent = new Intent(this, NotificationService.class);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(mTimeToNotify, TimeUnit.HOURS), pendingNotificationIntent);
+		}
 	}
 
 	@Override
@@ -97,6 +102,17 @@ public class MainActivity extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_screen, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_settings: 
+			Intent intent = new Intent(this, SettingsActivity.class);
+			startActivity(intent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	/**

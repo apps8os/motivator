@@ -43,11 +43,22 @@
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" >
     </TextView>
+    
+    <TextView
+        android:id="@+id/mood_question_energylevel_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mood_question_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text=""
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <android.support.v4.view.ViewPager
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mood_question_viewpager_cards"
-        android:layout_below="@+id/mood_question_title"
+        android:layout_below="@+id/mood_question_energylevel_textview"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignLeft="@+id/mood_question_next_button"
@@ -68,22 +79,12 @@
     </android.support.v4.view.ViewPager>
 
     <TextView
-        android:id="@+id/mood_question_energylevel_textview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/mood_question_viewpager_cards2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:text=""
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
         android:id="@+id/mood_question_moodlevel_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/mood_question_energylevel_textview"
+        android:layout_below="@+id/mood_question_viewpager_cards2"
+        android:layout_marginTop="24dp"
         android:text=""
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />

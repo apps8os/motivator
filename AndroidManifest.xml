@@ -51,7 +51,10 @@
         <activity 
             android:name="org.apps8os.motivator.ui.AddingGoalActivity"
             android:parentActivityName="org.apps8os.motivator.ui.MainActivity" ></activity>
-        <service android:name=".services.NotificationService"></service>
+        <service android:name="org.apps8os.motivator.services.NotificationService"></service>
+        <activity 
+            android:name="org.apps8os.motivator.ui.SettingsActivity"
+            android:parentActivityName="org.apps8os.motivator.ui.MainActivity"></activity>
     </application>
 
 </manifest>

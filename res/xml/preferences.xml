@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <CheckBoxPreference
+        android:key="send_notifications"
+        android:defaultValue="true"
+        android:title="@string/send_notifications"
+        android:persistent="true" />
+    <ListPreference 
+        android:key="minimum_notification_interval"
+        android:dependency="send_notifications"
+        android:title="@string/minimum_notification_interval"
+        android:dialogTitle="@string/minimum_notification_interval"
+        android:entries="@array/notification_intervals_strings"
+        android:entryValues="@array/notification_intervals_strings"
+        android:defaultValue="@string/default_interval"/>
+</PreferenceScreen>

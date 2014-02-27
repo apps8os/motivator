@@ -17,6 +17,8 @@
 -->
 <resources>
 
+    <string name="default_interval">"12"</string>
+    
     <string name="app_name">Motivator</string>
     <string name="action_settings">Settings</string>
     <string name="title_section1">History</string>
@@ -39,5 +41,7 @@
     <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
     <string name="add_goal">Add goal</string>
     <string name="this_weekend">This weekend</string>
+    <string name="send_notifications">Send notifications?</string>
+    <string name="minimum_notification_interval">Minimum notification interval</string>
 
 </resources>

@@ -18,8 +18,11 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.services.NotificationService;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -105,6 +108,8 @@ public class MoodQuestionActivity extends Activity {
         		saveMood(v);
         	}
         });
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
 	}
 	
 	@Override

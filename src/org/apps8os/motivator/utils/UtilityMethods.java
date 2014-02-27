@@ -2,6 +2,7 @@ package org.apps8os.motivator.utils;
 
 import java.util.Calendar;
 
+
 /**
  * Holds a set of static methods used in different classes.
  * @author Toni Järvinen

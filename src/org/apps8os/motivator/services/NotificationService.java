@@ -1,7 +1,6 @@
 package org.apps8os.motivator.services;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.ui.MainActivity;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 
 import android.app.NotificationManager;
@@ -19,6 +18,8 @@ import android.support.v4.app.TaskStackBuilder;
  *
  */
 public class NotificationService extends Service {
+	
+	public final static int NOTIFICATION_ID_MOOD = 10;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -42,6 +43,7 @@ public class NotificationService extends Service {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentTitle(getString(R.string.today_screen_mood));
 		builder.setSmallIcon(R.drawable.ic_launcher);
+		builder.setTicker(getString(R.string.today_screen_mood));
 		// Remove the notification when the user clicks it.
 		builder.setAutoCancel(true);
 		
@@ -54,7 +56,7 @@ public class NotificationService extends Service {
 		PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(pendingResultIntent);
 		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		manager.notify(0, builder.build());
+		manager.notify(NOTIFICATION_ID_MOOD, builder.build());
 		
 		// Stop the service after the notification has been sent
 		stopSelf();
