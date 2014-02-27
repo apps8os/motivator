@@ -57,13 +57,16 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 		// An alarm manager for scheduling notifications
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		
+		// Check if we need to send notifications or not.
 		if (key.equals(KEY_SEND_NOTIFICATIONS)) {
 			if (sharedPreferences.getBoolean(key, true)) {
 				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(mTimeToNotify, TimeUnit.HOURS), pendingNotificationIntent);
 			} else {
 				alarmManager.cancel(pendingNotificationIntent);
 			}
-		} else if (key.equals(KEY_NOTIFICATION_INTERVAL)) {
+		} 
+		// Check if the interval has changed and update the repeating alarm
+		else if (key.equals(KEY_NOTIFICATION_INTERVAL)) {
 			mTimeToNotify = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, "12"));
 			alarmManager.cancel(pendingNotificationIntent);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(mTimeToNotify, TimeUnit.HOURS), pendingNotificationIntent);

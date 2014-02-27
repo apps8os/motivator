@@ -16,17 +16,44 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string-array name="adding_event1">
-        <item >Milloin?</item>
-        <item >Tänään</item>
-        <item >Huomenna</item>
-        <item >Ensi viikonloppuna</item>
+    <string name="event_question_1">Milloin?</string>
+    <string name="event_question_1_answer_1">Tänään</string>
+    <string name="event_question_1_answer_2">Huomenna</string>
+    <string name="event_question_1_answer_3">Ensi viikonloppuna</string>
+    
+    <string name="event_question_2">Missä?</string>
+    <string name="event_question_2_answer_1">Kotona</string>
+    <string name="event_question_2_answer_2">Kaverin luona</string>
+    <string name="event_question_2_answer_3">Baarissa</string>
+    
+    <string name="event_question_3">Monen aikaan menet?</string>
+    <string name="event_question_3_answer_1">Ennen iltakuutta</string>
+    <string name="event_question_3_answer_2">Iltakuuden ja -yhdeksän välissä</string>
+    <string name="event_question_3_answer_3">Iltayhdeksän jälkeen</string>
+    
+    <string-array name="id1000">
+        <item >@string/event_question_1</item>
+        <item >@string/event_question_1_answer_1</item>
+        <item >@string/event_question_1_answer_2</item>
+        <item >@string/event_question_1_answer_3</item>
     </string-array>
-    <string-array name="adding_event2">
-        <item >Missä?</item>
-        <item >Kotona</item>
-        <item >Kaverilla</item>
-        <item >Baarissa</item>
+    <string-array name="id1001">
+        <item >@string/event_question_2</item>
+        <item >@string/event_question_2_answer_1</item>
+        <item >@string/event_question_2_answer_2</item>
+        <item >@string/event_question_2_answer_3</item>
+    </string-array>
+    <string-array name="id1002">
+        <item >@string/event_question_3</item>
+        <item >@string/event_question_3_answer_1</item>
+        <item >@string/event_question_3_answer_2</item>
+        <item >@string/event_question_3_answer_3</item>
+    </string-array>
+    
+    <string-array name="event_question_ids">
+        <item >id1000</item>
+        <item >id1001</item>
+        <item >id1002</item>
     </string-array>
     
     <integer name ="adding_event_amount">2</integer>

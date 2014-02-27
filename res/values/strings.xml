@@ -43,5 +43,6 @@
     <string name="this_weekend">This weekend</string>
     <string name="send_notifications">Send notifications?</string>
     <string name="minimum_notification_interval">Minimum notification interval</string>
+    <string name="cancel_event">Cancel event</string>
 
 </resources>

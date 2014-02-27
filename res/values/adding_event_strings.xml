@@ -16,19 +16,43 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string-array name="adding_event1">
-        <item >When?</item>
-        <item >Today</item>
-        <item >Tomorrow</item>
-        <item >Next weekend</item>
+    <string name="event_question_1">When?</string>
+    <string name="event_question_1_answer_1">Today</string>
+    <string name="event_question_1_answer_2">Tomorrow</string>
+    <string name="event_question_1_answer_3">Next weekend</string>
+    
+    <string name="event_question_2">Where?</string>
+    <string name="event_question_2_answer_1">Home</string>
+    <string name="event_question_2_answer_2">Friends home</string>
+    <string name="event_question_2_answer_3">Bar</string>
+    
+    <string name="event_question_3">At what time will you go?</string>
+    <string name="event_question_3_answer_1">Before 6pm</string>
+    <string name="event_question_3_answer_2">Between 6pm and 9pm</string>
+    <string name="event_question_3_answer_3">After 9pm</string>
+    
+    <string-array name="id1000">
+        <item >@string/event_question_1</item>
+        <item >@string/event_question_1_answer_1</item>
+        <item >@string/event_question_1_answer_2</item>
+        <item >@string/event_question_1_answer_3</item>
     </string-array>
-    <string-array name="adding_event2">
-        <item name="question">Where?</item>
-        <item >Home</item>
-        <item >Friends home</item>
-        <item >Bar</item>
+    <string-array name="id1001">
+        <item >@string/event_question_2</item>
+        <item >@string/event_question_2_answer_1</item>
+        <item >@string/event_question_2_answer_2</item>
+        <item >@string/event_question_2_answer_3</item>
+    </string-array>
+    <string-array name="id1002">
+        <item >@string/event_question_3</item>
+        <item >@string/event_question_3_answer_1</item>
+        <item >@string/event_question_3_answer_2</item>
+        <item >@string/event_question_3_answer_3</item>
     </string-array>
     
-    
-    <integer name ="adding_event_amount">2</integer>
+    <string-array name="event_question_ids">
+        <item >id1000</item>
+        <item >id1001</item>
+        <item >id1002</item>
+    </string-array>
 </resources>

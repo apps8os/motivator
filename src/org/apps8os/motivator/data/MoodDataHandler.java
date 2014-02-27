@@ -44,10 +44,12 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 		mQuestions = new SparseArray<Question>();
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
-		for (int i = 1; i <= res.getInteger(R.integer.mood_question_amount); i++) {
+		String[] moodQuestionIds =  res.getStringArray(R.array.mood_question_ids);
+		for (int i = 0; i < moodQuestionIds.length; i++) {
 			// String array of questions
-			String[] questionAndAnswers = res.getStringArray(res.getIdentifier("mood_question" + i, "array" , context.getPackageName()));
-			int id = i;
+			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(moodQuestionIds[i], "array", context.getPackageName()));
+			// discard the "id" part of the question id
+			int id = Integer.parseInt(moodQuestionIds[i].substring(2));
 			// Creation of new Question object and inserting it to the array.
 			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length));
 			mQuestions.put(id, question);
@@ -77,6 +79,14 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     
 	public Question getQuestion(int id) {
 		return mQuestions.get(id);
+	}
+	
+	public int getAmountOfQuestions() {
+		return mQuestions.size();
+	}
+	
+	public int getFirstQuestionId() {
+		return mQuestions.keyAt(0);
 	}
 	
 }

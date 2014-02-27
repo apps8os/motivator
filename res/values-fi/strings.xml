@@ -41,5 +41,6 @@
     <string name="this_weekend">Tänä viikonloppuna</string>
     <string name="send_notifications">Lähetä muistutuksia?</string>
     <string name="minimum_notification_interval">Pienin notifikaatioiden aikaväli</string>
+    <string name="cancel_event">Peru tapahtuma</string>
 
 </resources>

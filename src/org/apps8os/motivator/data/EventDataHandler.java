@@ -47,10 +47,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		mQuestions = new SparseArray<Question>();
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
-		for (int i = 1; i <= res.getInteger(R.integer.adding_event_amount); i++) {
+		String[] eventQuestionIds =  res.getStringArray(R.array.event_question_ids);
+		for (int i = 0; i < eventQuestionIds.length; i++) {
 			// String array of questions
-			String[] questionAndAnswers = res.getStringArray(res.getIdentifier("adding_event" + i, "array" , context.getPackageName()));
-			int id = i;
+			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(eventQuestionIds[i], "array", context.getPackageName()));
+			// discard the "id" part of the question id
+			int id = Integer.parseInt(eventQuestionIds[i].substring(2));
 			// Creation of new Question object and inserting it to the array.
 			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length));
 			mQuestions.put(id, question);
@@ -67,7 +69,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 */
 	public void insertAnswer(int answer, int questionId, int answersId) {
 		// Check if the question is the one asking when the event will be. (should be the first one)
-		if (questionId == 1) {
+		if (questionId == getFirstQuestionId()) {
 			// Initialize the cache calendar for today/now
 			mCalendarCache = new GregorianCalendar();
 			switch (answer) {
@@ -116,6 +118,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return query;
 	}
 	
+	/**
+	 * Used to get events that are today.
+	 * @return
+	 */
 	public Cursor getEventsToday() {
 		GregorianCalendar todayMidnight = new GregorianCalendar();
 		todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
@@ -136,6 +142,17 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return query;
 	}
 	
+	public Cursor getEventWithId(int id) {
+		String selection = KEY_ID_ANSWERS + " = " + id;
+		String[] columns = {KEY_ID_QUESTION, KEY_ANSWER};
+		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, null);
+		return query;
+	}
+	
+	public int getAmountOfQuestions() {
+		return mQuestions.size();
+	}
+	
 	public void deleteLastRow() {
     	super.deleteLastRow(TABLE_NAME);
 	}
@@ -143,4 +160,14 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public Question getQuestion(int id) {
 		return mQuestions.get(id);
 	}
+	
+	public int getFirstQuestionId() {
+		return mQuestions.keyAt(0);
+	}
+
+	public void deleteEvent(int mEventId) {
+		String selection = KEY_ID_ANSWERS + " = " + mEventId;
+		db.delete(TABLE_NAME, selection, null);
+	}
+	
 }

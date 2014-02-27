@@ -44,7 +44,7 @@ public class AddingEventActivity extends Activity {
 	private TextView mQuestionTextView;
 	private RadioGroup mAnswerGroupView;
 	private TextView mPromptMessageTextView;
-	private int mNumberOfQuestions = 2;
+	private int mNumberOfQuestions;
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
@@ -67,8 +67,9 @@ public class AddingEventActivity extends Activity {
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
 		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
+		mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
 		mAnswerId = incrementAnswersId();
-		mQuestionId = 0;
+		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
 		incrementQuestion(true);
 	}
 	

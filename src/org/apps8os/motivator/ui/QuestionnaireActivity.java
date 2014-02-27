@@ -45,7 +45,7 @@ public class QuestionnaireActivity extends Activity {
 	private TextView mQuestionTextView;
 	private RadioGroup mAnswerGroupView;
 	private TextView mPromptMessageTextView;
-	private int mNumberOfQuestions = 2;
+	private int mNumberOfQuestions;
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
@@ -70,7 +70,8 @@ public class QuestionnaireActivity extends Activity {
 		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
 		mAnswerId = incrementAnswersId();
-		mQuestionId = 0;
+		mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
+		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
 		incrementQuestion(true);
 	}
 	

@@ -16,16 +16,21 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string-array name="mood_question1">
+    <string-array name="id2000">
         <item >Joitko eilenä?</item>
         <item >En</item>
         <item >Kyllä</item>
     </string-array>
-    <string-array name="mood_question2">
+    <string-array name="id2001">
         <item >Oliko juomisesi ok?</item>
         <item >Ei</item>
         <item >Kyllä</item>
         <item >En tiedä</item>
+    </string-array>
+    
+    <string-array name="mood_question_ids">
+        <item >id2000</item>
+        <item >id2001</item>
     </string-array>
     
     <integer name ="mood_question_amount">2</integer>
