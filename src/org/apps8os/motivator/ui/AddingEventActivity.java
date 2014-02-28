@@ -131,7 +131,7 @@ public class AddingEventActivity extends Activity {
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mQuestionId > 1) {
+		if (mQuestionId != mDataHandler.getFirstQuestionId()) {
 			incrementQuestion(false);
 			mDataHandler.deleteLastRow();
 		} else {

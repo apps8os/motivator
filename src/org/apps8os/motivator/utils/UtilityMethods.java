@@ -4,11 +4,17 @@ import java.util.Calendar;
 
 
 /**
- * Holds a set of static methods used in different classes.
+ * Holds a set of static methods used in different classes. Not meant to be instanced.
  * @author Toni Järvinen
  *
  */
 public final class UtilityMethods {
+	
+	/**
+	 * Private empty constructor to make sure instancing this class induces an error.
+	 */
+	private UtilityMethods() {
+	}
 	
 	/**
 	 * Sets the calendar to midnight.
