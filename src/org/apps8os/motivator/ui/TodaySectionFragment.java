@@ -25,6 +25,7 @@ import org.apps8os.motivator.data.AnswerCase;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Question;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -39,7 +40,6 @@ import android.widget.LinearLayout;
 
 /**
  * Represents the today section in the UI.
- * TODO: Rewrite to do correct behavior
  */
 public class TodaySectionFragment extends Fragment {
 	
@@ -94,7 +94,7 @@ public class TodaySectionFragment extends Fragment {
 	 */
 	@Override
 	public void onResume() {
-		new LoadPlansTask().execute();
+		new LoadPlansTask(getActivity()).execute();
 		super.onResume();
 	}
 	
@@ -110,6 +110,12 @@ public class TodaySectionFragment extends Fragment {
 	 *
 	 */
 	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<AnswerCase>> {
+		
+		private Context mContext;
+
+		public LoadPlansTask(Context context) {
+			mContext = context;
+		}
 
 		/**
 		 * Load the events that are planned in background to an ArrayList of AnswerCase objects.
@@ -176,6 +182,7 @@ public class TodaySectionFragment extends Fragment {
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
 				eventButton.setText(result.get(i).getButtonText());
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getAnsweringId(), mContext));
 				mButtonLayout.addView(eventButton);
 				
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);

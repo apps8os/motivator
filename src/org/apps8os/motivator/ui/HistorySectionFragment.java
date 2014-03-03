@@ -18,6 +18,7 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,7 +49,8 @@ public class HistorySectionFragment extends Fragment {
 		moodButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//TODO
+				Intent intent = new Intent(getActivity(), MoodHistoryActivity.class);
+				startActivity(intent);
 			}
 		});
 		

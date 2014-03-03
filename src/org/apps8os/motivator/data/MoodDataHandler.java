@@ -23,6 +23,7 @@ import org.apps8os.motivator.R;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.util.SparseArray;
 
 /**
@@ -75,6 +76,19 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	values.put(KEY_MOODLEVEL, moodLevel);
     	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
     	db.insert(TABLE_NAME_MOOD, null, values);
+    }
+    
+    public int getMoodAmount() {
+    	String[] columns = {KEY_TIMESTAMP};
+    	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , null, null, null, null, null);
+    	return cursor.getCount();
+    }
+    
+    public int getGoodMoodsAmount() {
+    	String selection = KEY_MOODLEVEL + " > " + 1;
+    	String[] columns = {KEY_TIMESTAMP};
+    	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , selection, null, null, null, null);
+    	return cursor.getCount();
     }
     
 	public Question getQuestion(int id) {

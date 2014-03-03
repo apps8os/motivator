@@ -96,6 +96,10 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		db = this.getWritableDatabase();
 	}
 	
+	public boolean isOpen() {
+		return db.isOpen();
+	}
+	
 	/**
 	 * Delete last row from the given table. Call this from subclass.
 	 * @param tableName
