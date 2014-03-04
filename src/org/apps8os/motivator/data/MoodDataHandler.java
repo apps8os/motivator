@@ -81,14 +81,18 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     public int getMoodAmount() {
     	String[] columns = {KEY_TIMESTAMP};
     	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , null, null, null, null, null);
-    	return cursor.getCount();
+    	int amount = cursor.getCount();
+    	cursor.close();
+    	return amount;
     }
     
     public int getGoodMoodsAmount() {
     	String selection = KEY_MOODLEVEL + " > " + 1;
     	String[] columns = {KEY_TIMESTAMP};
     	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , selection, null, null, null, null);
-    	return cursor.getCount();
+    	int amount = cursor.getCount();
+    	cursor.close();
+    	return amount;
     }
     
 	public Question getQuestion(int id) {

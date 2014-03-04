@@ -82,13 +82,6 @@ public class TodaySectionFragment extends Fragment {
 		return rootView;
 	}
 	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mDataHandler = new EventDataHandler(getActivity());
-		mDataHandler.open();
-	}
-	
 	/**
 	 * Update the events for today on resume with an async task.
 	 */
@@ -96,12 +89,6 @@ public class TodaySectionFragment extends Fragment {
 	public void onResume() {
 		new LoadPlansTask(getActivity()).execute();
 		super.onResume();
-	}
-	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
 	}
 	
 	/**
@@ -115,6 +102,10 @@ public class TodaySectionFragment extends Fragment {
 
 		public LoadPlansTask(Context context) {
 			mContext = context;
+			
+			// Open the database connection
+			mDataHandler = new EventDataHandler(getActivity());
+			mDataHandler.open();
 		}
 
 		/**
@@ -166,6 +157,10 @@ public class TodaySectionFragment extends Fragment {
 					}
 				}
 			});
+			
+			// Lastly close the database connection
+			mDataHandler.close();
+			
 			return result;
 		}
 		
@@ -188,6 +183,7 @@ public class TodaySectionFragment extends Fragment {
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
 				mButtonLayout.addView(separator);
 			}
+			
 		}
 	}
 }

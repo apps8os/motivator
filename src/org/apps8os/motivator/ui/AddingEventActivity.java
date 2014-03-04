@@ -159,7 +159,7 @@ public class AddingEventActivity extends Activity {
 
 				mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId);
 
-				// Determine if we have already asked enough questions
+				// Determine if the questionnaire is done
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
 				} else {								

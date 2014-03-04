@@ -89,8 +89,7 @@ public class PlanSectionFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mDataHandler = new EventDataHandler(getActivity());
-		mDataHandler.open();
+
 	}
 	
 	/**
@@ -120,6 +119,10 @@ public class PlanSectionFragment extends Fragment {
 		public LoadPlansTask(Context context) {
 			super();
 			mContext = context;
+			
+			// Open the database connection
+			mDataHandler = new EventDataHandler(getActivity());
+			mDataHandler.open();
 		}
 
 		/**
@@ -164,6 +167,10 @@ public class PlanSectionFragment extends Fragment {
 					}
 				}
 			});
+			
+			// lastly close the database connection
+			mDataHandler.close();
+			
 			return result;
 		}
 		
