@@ -48,7 +48,7 @@ public class MoodQuestionActivity extends Activity {
 	
 	private int[] mImages1 = {
             R.drawable.temp_emoticon_top, R.drawable.temp_emoticon_top,
-            R.drawable.temp_emoticon_top 
+            R.drawable.temp_emoticon_top
             };
 	
 	 private int[] mImages2 = {

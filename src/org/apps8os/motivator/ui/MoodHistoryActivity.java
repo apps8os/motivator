@@ -9,11 +9,19 @@ import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 /**
- * Represents the mood history of the user
+ * Represents the mood history of the user by day.
  * @author Toni Järvinen
  *
  */
@@ -21,71 +29,54 @@ import android.widget.RelativeLayout;
 public class MoodHistoryActivity extends Activity {
 	
 	private MoodDataHandler mDataHandler;
-	
-	private static final int MAX_IMAGE_SIZE = 250;
+	private LayoutInflater mInflater;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_mood_history);
-	    Resources res = getResources();
 	    
-	    // TODO: Replace below with correct implementation
+	    mInflater = getLayoutInflater();
+	    ViewPager viewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
+	    DatePagerAdapter pagerAdapter = new DatePagerAdapter();
 	    
-	    mDataHandler = new MoodDataHandler(this);
-	    mDataHandler.open();
-	    float moodAmount = mDataHandler.getMoodAmount();
-	    float goodMoodAmount = mDataHandler.getGoodMoodsAmount();
+	    viewPager.setAdapter(pagerAdapter);
 	    
-	    if (moodAmount == 0) {
-	    	moodAmount = 1;
-	    }
+	    viewPager.setCurrentItem(2);
 	    
-	    // Scale for the display
-        final float scale = res.getDisplayMetrics().density;
-        int maxSize = (int) (MAX_IMAGE_SIZE * scale + 0.5f);
-        
-        // Get a ration from 0.0 to 1.0 of how many times the user was in good mood.
-        float goodMoodRatio = (goodMoodAmount / moodAmount);
-        
-        // Set the image width with the ratio
-	    int imageWidth = (int) (goodMoodRatio * maxSize);
 	    
-	    ImageView mood1 = new ImageView(this);
-	    mood1.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon));
-	    LayoutParams imageParams = new LayoutParams(imageWidth, imageWidth);
-	    mood1.setLayoutParams(imageParams);
-	    
-	    // Scale the location based on the ratio
-	    mood1.setX(50/goodMoodRatio * scale);
-	    mood1.setY(100 * scale);
-	    
-	    RelativeLayout view = (RelativeLayout) findViewById(R.id.activity_mood_history);
-	    view.addView(mood1);
-	    
-	    // Do the same as above but for not good moods.
-	    imageWidth = (int) ((1 - goodMoodRatio) * maxSize);
-	    ImageView mood2 = new ImageView(this);
-	    mood2.setImageDrawable(res.getDrawable(R.drawable.ic_launcher));
-	    imageParams = new LayoutParams(imageWidth, imageWidth);
-	    mood2.setLayoutParams(imageParams);
-	    mood2.setX(50/(1 - goodMoodRatio) * scale);
-	    mood2.setY(300 * scale);
-	   
-	    view.addView(mood2);
 	}
 	
-	public void onResume() {
-		if (!mDataHandler.isOpen()) {
-			mDataHandler.open();
+	private class DatePagerAdapter extends PagerAdapter {
+
+		@Override
+		public int getCount() {
+			return 3;
 		}
-		super.onResume();
-	}
-	
-	public void onStop() {
-		mDataHandler.close();
-		super.onStop();
+		
+		@Override
+		public Object instantiateItem(ViewGroup viewGroup, int position) {
+			ScrollView dateLayout = (ScrollView) mInflater.inflate(R.layout.element_mood_history_day_view, null);
+			LinearLayout innerLayout = (LinearLayout) dateLayout.getChildAt(0);
+			TextView title = (TextView) innerLayout.getChildAt(0);
+			title.setText("21.03.2013");
+			TextView comment = (TextView) innerLayout.getChildAt(2);
+			comment.setText("Paras päivä koskaan!");
+			viewGroup.addView(dateLayout);
+			return dateLayout;
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view == object;
+		}
+		
+		@Override
+		public void destroyItem(ViewGroup viewGroup, int position, Object object) {
+			viewGroup.removeView((View) object);
+		}
+		
 	}
 
 }
