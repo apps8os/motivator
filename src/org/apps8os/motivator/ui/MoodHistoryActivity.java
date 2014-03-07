@@ -27,6 +27,7 @@ import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -40,8 +41,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
- * Represents the mood history of the user by day. Here, previous day does not mean calendar day but rather
- * previous day with records on database.
+ * Represents the mood history of the user. In this activity, the functionality and layout
+ * changes based on the orientation. Portrait orientation has the mood history of the user by day.
+ * Here , previous day does not mean calendar day but rather previous day with records on database.
  * @author Toni Järvinen
  *
  */
@@ -54,28 +56,80 @@ public class MoodHistoryActivity extends Activity {
 	private DatePagerAdapter mPagerAdapter;
 	private DayInHistory mLastDay;
 	private int mSelectedItem;
+	
+	private boolean mLoadedFirst = false;
+	
+	private ArrayList<View> dateViews = new ArrayList<View>();
+	private ArrayList<String> viewTitles = new ArrayList<String>();
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.activity_mood_history);
-	    
-	    
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
+	    // Load correct layout and functionality based on orientation
+	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+	    	loadPortraitView();
+	    } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	    	loadLandscapeView();
+	    }
 	    
-	    mInflater = getLayoutInflater();
+	}
+	
+	/**
+	 * Loading different view when orientation is portrait or landscape.
+	 */
+	@Override 
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			loadPortraitView();
+		} else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			loadLandscapeView();
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		mDataHandler.open();
+		super.onResume();
+	}
+	
+	@Override
+	public void onStop() {
+		mDataHandler.close();
+		super.onStop();
+	}
+	
+	/**
+	 * Loads the views and funtionality for landscape orientation.
+	 * TODO: Functionality, DUMMY calendar currently
+	 */
+	public void loadLandscapeView() {
+		setContentView(R.layout.activity_mood_history_landscape);
+	}
+	
+	/**
+	 * Loads the views and functionality for portrait orientation.
+	 * In portrait view, days are represented in a horizontially scrollable carousel.
+	 */
+	public void loadPortraitView() {
+	    setContentView(R.layout.activity_mood_history);
+		mInflater = getLayoutInflater();
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
 	    mPagerAdapter = new DatePagerAdapter(this);
 	    mViewPager.setAdapter(mPagerAdapter);
-	    mViewPager.setCurrentItem(0);
+	    mViewPager.setCurrentItem(mSelectedItem);
 	    mViewPager.setOffscreenPageLimit(3);
 	    
-	    // Initialize the first days to be from today.
-		Calendar tomorrow = new GregorianCalendar();
-	    tomorrow.add(Calendar.DATE, 1);
-	    loadSetOfDaysFrom(tomorrow);
+	    if (!mLoadedFirst) {
+		    // Initialize the first days to be from today.
+			Calendar tomorrow = new GregorianCalendar();
+		    tomorrow.add(Calendar.DATE, 1);
+		    loadSetOfDaysFrom(tomorrow);
+		    mLoadedFirst = true;
+	    }
 	    
 	    // Set an anonymous implementation of onPageChangeListener to load more pages when needed.
 	    mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -92,25 +146,13 @@ public class MoodHistoryActivity extends Activity {
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// Load 3 or less more pages if we are at the end already.
-				if (mSelectedItem == mPagerAdapter.getCount() - 1 && mLastDay != null) {
+				if (mSelectedItem == mPagerAdapter.getCount() - 2 && mLastDay != null) {
 					loadSetOfDaysFrom(mLastDay.getDate());
 				} else {
 				}
 			}
 			
 		});
-	}
-	
-	@Override
-	public void onResume() {
-		mDataHandler.open();
-		super.onResume();
-	}
-	
-	@Override
-	public void onStop() {
-		mDataHandler.close();
-		super.onStop();
 	}
 	/**
 	 * Gets the previous DayInHistory with moods prior to the parameter currentDay.
@@ -186,6 +228,8 @@ public class MoodHistoryActivity extends Activity {
 	    }
 
 	}
+	
+	
 	/**
 	 * Adapter for the day viewpager.
 	 * @author Toni Järvinen
@@ -194,7 +238,7 @@ public class MoodHistoryActivity extends Activity {
 	private class DatePagerAdapter extends PagerAdapter {
 		
 		private Context mContext;
-		private ArrayList<View> dateViews = new ArrayList<View>();
+
 
 		public DatePagerAdapter(Context context) {
 			mContext = context;
@@ -209,6 +253,9 @@ public class MoodHistoryActivity extends Activity {
 		public Object instantiateItem(ViewGroup viewGroup, int position) {			
 			// Gets the view from the ArrayList and adds it to the group
 			View view = dateViews.get(position);
+			if (view.getParent() != null) {
+				((ViewGroup) view.getParent()).removeView(view);
+			}
 			viewGroup.addView(view);
 			return view;
 		}
@@ -223,15 +270,22 @@ public class MoodHistoryActivity extends Activity {
 			TextView comment = (TextView) innerLayout.getChildAt(2);
 			// Set default page if the day is null or set the content from day object if it exists.
 			if (day != null) {
-				title.setText(day.getDateInString(mContext));
+				viewTitles.add(day.getDateInString(mContext));
+				title.setText(R.string.your_mood);
 				// DUMMY
 				comment.setText("Paras päivä koskaan!");
 			} else {
 				// DUMMY
-				comment.setText("Answer more to the mood questions!");
+				viewTitles.add("");
+				comment.setText(R.string.last_mood);
 				comment.setGravity(Gravity.CENTER);
 			}
 			dateViews.add(dateLayout);
+		}
+		
+		@Override 
+		public CharSequence getPageTitle(int position) {
+			return viewTitles.get(position);
 		}
 
 		@Override
