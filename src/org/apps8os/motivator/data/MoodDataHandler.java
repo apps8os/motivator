@@ -17,8 +17,10 @@
 package org.apps8os.motivator.data;
 
 import java.util.Arrays;
+import java.util.Calendar;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -78,21 +80,63 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	db.insert(TABLE_NAME_MOOD, null, values);
     }
     
-    public int getMoodAmount() {
-    	String[] columns = {KEY_TIMESTAMP};
-    	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , null, null, null, null, null);
-    	int amount = cursor.getCount();
-    	cursor.close();
-    	return amount;
+    
+    /**
+     * Give the date, return cursor over moods from the previous date that had moods. Note: Not yesterday if it did
+     * not have any mood data recorded.
+     * @param date
+     * @return
+     */
+    public Cursor getPreviousMoodFrom(Calendar date) {
+    	Cursor query = null;
+    	boolean stop = false;
+		// Move the date back 1 day.
+		date.add(Calendar.DATE, -1);
+    	// Get the earliest timestamp to make sure we won't be stuck in the loop
+    	long earliestTimestamp = getEarliestMoodTimestamp();
+    	// Check if we found the date, if we already went past earliest data or if the table is empty
+    	while (!stop && earliestTimestamp < date.getTimeInMillis() && getMoodTableSize() > 0) {
+    		// Get the boundaries, Note that the getDayInMillis moves the given Calendar instance
+    		long boundaries[] = UtilityMethods.getDayInMillis(date);
+        	String selection = KEY_TIMESTAMP + " > " + boundaries[0] + " AND " + KEY_TIMESTAMP + " < " + boundaries[1];
+        	String columns[] = {KEY_ENERGYLEVEL, KEY_MOODLEVEL, KEY_TIMESTAMP};
+        	Cursor tempQuery = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+        	// Check if the query had a result, if it had, stop the loop and set the return value.
+        	if (tempQuery.getCount() > 0) {
+        		query = tempQuery;
+        		stop = true;
+        	} else {
+        		// Else, close the temporary query and move the date back 1 day.
+        		tempQuery.close();
+            	date.add(Calendar.DATE, -1);
+        	}
+    	}
+    	
+    	return query;
     }
     
-    public int getGoodMoodsAmount() {
-    	String selection = KEY_MOODLEVEL + " > " + 1;
-    	String[] columns = {KEY_TIMESTAMP};
-    	Cursor cursor = db.query(TABLE_NAME_MOOD, columns , selection, null, null, null, null);
-    	int amount = cursor.getCount();
-    	cursor.close();
-    	return amount;
+    /**
+     * Gets the earliest timestamp in the mood table.
+     * @return
+     */
+    public long getEarliestMoodTimestamp() {
+    	Cursor query = db.rawQuery("SELECT MIN(" + KEY_TIMESTAMP + ") FROM " + TABLE_NAME_MOOD, null);
+    	query.moveToFirst();
+    	long result = query.getLong(0);
+    	query.close();
+    	return result;
+    }
+    
+    /**
+     * Gets the size of the mood table.
+     * @return
+     */
+    public long getMoodTableSize() {
+    	String columns[] = {KEY_TIMESTAMP};
+    	Cursor query = db.query(TABLE_NAME_MOOD, columns, null, null, null, null, null);
+    	long size = query.getCount();
+    	query.close();
+    	return size;
     }
     
 	public Question getQuestion(int id) {

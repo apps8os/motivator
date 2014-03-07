@@ -28,5 +28,22 @@ public final class UtilityMethods {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar;
 	}
+	
+	/**
+	 * Returns the day boundaries on a 2 long millisecond values. Effectively the times 00:00:00 and 23:59:59
+	 * Returns array with earlier boundary as first value and later second. NOTE: This also sets the original
+	 * calendar instance to 1 23:59:59!
+	 * @param calendar
+	 * @return
+	 */
+	public static long[] getDayInMillis(Calendar calendar) {
+		UtilityMethods.setToMidnight(calendar);
+		long earlierBoundary = calendar.getTimeInMillis();
+    	calendar.add(Calendar.DATE, 1);
+    	calendar.add(Calendar.MILLISECOND, -1);
+    	long laterBoundary = calendar.getTimeInMillis();
+    	long result[] = {earlierBoundary, laterBoundary};
+    	return result;
+	}
 
 }
