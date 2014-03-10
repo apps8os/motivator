@@ -18,6 +18,7 @@ package org.apps8os.motivator.data;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.utils.UtilityMethods;
@@ -84,45 +85,50 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     /**
      * Give the date, return cursor over moods from the previous date that had moods. Note: Not yesterday if it did
      * not have any mood data recorded.
-     * @param date
      * @return
      */
-    public Cursor getPreviousMoodFrom(Calendar date) {
+    public Cursor getPreviousMoodFrom(long timeStamp) {
     	Cursor query = null;
-    	boolean stop = false;
-		// Move the date back 1 day.
-		date.add(Calendar.DATE, -1);
-    	// Get the earliest timestamp to make sure we won't be stuck in the loop
-    	long earliestTimestamp = getEarliestMoodTimestamp();
-    	// Check if we found the date, if we already went past earliest data or if the table is empty
-    	while (!stop && earliestTimestamp < date.getTimeInMillis() && getMoodTableSize() > 0) {
-    		// Get the boundaries, Note that the getDayInMillis moves the given Calendar instance
-    		long boundaries[] = UtilityMethods.getDayInMillis(date);
-        	String selection = KEY_TIMESTAMP + " > " + boundaries[0] + " AND " + KEY_TIMESTAMP + " < " + boundaries[1];
-        	String columns[] = {KEY_ENERGYLEVEL, KEY_MOODLEVEL, KEY_TIMESTAMP};
-        	Cursor tempQuery = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
-        	// Check if the query had a result, if it had, stop the loop and set the return value.
-        	if (tempQuery.getCount() > 0) {
-        		query = tempQuery;
-        		stop = true;
-        	} else {
-        		// Else, close the temporary query and move the date back 1 day.
-        		tempQuery.close();
-            	date.add(Calendar.DATE, -1);
-        	}
-    	}
     	
-    	return query;
+    	// Get the time stamp for the next mood data from the given timestamp.
+    	long nextMood = getNextMoodTimestamp(timeStamp);
+    	
+    	// If one was not found, return null
+    	if (nextMood == 0) {
+    		return null;
+    	}
+    	// Create a Calendar object for the nextMood timestamp.
+    	Calendar date = new GregorianCalendar();
+    	date.setTimeInMillis(nextMood);
+    	// Get the day boundaries for the day.
+    	long[] boundaries = UtilityMethods.getDayInMillis(date);
+    	
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
+    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
+    	query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	
+    	if (query.moveToFirst()) {
+    		return query;
+    	} else {
+    		return null;
+    	}
     }
     
     /**
-     * Gets the earliest timestamp in the mood table.
+     * Gets the next latest mood data from the given timestamp.
+     * @param fromTimestamp
      * @return
      */
-    public long getEarliestMoodTimestamp() {
-    	Cursor query = db.rawQuery("SELECT MIN(" + KEY_TIMESTAMP + ") FROM " + TABLE_NAME_MOOD, null);
-    	query.moveToFirst();
-    	long result = query.getLong(0);
+    public long getNextMoodTimestamp(long fromTimestamp) {
+    	String selection = KEY_TIMESTAMP + " < " + fromTimestamp;
+    	String columns[] = {KEY_TIMESTAMP};
+    	Cursor query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, KEY_TIMESTAMP);
+    	long result;
+    	if (query.moveToLast()) {
+    		result = query.getLong(0);
+    	} else {
+    		result = 0;
+    	}
     	query.close();
     	return result;
     }

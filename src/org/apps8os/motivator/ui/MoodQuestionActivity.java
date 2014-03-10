@@ -93,7 +93,7 @@ public class MoodQuestionActivity extends Activity {
         
         setViewPager(mCardsViewPagerMood);
         
-        // Get the textfield for energy level
+        // Get the text field for energy level
         mMoodLevelText = (TextView) findViewById(R.id.mood_question_moodlevel_textview);
         mMoodLevelText.setText(mCardsViewPagerMood.getAdapter().getPageTitle(DEFAULT_MOOD_SELECTION));
         

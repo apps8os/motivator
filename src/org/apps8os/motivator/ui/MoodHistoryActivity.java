@@ -25,6 +25,7 @@ import java.util.GregorianCalendar;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -125,9 +126,8 @@ public class MoodHistoryActivity extends Activity {
 	    
 	    if (!mLoadedFirst) {
 		    // Initialize the first days to be from today.
-			Calendar tomorrow = new GregorianCalendar();
-		    tomorrow.add(Calendar.DATE, 1);
-		    loadSetOfDaysFrom(tomorrow);
+			Calendar now = new GregorianCalendar();
+		    loadSetOfDaysFrom(now.getTimeInMillis());
 		    mLoadedFirst = true;
 	    }
 	    
@@ -147,7 +147,7 @@ public class MoodHistoryActivity extends Activity {
 			public void onPageScrollStateChanged(int arg0) {
 				// Load 3 or less more pages if we are at the end already.
 				if (mSelectedItem == mPagerAdapter.getCount() - 2 && mLastDay != null) {
-					loadSetOfDaysFrom(mLastDay.getDate());
+					loadSetOfDaysFrom(mLastDay.getDateInMillis());
 				} else {
 				}
 			}
@@ -163,7 +163,7 @@ public class MoodHistoryActivity extends Activity {
 		if ( currentDay == null ) {
 			return null;
 		}
-		Cursor previousMoods = mDataHandler.getPreviousMoodFrom(currentDay.getDate());
+		Cursor previousMoods = mDataHandler.getPreviousMoodFrom(currentDay.getDateInMillis());
 		if (previousMoods == null) {
 			return null;
 		} else {
@@ -186,11 +186,11 @@ public class MoodHistoryActivity extends Activity {
 	
 	/**
 	 * Initializes the first 3 instances of DayInHistory to mDays array.
-	 * Gets 3 latest days with mood answers.
+	 * Gets 3 days that have mood data from the given timestamp.
 	 */
-	private void loadSetOfDaysFrom(Calendar calendar) {
+	private void loadSetOfDaysFrom(long timeStamp) {
 	    // Get a cursor with latest moods for today.
-	    Cursor latestMoods = mDataHandler.getPreviousMoodFrom(calendar);
+	    Cursor latestMoods = mDataHandler.getPreviousMoodFrom(timeStamp);
 	    DayInHistory latestDayWithMoods = null;
 	    // Check if we do not have any moods.
 	    if (latestMoods != null) {

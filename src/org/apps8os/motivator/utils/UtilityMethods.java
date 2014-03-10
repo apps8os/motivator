@@ -56,7 +56,6 @@ public final class UtilityMethods {
 		UtilityMethods.setToMidnight(calendar);
 		long earlierBoundary = calendar.getTimeInMillis();
     	calendar.add(Calendar.DATE, 1);
-    	calendar.add(Calendar.MILLISECOND, -1);
     	long laterBoundary = calendar.getTimeInMillis();
     	long result[] = {earlierBoundary, laterBoundary};
     	return result;

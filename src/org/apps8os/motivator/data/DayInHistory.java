@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.apps8os.motivator.utils.UtilityMethods;
+
 import android.content.Context;
 
 /**
@@ -38,13 +40,13 @@ public class DayInHistory {
 	private String mComment;
 	private Calendar mDate;
 	/**
-	 * Create an instance. Here dayInMillis is usually the earliest timestamp of a certain day and it
-	 * comes from a cursor over a database.
+	 * Create an instance. Here dayInMillis is the midnight of the day represented by this instance.
 	 * @param dayInMillis
 	 */
 	public DayInHistory(long dayInMillis) {
 		mDate = new GregorianCalendar();
 		mDate.setTimeInMillis(dayInMillis);
+		mDate = UtilityMethods.setToMidnight(mDate);
 	}
 	
 	public void addMoodLevel(int moodLevel) {
@@ -102,7 +104,7 @@ public class DayInHistory {
 	}
 	
 	
-	public Calendar getDate() {
-		return mDate;
+	public long getDateInMillis() {
+		return mDate.getTimeInMillis();
 	}
 }

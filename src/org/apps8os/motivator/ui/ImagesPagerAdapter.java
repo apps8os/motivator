@@ -21,6 +21,7 @@ import org.apps8os.motivator.R;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class ImagesPagerAdapter extends PagerAdapter  {
     private int[] mTitles;
     private Resources mResources;
     private Context mContext;
+    private LayoutInflater mInflater;
  
    
     public ImagesPagerAdapter(int[] images, Context context) {
@@ -43,6 +45,7 @@ public class ImagesPagerAdapter extends PagerAdapter  {
     	mImages = images;
     	mContext = context;
     	mResources = context.getResources();
+    	mInflater = LayoutInflater.from(context);
     }
     
     public ImagesPagerAdapter(int[] images, int[] titles, Context context) {
@@ -72,7 +75,7 @@ public class ImagesPagerAdapter extends PagerAdapter  {
     @Override
     public Object instantiateItem(ViewGroup viewGroup, int position) {
     	// Get the ImageView by inflating it from layout xml
-        ImageView carouselImage = (ImageView) View.inflate(viewGroup.getContext(), R.layout.element_mood_selection_image, null);
+        ImageView carouselImage = (ImageView) mInflater.inflate(R.layout.element_mood_selection_image, viewGroup, false);
         
         // Set the correct image and a tag for the position
         carouselImage.setImageDrawable(mResources.getDrawable(mImages[position]));
