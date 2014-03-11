@@ -32,11 +32,11 @@ import android.content.Context;
  */
 public class DayInHistory {
 	
-	private int mMoodSum;
-	private int mMoodAmount;
-	private int mEnergySum;
-	private int mEnergyAmount;
-	private int mAlcoholDrinks;
+	private int mMoodSum = 0;
+	private int mMoodAmount = 0;
+	private int mEnergySum = 0;
+	private int mEnergyAmount = 0;
+	private int mAlcoholDrinks = 0;
 	private String mComment;
 	private Calendar mDate;
 	/**
@@ -103,8 +103,15 @@ public class DayInHistory {
 		return sdf.format(mDate.getTime());
 	}
 	
-	
+	/**
+	 * Gets the date in milliseconds.
+	 * @return
+	 */
 	public long getDateInMillis() {
 		return mDate.getTimeInMillis();
+	}
+	
+	public Calendar getDate() {
+		return mDate;
 	}
 }

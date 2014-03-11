@@ -38,6 +38,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -54,21 +55,31 @@ public class MoodHistoryActivity extends Activity {
 	private MoodDataHandler mDataHandler;
 	private LayoutInflater mInflater;
 	private ViewPager mViewPager;
-	private DatePagerAdapter mPagerAdapter;
+	private DatePagerAdapter mPagerAdapterDay;
+	private WeekPagerAdapter mPagerAdapterWeek;
 	private DayInHistory mLastDay;
+	private Calendar mLatestWeekEnd;
 	private int mSelectedItem;
 	
 	private boolean mLoadedFirst = false;
+	private boolean mLoadedFirstLandscape = false;
 	
 	private ArrayList<View> dateViews = new ArrayList<View>();
 	private ArrayList<String> viewTitles = new ArrayList<String>();
+	
+	private ArrayList<View> weekViews = new ArrayList<View>();
+	private ArrayList<String> weekTitles = new ArrayList<String>();
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    setContentView(R.layout.activity_mood_history);
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
+		mInflater = getLayoutInflater();
+		
+	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
 	    // Load correct layout and functionality based on orientation
 	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 	    	loadPortraitView();
@@ -108,7 +119,18 @@ public class MoodHistoryActivity extends Activity {
 	 * TODO: Functionality, DUMMY calendar currently
 	 */
 	public void loadLandscapeView() {
-		setContentView(R.layout.activity_mood_history_landscape);
+		mPagerAdapterWeek = new WeekPagerAdapter(this);
+		mViewPager.setAdapter(mPagerAdapterWeek);
+		
+	    if (!mLoadedFirstLandscape) {
+		    // Initialize the first days to be from today.
+			mLatestWeekEnd = new GregorianCalendar();
+		    mLoadedFirstLandscape = true;
+		    for (int i = 0; i < 3; i++) {
+		    	mPagerAdapterWeek.addPreviousWeek();
+		    	mPagerAdapterWeek.notifyDataSetChanged();
+		    }
+	    }
 	}
 	
 	/**
@@ -116,11 +138,8 @@ public class MoodHistoryActivity extends Activity {
 	 * In portrait view, days are represented in a horizontially scrollable carousel.
 	 */
 	public void loadPortraitView() {
-	    setContentView(R.layout.activity_mood_history);
-		mInflater = getLayoutInflater();
-	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
-	    mPagerAdapter = new DatePagerAdapter(this);
-	    mViewPager.setAdapter(mPagerAdapter);
+	    mPagerAdapterDay = new DatePagerAdapter(this);
+	    mViewPager.setAdapter(mPagerAdapterDay);
 	    mViewPager.setCurrentItem(mSelectedItem);
 	    mViewPager.setOffscreenPageLimit(3);
 	    
@@ -146,13 +165,29 @@ public class MoodHistoryActivity extends Activity {
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// Load 3 or less more pages if we are at the end already.
-				if (mSelectedItem == mPagerAdapter.getCount() - 2 && mLastDay != null) {
+				if (mSelectedItem == mPagerAdapterDay.getCount() - 2 && mLastDay != null) {
 					loadSetOfDaysFrom(mLastDay.getDateInMillis());
 				} else {
 				}
 			}
 			
 		});
+	}
+	
+	private DayInHistory getDateWithMoods(long dayInMillis, Cursor cursor) {
+		// Initialize the DayInHistory object with the first timestamp on the constructor.
+	    DayInHistory previousDayWithMoods = new DayInHistory(dayInMillis);
+	    // Add all moods to the DayInHistory object.
+	    while (cursor != null && !cursor.isClosed()) {
+	    	previousDayWithMoods.addMoodLevel(cursor.getInt(0));
+	    	previousDayWithMoods.addEnergyLevel(cursor.getInt(1));
+	    	if (cursor.isLast()) {
+	    		cursor.close();
+	    	} else {
+	    		cursor.moveToNext();
+	    	}
+	    }
+	    return previousDayWithMoods;
 	}
 	/**
 	 * Gets the previous DayInHistory with moods prior to the parameter currentDay.
@@ -169,17 +204,7 @@ public class MoodHistoryActivity extends Activity {
 		} else {
 			previousMoods.moveToFirst();
 			// Initialize the DayInHistory object with the first timestamp on the constructor.
-		    DayInHistory previousDayWithMoods = new DayInHistory(previousMoods.getLong(2));
-		    // Add all moods to the DayInHistory object.
-		    while (!previousMoods.isClosed()) {
-		    	previousDayWithMoods.addMoodLevel(previousMoods.getInt(0));
-		    	previousDayWithMoods.addEnergyLevel(previousMoods.getInt(1));
-		    	if (previousMoods.isLast()) {
-		    		previousMoods.close();
-		    	} else {
-		    		previousMoods.moveToNext();
-		    	}
-		    }
+		    DayInHistory previousDayWithMoods = getDateWithMoods(previousMoods.getLong(2), previousMoods);
 		    return previousDayWithMoods;
 		}
 	}
@@ -195,38 +220,26 @@ public class MoodHistoryActivity extends Activity {
 	    // Check if we do not have any moods.
 	    if (latestMoods != null) {
 		    latestMoods.moveToFirst();
-		    latestDayWithMoods = new DayInHistory(latestMoods.getLong(2));
-		    // Get all the moods of the day.
-		    while (!latestMoods.isClosed()) {
-		    	latestDayWithMoods.addMoodLevel(latestMoods.getInt(0));
-		    	latestDayWithMoods.addEnergyLevel(latestMoods.getInt(1));
-		    	if (latestMoods.isLast()) {
-		    		latestMoods.close();
-		    	} else {
-		    		latestMoods.moveToNext();
-		    	}
-		    }
+		    latestDayWithMoods = getDateWithMoods(latestMoods.getLong(2), latestMoods);;
 	    }
-	    
 	    // Add the days to the adapter. If null, don't add more than one null page.
-	    mPagerAdapter.addDay(latestDayWithMoods);
+	    mPagerAdapterDay.addDay(latestDayWithMoods);
 	    if (latestDayWithMoods == null) {
-	    	mPagerAdapter.notifyDataSetChanged();
+	    	mPagerAdapterDay.notifyDataSetChanged();
 		    mLastDay = latestDayWithMoods;
 	    } else {
 		    DayInHistory next = getPreviousDayWithMoods(latestDayWithMoods);
-		    mPagerAdapter.addDay(next);
+		    mPagerAdapterDay.addDay(next);
 		    if (next == null) {
-			    mPagerAdapter.notifyDataSetChanged();
+			    mPagerAdapterDay.notifyDataSetChanged();
 			    mLastDay = next;
 		    } else {
 		    	next = getPreviousDayWithMoods(next);
-		    	mPagerAdapter.addDay(next);
-		    	mPagerAdapter.notifyDataSetChanged();
+		    	mPagerAdapterDay.addDay(next);
+		    	mPagerAdapterDay.notifyDataSetChanged();
 			    mLastDay = next;
 		    }
 	    }
-
 	}
 	
 	
@@ -238,7 +251,6 @@ public class MoodHistoryActivity extends Activity {
 	private class DatePagerAdapter extends PagerAdapter {
 		
 		private Context mContext;
-
 
 		public DatePagerAdapter(Context context) {
 			mContext = context;
@@ -286,6 +298,79 @@ public class MoodHistoryActivity extends Activity {
 		@Override 
 		public CharSequence getPageTitle(int position) {
 			return viewTitles.get(position);
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view == object;
+		}
+		
+		@Override
+		public void destroyItem(ViewGroup viewGroup, int position, Object object) {
+			viewGroup.removeView((View) object);
+		}
+		
+	}
+	
+	/**
+	 * Adapter for the day viewpager.
+	 * @author Toni Järvinen
+	 *
+	 */
+	private class WeekPagerAdapter extends PagerAdapter {
+		
+		private Context mContext;
+
+		public WeekPagerAdapter(Context context) {
+			mContext = context;
+		}
+
+		@Override
+		public int getCount() {
+			return weekViews.size();
+		}
+		
+		@Override
+		public Object instantiateItem(ViewGroup viewGroup, int position) {			
+			// Gets the view from the ArrayList and adds it to the group
+			View view = weekViews.get(position);
+			if (view.getParent() != null) {
+				((ViewGroup) view.getParent()).removeView(view);
+			}
+			viewGroup.addView(view);
+			return view;
+		}
+		/**
+		 * Adds a view representing a day to the adapter list of views.
+		 * @param day
+		 */
+		public void addPreviousWeek() {
+			RelativeLayout weekLayout = (RelativeLayout) mInflater.inflate(R.layout.element_mood_history_landscape, null);
+			mLatestWeekEnd.setFirstDayOfWeek(Calendar.MONDAY);
+			int currentDayOfWeek = mLatestWeekEnd.get(Calendar.DAY_OF_WEEK);
+			mLatestWeekEnd.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			int daysInThisWeek = currentDayOfWeek - mLatestWeekEnd.get(Calendar.DAY_OF_WEEK);
+			if (daysInThisWeek < 0) {
+				daysInThisWeek = 6;
+			}
+			LinearLayout dayLayout = (LinearLayout) weekLayout.getChildAt(1);
+			for (int i = 0; i <= daysInThisWeek; i++) {
+				Cursor moods = mDataHandler.getMoodsForDay(mLatestWeekEnd);
+				DayInHistory day = getDateWithMoods(mLatestWeekEnd.getTimeInMillis(), moods);
+				WeekDayView dayView = (WeekDayView) mInflater.inflate(R.layout.element_mood_history_week_day, dayLayout, false);
+				dayView.setDay(day);
+				dayLayout.addView(dayView);
+				mLatestWeekEnd.add(Calendar.DATE, 1);
+			}
+			mLatestWeekEnd.add(Calendar.DATE, (-daysInThisWeek - 1));
+			weekTitles.add("Week " + mLatestWeekEnd.get(Calendar.WEEK_OF_YEAR));
+			mLatestWeekEnd.add(Calendar.DATE, -1);
+			weekViews.add(weekLayout);
+		}
+		
+		@Override 
+		public CharSequence getPageTitle(int position) {
+			return weekTitles.get(position);
 		}
 
 		@Override

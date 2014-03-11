@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <declare-styleable name="WeekDayView">
+	  <attr name="dayOfWeek" format="string" />
+	  <attr name="events" format="boolean" />
+	  <attr name="drinks" format="integer" />
+	  <attr name="textColor" format="color" />
+   </declare-styleable>
+</resources>

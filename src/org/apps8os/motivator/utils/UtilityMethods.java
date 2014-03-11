@@ -57,6 +57,7 @@ public final class UtilityMethods {
 		long earlierBoundary = calendar.getTimeInMillis();
     	calendar.add(Calendar.DATE, 1);
     	long laterBoundary = calendar.getTimeInMillis();
+    	calendar.add(Calendar.DATE, -1);
     	long result[] = {earlierBoundary, laterBoundary};
     	return result;
 	}

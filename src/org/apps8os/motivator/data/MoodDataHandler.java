@@ -114,6 +114,22 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	}
     }
     
+    public Cursor getMoodsForDay(Calendar day) {
+    	Cursor query = null;
+    	UtilityMethods.setToMidnight(day);
+    	long[] boundaries = UtilityMethods.getDayInMillis(day);
+    	
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
+    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
+    	query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	
+    	if (query.moveToFirst()) {
+    		return query;
+    	} else {
+    		return null;
+    	}
+    }
+    
     /**
      * Gets the next latest mood data from the given timestamp.
      * @param fromTimestamp

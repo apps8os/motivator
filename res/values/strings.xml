@@ -46,5 +46,13 @@
     <string name="cancel_event">Cancel event</string>
     <string name="your_mood">Your mood</string>
     <string name="last_mood">Answer more mood questions</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+    <string name="sunday_short">Sun</string>
+    
 
 </resources>
