@@ -18,29 +18,39 @@ package org.apps8os.motivator.ui;
 
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
-import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 /**
  * Represents the mood history of the user. In this activity, the functionality and layout
@@ -50,23 +60,22 @@ import android.widget.TextView;
  *
  */
 
-public class MoodHistoryActivity extends Activity {
+public class MoodHistoryActivity extends FragmentActivity {
 	
 	private MoodDataHandler mDataHandler;
 	private LayoutInflater mInflater;
 	private ViewPager mViewPager;
-	private DatePagerAdapter mPagerAdapterDay;
+	private FragmentDatePagerAdapter mPagerAdapterDay;
 	private WeekPagerAdapter mPagerAdapterWeek;
-	private DayInHistory mLastDay;
 	private Calendar mLatestWeekEnd;
-	private int mSelectedItem;
 	
-	private boolean mLoadedFirst = false;
+	private static long mSprintStartDateInMillis = 1393632000000L;
+	private int mIndexOfTodayInSprint;
+	private int mSelectedDay;
+	private static Calendar mToday;
+	
 	private boolean mLoadedFirstLandscape = false;
-	
-	private ArrayList<View> dateViews = new ArrayList<View>();
-	private ArrayList<String> viewTitles = new ArrayList<String>();
-	
+
 	private ArrayList<View> weekViews = new ArrayList<View>();
 	private ArrayList<String> weekTitles = new ArrayList<String>();
 
@@ -78,6 +87,12 @@ public class MoodHistoryActivity extends Activity {
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
 		mInflater = getLayoutInflater();
+		
+		mToday = new GregorianCalendar();
+		mIndexOfTodayInSprint = (int) TimeUnit.DAYS.convert(mToday.getTimeInMillis() - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
+		mIndexOfTodayInSprint += 1;
+		
+		mSelectedDay = mIndexOfTodayInSprint;
 		
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
 	    // Load correct layout and functionality based on orientation
@@ -103,6 +118,53 @@ public class MoodHistoryActivity extends Activity {
 	}
 	
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    getMenuInflater().inflate(R.menu.mood_history, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.mood_history_search:
+			DialogFragment dialog = new DatePickerFragment();
+			dialog.show(getSupportFragmentManager(), "datePicker");
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	public static class DatePickerFragment extends DialogFragment
+		    implements DatePickerDialog.OnDateSetListener {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+			pickerDialog.getDatePicker().setMinDate(mSprintStartDateInMillis);
+			pickerDialog.getDatePicker().setMaxDate(mToday.getTimeInMillis());
+			return pickerDialog;
+		}
+
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear,
+				int dayOfMonth) {
+			Calendar date = new GregorianCalendar();
+			date.set(Calendar.YEAR, year);
+			date.set(Calendar.MONTH, monthOfYear);
+			date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			long dateInMillis = date.getTimeInMillis();
+			if (dateInMillis >= mSprintStartDateInMillis && dateInMillis <= mToday.getTimeInMillis()) {
+				((MoodHistoryActivity) getActivity()).setSelectedDay(dateInMillis);
+			}
+		}
+	}
+	
+	@Override
 	public void onResume() {
 		mDataHandler.open();
 		super.onResume();
@@ -112,6 +174,12 @@ public class MoodHistoryActivity extends Activity {
 	public void onStop() {
 		mDataHandler.close();
 		super.onStop();
+	}
+	
+	
+	public void setSelectedDay(long dayInMillis) {
+		mSelectedDay = (int) TimeUnit.DAYS.convert(dayInMillis - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
+		mViewPager.setCurrentItem(mSelectedDay);
 	}
 	
 	/**
@@ -138,40 +206,27 @@ public class MoodHistoryActivity extends Activity {
 	 * In portrait view, days are represented in a horizontially scrollable carousel.
 	 */
 	public void loadPortraitView() {
-	    mPagerAdapterDay = new DatePagerAdapter(this);
+	    mPagerAdapterDay = new FragmentDatePagerAdapter(getSupportFragmentManager());
 	    mViewPager.setAdapter(mPagerAdapterDay);
-	    mViewPager.setCurrentItem(mSelectedItem);
+	    mViewPager.setCurrentItem(mSelectedDay);
 	    mViewPager.setOffscreenPageLimit(3);
 	    
-	    if (!mLoadedFirst) {
-		    // Initialize the first days to be from today.
-			Calendar now = new GregorianCalendar();
-		    loadSetOfDaysFrom(now.getTimeInMillis());
-		    mLoadedFirst = true;
-	    }
-	    
-	    // Set an anonymous implementation of onPageChangeListener to load more pages when needed.
-	    mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			
-			@Override
-			public void onPageSelected(int arg0) {
-				mSelectedItem = arg0;	
-			}
-			
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {		
-			}
-			
+	    mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// Load 3 or less more pages if we are at the end already.
-				if (mSelectedItem == mPagerAdapterDay.getCount() - 2 && mLastDay != null) {
-					loadSetOfDaysFrom(mLastDay.getDateInMillis());
-				} else {
-				}
 			}
-			
-		});
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageSelected(int arg0) {
+				mSelectedDay = arg0;
+			}
+	    	
+	    });
 	}
 	
 	private DayInHistory getDateWithMoods(long dayInMillis, Cursor cursor) {
@@ -189,57 +244,24 @@ public class MoodHistoryActivity extends Activity {
 	    }
 	    return previousDayWithMoods;
 	}
-	/**
-	 * Gets the previous DayInHistory with moods prior to the parameter currentDay.
-	 * @param currentDay
-	 * @return
-	 */
-	private DayInHistory getPreviousDayWithMoods(DayInHistory currentDay) {
-		if ( currentDay == null ) {
-			return null;
-		}
-		Cursor previousMoods = mDataHandler.getPreviousMoodFrom(currentDay.getDateInMillis());
-		if (previousMoods == null) {
-			return null;
-		} else {
-			previousMoods.moveToFirst();
-			// Initialize the DayInHistory object with the first timestamp on the constructor.
-		    DayInHistory previousDayWithMoods = getDateWithMoods(previousMoods.getLong(2), previousMoods);
-		    return previousDayWithMoods;
-		}
-	}
 	
-	/**
-	 * Initializes the first 3 instances of DayInHistory to mDays array.
-	 * Gets 3 days that have mood data from the given timestamp.
-	 */
-	private void loadSetOfDaysFrom(long timeStamp) {
-	    // Get a cursor with latest moods for today.
-	    Cursor latestMoods = mDataHandler.getPreviousMoodFrom(timeStamp);
-	    DayInHistory latestDayWithMoods = null;
-	    // Check if we do not have any moods.
-	    if (latestMoods != null) {
-		    latestMoods.moveToFirst();
-		    latestDayWithMoods = getDateWithMoods(latestMoods.getLong(2), latestMoods);;
+	private DayInHistory getDateInHistory(long dayInMillis) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(dayInMillis);
+		Cursor cursor = mDataHandler.getMoodsForDay(calendar);
+		// Initialize the DayInHistory object with the first timestamp on the constructor.
+	    DayInHistory previousDayWithMoods = new DayInHistory(dayInMillis);
+	    // Add all moods to the DayInHistory object.
+	    while (cursor != null && !cursor.isClosed()) {
+	    	previousDayWithMoods.addMoodLevel(cursor.getInt(0));
+	    	previousDayWithMoods.addEnergyLevel(cursor.getInt(1));
+	    	if (cursor.isLast()) {
+	    		cursor.close();
+	    	} else {
+	    		cursor.moveToNext();
+	    	}
 	    }
-	    // Add the days to the adapter. If null, don't add more than one null page.
-	    mPagerAdapterDay.addDay(latestDayWithMoods);
-	    if (latestDayWithMoods == null) {
-	    	mPagerAdapterDay.notifyDataSetChanged();
-		    mLastDay = latestDayWithMoods;
-	    } else {
-		    DayInHistory next = getPreviousDayWithMoods(latestDayWithMoods);
-		    mPagerAdapterDay.addDay(next);
-		    if (next == null) {
-			    mPagerAdapterDay.notifyDataSetChanged();
-			    mLastDay = next;
-		    } else {
-		    	next = getPreviousDayWithMoods(next);
-		    	mPagerAdapterDay.addDay(next);
-		    	mPagerAdapterDay.notifyDataSetChanged();
-			    mLastDay = next;
-		    }
-	    }
+	    return previousDayWithMoods;
 	}
 	
 	
@@ -248,66 +270,36 @@ public class MoodHistoryActivity extends Activity {
 	 * @author Toni Järvinen
 	 *
 	 */
-	private class DatePagerAdapter extends PagerAdapter {
+	private class FragmentDatePagerAdapter extends FragmentStatePagerAdapter {
 		
-		private Context mContext;
-
-		public DatePagerAdapter(Context context) {
-			mContext = context;
+		public FragmentDatePagerAdapter(FragmentManager fm) {
+			super(fm);
 		}
 
 		@Override
 		public int getCount() {
-			return dateViews.size();
+			return mIndexOfTodayInSprint;
 		}
 		
-		@Override
-		public Object instantiateItem(ViewGroup viewGroup, int position) {			
-			// Gets the view from the ArrayList and adds it to the group
-			View view = dateViews.get(position);
-			if (view.getParent() != null) {
-				((ViewGroup) view.getParent()).removeView(view);
-			}
-			viewGroup.addView(view);
-			return view;
-		}
-		/**
-		 * Adds a view representing a day to the adapter list of views.
-		 * @param day
-		 */
-		public void addDay(DayInHistory day) {
-			ScrollView dateLayout = (ScrollView) mInflater.inflate(R.layout.element_mood_history_day_view, null);
-			LinearLayout innerLayout = (LinearLayout) dateLayout.getChildAt(0);
-			TextView title = (TextView) innerLayout.getChildAt(0);
-			TextView comment = (TextView) innerLayout.getChildAt(2);
-			// Set default page if the day is null or set the content from day object if it exists.
-			if (day != null) {
-				viewTitles.add(day.getDateInString(mContext));
-				title.setText(R.string.your_mood);
-				// DUMMY
-				comment.setText("Paras päivä koskaan!");
-			} else {
-				// DUMMY
-				viewTitles.add("");
-				comment.setText(R.string.last_mood);
-				comment.setGravity(Gravity.CENTER);
-			}
-			dateViews.add(dateLayout);
-		}
 		
 		@Override 
 		public CharSequence getPageTitle(int position) {
-			return viewTitles.get(position);
+			long dateInMillis = mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS);
+			Calendar date = new GregorianCalendar();
+			date.setTimeInMillis(dateInMillis);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", getResources().getConfiguration().locale);
+			return sdf.format(date.getTime());
 		}
 
 		@Override
-		public boolean isViewFromObject(View view, Object object) {
-			return view == object;
-		}
-		
-		@Override
-		public void destroyItem(ViewGroup viewGroup, int position, Object object) {
-			viewGroup.removeView((View) object);
+		public Fragment getItem(int position) {
+			Fragment fragment;
+			DayInHistory date = getDateInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
+			fragment = new MoodHistoryDayFragment();
+			Bundle b = new Bundle();
+			b.putParcelable(MotivatorConstants.DAY_IN_HISTORY, date);
+			fragment.setArguments(b);
+			return fragment;
 		}
 		
 	}

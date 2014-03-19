@@ -20,6 +20,8 @@ package org.apps8os.motivator.data;
 
 
 
+import java.util.concurrent.TimeUnit;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -40,7 +42,10 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	
 	protected static final String KEY_ENERGYLEVEL = "energylevel";
 	protected static final String KEY_MOODLEVEL = "moodlevel";
-	protected static final String TABLE_NAME_MOOD_LEVELS = "mood_table";
+	
+	protected static final String KEY_SPRINT_START = "sprint_start";
+	protected static final String KEY_SPRINT_DAYS = "sprint_days";
+	protected static final String KEY_SPRINT_END = "sprint_end";
  	
 	protected static final String KEY_ID_ANSWERS = "answers_id";		// Represents a single answering instance, same for all answers in the same instance of a questionnaire.
 	protected static final String KEY_ID_QUESTION = "question_id"; 		// The question which the answers belongs to.
@@ -51,9 +56,16 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String TABLE_NAME_QUESTIONNAIRE = "mood_answers";
 	protected static final String TABLE_NAME_EVENTS = "event_answers";
 	protected static final String TABLE_NAME_GOALS = "goal_answers";
+	protected static final String TABLE_NAME_MOOD_LEVELS = "mood_table";
+	protected static final String TABLE_NAME_SPRINTS = "sprint_table";
 	
 	private static final String[] TABLE_NAMES = {TABLE_NAME_QUESTIONNAIRE, TABLE_NAME_EVENTS, TABLE_NAME_GOALS};
-	
+	private static final String TABLE_CREATE_SPRINTS =
+			"CREATE TABLE " + TABLE_NAME_SPRINTS + " (" +
+			"id INTEGER PRIMARY KEY, " +
+			KEY_SPRINT_START + " INTEGER, " +
+			KEY_SPRINT_DAYS + " INTEGER, " +
+			KEY_SPRINT_END + " INTEGER);";
 	private static final String TABLE_CREATE_MOOD_LEVELS =
 			"CREATE TABLE " + TABLE_NAME_MOOD_LEVELS + " (" +
 			"id INTEGER PRIMARY KEY, " +
@@ -81,6 +93,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 			db.execSQL(createTable);
 		}
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
+		db.execSQL(TABLE_CREATE_SPRINTS);
 	}
 
 	@Override
@@ -98,6 +111,15 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	
 	public boolean isOpen() {
 		return db.isOpen();
+	}
+	
+	public void insertSprint(long startTime, int days) {
+		ContentValues values = new ContentValues();
+		values.put(KEY_SPRINT_START, startTime);
+		values.put(KEY_SPRINT_DAYS, days);
+		long endTime = startTime + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS);
+		values.put(KEY_SPRINT_END, endTime);
+		db.insert(TABLE_NAME_SPRINTS, null, values);
 	}
 	
 	/**

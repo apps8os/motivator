@@ -28,9 +28,11 @@ import org.apps8os.motivator.data.Question;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +46,7 @@ import android.widget.LinearLayout;
 public class TodaySectionFragment extends Fragment {
 	
 	private EventDataHandler mDataHandler;
+	private LinearLayout mEventLayout;
 	private LinearLayout mButtonLayout;
 	private LayoutInflater mInflater;
 	
@@ -58,7 +61,9 @@ public class TodaySectionFragment extends Fragment {
 				R.layout.fragment_main_activity_today_section, container, false);
 		
 		// The layout which has dynamic amount of future events/buttons.
-		mButtonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		mEventLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		
+		mButtonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
 		
 		// two buttons that are always present
 		
@@ -71,13 +76,20 @@ public class TodaySectionFragment extends Fragment {
 			}
 		});
 		
-		Button addGoalButton = (Button) rootView.findViewById(R.id.main_activity_today_add_place_button);
-		addGoalButton.setOnClickListener(new OnClickListener() {
+		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
+		mButtonLayout.addView(separator);
+		
+		Button addDrinkButton = (Button) inflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
+		Drawable star = getActivity().getResources().getDrawable(R.drawable.pullo1);
+		addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
+		addDrinkButton.setText(Html.fromHtml("Add Drink"));
+		addDrinkButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO
 			}
 		});
+		mButtonLayout.addView(addDrinkButton);
 		
 		return rootView;
 	}
@@ -169,19 +181,19 @@ public class TodaySectionFragment extends Fragment {
 		 */
 		@Override
 		protected void onPostExecute(ArrayList<AnswerCase> result) {
-			mButtonLayout.removeAllViews();
-			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-			mButtonLayout.addView(separator);
+			mEventLayout.removeAllViews();
+			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
+			mEventLayout.addView(separator);
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
-				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
+				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
 				eventButton.setText(result.get(i).getButtonText());
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getAnsweringId(), mContext));
-				mButtonLayout.addView(eventButton);
+				mEventLayout.addView(eventButton);
 				
-				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-				mButtonLayout.addView(separator);
+				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
+				mEventLayout.addView(separator);
 			}
 			
 		}

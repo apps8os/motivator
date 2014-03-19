@@ -53,6 +53,6 @@
     <string name="friday_short">Fri</string>
     <string name="saturday_short">Sat</string>
     <string name="sunday_short">Sun</string>
-    
+    <string name="action_search">Search</string>
 
 </resources>

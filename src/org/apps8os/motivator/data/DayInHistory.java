@@ -23,6 +23,8 @@ import java.util.GregorianCalendar;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Represents a day in the users history. The definition which belongs to a certain day is done
@@ -30,7 +32,7 @@ import android.content.Context;
  * @author Toni Järvinen
  *
  */
-public class DayInHistory {
+public class DayInHistory implements Parcelable{
 	
 	private int mMoodSum = 0;
 	private int mMoodAmount = 0;
@@ -38,16 +40,39 @@ public class DayInHistory {
 	private int mEnergyAmount = 0;
 	private int mAlcoholDrinks = 0;
 	private String mComment;
-	private Calendar mDate;
+	private long mDateInMillis;
 	/**
-	 * Create an instance. Here dayInMillis is the midnight of the day represented by this instance.
+	 * Create an instance. Set the date in millis to midnight of the day.
 	 * @param dayInMillis
 	 */
 	public DayInHistory(long dayInMillis) {
-		mDate = new GregorianCalendar();
+		Calendar mDate = new GregorianCalendar();
 		mDate.setTimeInMillis(dayInMillis);
 		mDate = UtilityMethods.setToMidnight(mDate);
+		mDateInMillis = mDate.getTimeInMillis();
 	}
+	
+	private DayInHistory(Parcel source) {
+		mMoodSum = source.readInt();
+		mMoodAmount = source.readInt();
+		mEnergyAmount = source.readInt();
+		mEnergySum = source.readInt();
+		mAlcoholDrinks = source.readInt();
+		mComment = source.readString();
+		mDateInMillis = source.readLong();
+	}
+	
+	public static final Parcelable.Creator<DayInHistory> CREATOR = new Parcelable.Creator<DayInHistory>() {
+		@Override
+		public DayInHistory createFromParcel(Parcel source) {
+			return new DayInHistory(source);
+		}
+
+		@Override
+		public DayInHistory[] newArray(int size) {
+			return new DayInHistory[size];
+		}
+	};
 	
 	public void addMoodLevel(int moodLevel) {
 		mMoodAmount += 1;
@@ -71,7 +96,12 @@ public class DayInHistory {
 	 * @return the mAvgMoodLevel
 	 */
 	public int getAvgMoodLevel() {
-		return mMoodSum / mMoodAmount;
+		if (mMoodAmount > 0) {
+			return mMoodSum / mMoodAmount;
+		} else {
+			return 0;
+		}
+		
 	}
 
 	/**
@@ -100,7 +130,9 @@ public class DayInHistory {
 	 */
 	public String getDateInString(Context context) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
-		return sdf.format(mDate.getTime());
+		Calendar date = new GregorianCalendar();
+		date.setTimeInMillis(mDateInMillis);
+		return sdf.format(date.getTime());
 	}
 	
 	/**
@@ -108,10 +140,23 @@ public class DayInHistory {
 	 * @return
 	 */
 	public long getDateInMillis() {
-		return mDate.getTimeInMillis();
+		return mDateInMillis;
 	}
 	
-	public Calendar getDate() {
-		return mDate;
+
+	@Override
+	public int describeContents() {
+		return hashCode();
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(mMoodSum);
+		dest.writeInt(mMoodAmount);
+		dest.writeInt(mEnergyAmount);
+		dest.writeInt(mEnergySum);
+		dest.writeInt(mAlcoholDrinks);
+		dest.writeString(mComment);
+		dest.writeLong(mDateInMillis);
 	}
 }

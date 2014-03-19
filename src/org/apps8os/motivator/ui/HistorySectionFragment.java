@@ -19,8 +19,11 @@ package org.apps8os.motivator.ui;
 import org.apps8os.motivator.R;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +59,30 @@ public class HistorySectionFragment extends Fragment {
 		
 		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
 		buttonLayout.addView(separator);
+		
+		Button moodRelButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
+		moodRelButton.setText("Drinking history");
+		moodRelButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), MoodRelationHistoryActivity.class);
+				startActivity(intent);
+			}
+			
+		});
+		buttonLayout.addView(moodRelButton);
+		
+		
+		View separator2 = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
+		buttonLayout.addView(separator2);
+		
+		Button achievementButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
+		achievementButton.setTextColor(getActivity().getResources().getColor(R.color.blue));
+		achievementButton.setShadowLayer(2, 1, 1, Color.CYAN);
+		Drawable star = getActivity().getResources().getDrawable(R.drawable.star1_small);
+		achievementButton.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
+		achievementButton.setText(Html.fromHtml("Achievement<br><small>Do not drink for 2 weeks</small>"));
+		buttonLayout.addView(achievementButton);
 		
 		return rootView;
 	}

@@ -1,6 +1,7 @@
 package org.apps8os.motivator.ui;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
@@ -78,7 +79,9 @@ public class WeekDayView extends View {
 	}
 	
 	public void setDay(DayInHistory day) {
-		switch (day.getDate().get(Calendar.DAY_OF_WEEK)) {
+		Calendar date = new GregorianCalendar();
+		date.setTimeInMillis(day.getDateInMillis());
+		switch (date.get(Calendar.DAY_OF_WEEK)) {
 		case Calendar.MONDAY:
 			mDayOfWeek = mRes.getString(R.string.monday_short);
 			break;

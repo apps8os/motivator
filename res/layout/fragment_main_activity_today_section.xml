@@ -60,6 +60,13 @@
 		    android:visibility="visible"
 		    style="?android:attr/borderlessButtonStyle" >
 		</Button>
+		
+        <LinearLayout
+            android:id="@+id/main_activity_today_dynamic_buttons2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/main_activity_today_dynamic_buttons"

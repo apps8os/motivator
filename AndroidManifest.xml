@@ -62,6 +62,10 @@
             android:name="org.apps8os.motivator.ui.MoodHistoryActivity"
             android:parentActivityName="org.apps8os.motivator.ui.MainActivity"
             android:configChanges="orientation|screenLayout|screenSize"></activity>
+        <activity 
+            android:name="org.apps8os.motivator.ui.MoodRelationHistoryActivity"
+            android:parentActivityName="org.apps8os.motivator.ui.MainActivity">
+        </activity>
     </application>
 
 </manifest>
