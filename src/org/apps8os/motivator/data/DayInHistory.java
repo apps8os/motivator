@@ -27,8 +27,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Represents a day in the users history. The definition which belongs to a certain day is done
- * by the using class.
+ * Represents a day in the users history. Implements parcelable for transfering the instance
+ * between activities/fragments.
  * @author Toni Järvinen
  *
  */
@@ -52,6 +52,10 @@ public class DayInHistory implements Parcelable{
 		mDateInMillis = mDate.getTimeInMillis();
 	}
 	
+	/**
+	 * Reconstructs the instance from the parcel.
+	 * @param source
+	 */
 	private DayInHistory(Parcel source) {
 		mMoodSum = source.readInt();
 		mMoodAmount = source.readInt();
@@ -62,6 +66,9 @@ public class DayInHistory implements Parcelable{
 		mDateInMillis = source.readLong();
 	}
 	
+	/**
+	 * Creator instance for the parcelable interface.
+	 */
 	public static final Parcelable.Creator<DayInHistory> CREATOR = new Parcelable.Creator<DayInHistory>() {
 		@Override
 		public DayInHistory createFromParcel(Parcel source) {
@@ -149,6 +156,9 @@ public class DayInHistory implements Parcelable{
 		return hashCode();
 	}
 
+	/**
+	 * Writing to the parcel.
+	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(mMoodSum);

@@ -15,33 +15,33 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:id="@+id/mood_history_week_root" >
 
     <FrameLayout
+        android:id="@+id/mood_history_week_graph"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher" />
-
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >
+        
+        <com.echo.holographlibrary.LineGraph
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="60dp"
+	        android:id="@+id/graph"/>
+	        
     </FrameLayout>
 
     <LinearLayout
         android:orientation="horizontal"
+        android:layout_weight="1"
         android:id="@+id/mood_history_weekview"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:gravity="center" >
+        android:layout_height="fill_parent" >
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

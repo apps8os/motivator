@@ -28,6 +28,7 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -39,23 +40,17 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 /**
  * Represents the mood history of the user. In this activity, the functionality and layout
  * changes based on the orientation. Portrait orientation has the mood history of the user by day.
- * Here , previous day does not mean calendar day but rather previous day with records on database.
  * @author Toni Järvinen
  *
  */
@@ -63,21 +58,17 @@ import android.widget.RelativeLayout;
 public class MoodHistoryActivity extends FragmentActivity {
 	
 	private MoodDataHandler mDataHandler;
-	private LayoutInflater mInflater;
 	private ViewPager mViewPager;
 	private FragmentDatePagerAdapter mPagerAdapterDay;
-	private WeekPagerAdapter mPagerAdapterWeek;
-	private Calendar mLatestWeekEnd;
+	private FragmentWeekPagerAdapter mPagerAdapterWeek;
 	
 	private static long mSprintStartDateInMillis = 1393632000000L;
-	private int mIndexOfTodayInSprint;
+	private int mNumberOfTodayInSprint;
+	private int mNumberOfWeeksInSprint;
 	private int mSelectedDay;
-	private static Calendar mToday;
-	
-	private boolean mLoadedFirstLandscape = false;
-
-	private ArrayList<View> weekViews = new ArrayList<View>();
-	private ArrayList<String> weekTitles = new ArrayList<String>();
+	private int mSelectedWeek;
+	private Calendar mToday;
+	private static Calendar mStartDate;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -86,14 +77,29 @@ public class MoodHistoryActivity extends FragmentActivity {
 	    setContentView(R.layout.activity_mood_history);
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
-		mInflater = getLayoutInflater();
 		
 		mToday = new GregorianCalendar();
-		mIndexOfTodayInSprint = (int) TimeUnit.DAYS.convert(mToday.getTimeInMillis() - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
-		mIndexOfTodayInSprint += 1;
+		UtilityMethods.setToMidnight(mToday);
+		mToday.setFirstDayOfWeek(Calendar.MONDAY);
 		
-		mSelectedDay = mIndexOfTodayInSprint;
+		// Gets the index/amount of days for today for the day view.
+		mNumberOfTodayInSprint = (int) TimeUnit.DAYS.convert(mToday.getTimeInMillis() - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
+		mNumberOfTodayInSprint += 1;
 		
+		mStartDate = new GregorianCalendar();
+		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
+		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
+		
+		mNumberOfWeeksInSprint = mToday.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR) + 1;
+		if ( mNumberOfWeeksInSprint < 0 ) {
+			mNumberOfWeeksInSprint = 52 + 1 - mStartDate.get(Calendar.WEEK_OF_YEAR) + mToday.get(Calendar.WEEK_OF_YEAR);
+		} else {
+			
+		}
+		
+		// Sets the default selections as today or this week.
+		mSelectedDay = mNumberOfTodayInSprint - 1;
+		mSelectedWeek = mNumberOfWeeksInSprint - 1;
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
 	    // Load correct layout and functionality based on orientation
 	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -117,16 +123,24 @@ public class MoodHistoryActivity extends FragmentActivity {
 		}
 	}
 	
+	/**
+	 * Loading the action bar menu
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    getMenuInflater().inflate(R.menu.mood_history, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
+	/**
+	 * Actions for the menu items.
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		// Search functionality for the search button
 		case R.id.mood_history_search:
+			// Spawn a dialog fragment so that the user can select a day.
 			DialogFragment dialog = new DatePickerFragment();
 			dialog.show(getSupportFragmentManager(), "datePicker");
 			return true;
@@ -135,8 +149,18 @@ public class MoodHistoryActivity extends FragmentActivity {
 		}
 	}
 	
+	/**
+	 * Represents the DatePicker fragment which is created when the user
+	 * clicks the search button. Implements on data set listener to get the
+	 * selection.
+	 * @author Toni Järvinen
+	 *
+	 */
 	public static class DatePickerFragment extends DialogFragment
 		    implements DatePickerDialog.OnDateSetListener {
+		
+		private Calendar mToday = new GregorianCalendar();
+		
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			// Use the current date as the default date in the picker
@@ -145,11 +169,15 @@ public class MoodHistoryActivity extends FragmentActivity {
 			int month = c.get(Calendar.MONTH);
 			int day = c.get(Calendar.DAY_OF_MONTH);
 			DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+			// Set the minimun and maximum dates based on the sprint and today.
 			pickerDialog.getDatePicker().setMinDate(mSprintStartDateInMillis);
 			pickerDialog.getDatePicker().setMaxDate(mToday.getTimeInMillis());
 			return pickerDialog;
 		}
-
+		
+		/**
+		 * Jumps to the selected day when selected.
+		 */
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
@@ -158,7 +186,8 @@ public class MoodHistoryActivity extends FragmentActivity {
 			date.set(Calendar.MONTH, monthOfYear);
 			date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			long dateInMillis = date.getTimeInMillis();
-			if (dateInMillis >= mSprintStartDateInMillis && dateInMillis <= mToday.getTimeInMillis()) {
+			// If the date is in the allowed limits, set the selected day in the activity
+			if (dateInMillis >= mSprintStartDateInMillis && dateInMillis < mToday.getTimeInMillis() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
 				((MoodHistoryActivity) getActivity()).setSelectedDay(dateInMillis);
 			}
 		}
@@ -176,10 +205,28 @@ public class MoodHistoryActivity extends FragmentActivity {
 		super.onStop();
 	}
 	
-	
+	/**
+	 * Used to set the selected day and week of the sprint in the activity.
+	 * @param dayInMillis
+	 */
 	public void setSelectedDay(long dayInMillis) {
 		mSelectedDay = (int) TimeUnit.DAYS.convert(dayInMillis - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
-		mViewPager.setCurrentItem(mSelectedDay);
+		Calendar selectedDayAsCalendar = new GregorianCalendar();
+		selectedDayAsCalendar.setTimeInMillis(dayInMillis);
+		selectedDayAsCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		mSelectedWeek = selectedDayAsCalendar.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR);
+		// Take into account change of year.
+		if ( mSelectedWeek < 0 ) {
+			mSelectedWeek = 52 - mStartDate.get(Calendar.WEEK_OF_YEAR) + selectedDayAsCalendar.get(Calendar.WEEK_OF_YEAR);
+		} else {
+		}
+		// Set the day or week depending on orientation.
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			mViewPager.setCurrentItem(mSelectedDay);
+		} else  {
+			
+			mViewPager.setCurrentItem(mSelectedWeek);
+		}
 	}
 	
 	/**
@@ -187,18 +234,10 @@ public class MoodHistoryActivity extends FragmentActivity {
 	 * TODO: Functionality, DUMMY calendar currently
 	 */
 	public void loadLandscapeView() {
-		mPagerAdapterWeek = new WeekPagerAdapter(this);
+		mPagerAdapterWeek = new FragmentWeekPagerAdapter(getSupportFragmentManager(), this);
 		mViewPager.setAdapter(mPagerAdapterWeek);
-		
-	    if (!mLoadedFirstLandscape) {
-		    // Initialize the first days to be from today.
-			mLatestWeekEnd = new GregorianCalendar();
-		    mLoadedFirstLandscape = true;
-		    for (int i = 0; i < 3; i++) {
-		    	mPagerAdapterWeek.addPreviousWeek();
-		    	mPagerAdapterWeek.notifyDataSetChanged();
-		    }
-	    }
+		mViewPager.setCurrentItem(mSelectedWeek);
+		mViewPager.setOffscreenPageLimit(1);
 	}
 	
 	/**
@@ -209,7 +248,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 	    mPagerAdapterDay = new FragmentDatePagerAdapter(getSupportFragmentManager());
 	    mViewPager.setAdapter(mPagerAdapterDay);
 	    mViewPager.setCurrentItem(mSelectedDay);
-	    mViewPager.setOffscreenPageLimit(3);
+	    mViewPager.setOffscreenPageLimit(5);
 	    
 	    mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 
@@ -229,23 +268,12 @@ public class MoodHistoryActivity extends FragmentActivity {
 	    });
 	}
 	
-	private DayInHistory getDateWithMoods(long dayInMillis, Cursor cursor) {
-		// Initialize the DayInHistory object with the first timestamp on the constructor.
-	    DayInHistory previousDayWithMoods = new DayInHistory(dayInMillis);
-	    // Add all moods to the DayInHistory object.
-	    while (cursor != null && !cursor.isClosed()) {
-	    	previousDayWithMoods.addMoodLevel(cursor.getInt(0));
-	    	previousDayWithMoods.addEnergyLevel(cursor.getInt(1));
-	    	if (cursor.isLast()) {
-	    		cursor.close();
-	    	} else {
-	    		cursor.moveToNext();
-	    	}
-	    }
-	    return previousDayWithMoods;
-	}
-	
-	private DayInHistory getDateInHistory(long dayInMillis) {
+	/**
+	 * Gets a DayInHistory object for the day represented as millisecond value.
+	 * @param dayInMillis
+	 * @return
+	 */
+	protected DayInHistory getDateInHistory(long dayInMillis) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(dayInMillis);
 		Cursor cursor = mDataHandler.getMoodsForDay(calendar);
@@ -266,7 +294,8 @@ public class MoodHistoryActivity extends FragmentActivity {
 	
 	
 	/**
-	 * Adapter for the day viewpager.
+	 * Fragment adapter for the date view in the activity. Extends FragmentStatePagerAdapter so that it can destroy
+	 * fragments in memory more aggressively due to the large amount of fragments.
 	 * @author Toni Järvinen
 	 *
 	 */
@@ -278,10 +307,12 @@ public class MoodHistoryActivity extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			return mIndexOfTodayInSprint;
+			return mNumberOfTodayInSprint;
 		}
 		
-		
+		/**
+		 * Page title as the date
+		 */
 		@Override 
 		public CharSequence getPageTitle(int position) {
 			long dateInMillis = mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS);
@@ -290,13 +321,17 @@ public class MoodHistoryActivity extends FragmentActivity {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", getResources().getConfiguration().locale);
 			return sdf.format(date.getTime());
 		}
-
+		
+		/**
+		 * Instantiates the MoodHistoryDayFragment for the position.
+		 */
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment;
 			DayInHistory date = getDateInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
 			fragment = new MoodHistoryDayFragment();
 			Bundle b = new Bundle();
+			// Send the DayInHistory for the fragment as parcelable.
 			b.putParcelable(MotivatorConstants.DAY_IN_HISTORY, date);
 			fragment.setArguments(b);
 			return fragment;
@@ -305,74 +340,58 @@ public class MoodHistoryActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * Adapter for the day viewpager.
+	 * Fragment adapter for the week view in the activity.
 	 * @author Toni Järvinen
 	 *
 	 */
-	private class WeekPagerAdapter extends PagerAdapter {
-		
+	private class FragmentWeekPagerAdapter extends FragmentPagerAdapter {
+
 		private Context mContext;
 
-		public WeekPagerAdapter(Context context) {
+		public FragmentWeekPagerAdapter(FragmentManager fm, Context context) {
+			super(fm);
 			mContext = context;
 		}
 
 		@Override
 		public int getCount() {
-			return weekViews.size();
+			return mNumberOfWeeksInSprint;
 		}
 		
-		@Override
-		public Object instantiateItem(ViewGroup viewGroup, int position) {			
-			// Gets the view from the ArrayList and adds it to the group
-			View view = weekViews.get(position);
-			if (view.getParent() != null) {
-				((ViewGroup) view.getParent()).removeView(view);
-			}
-			viewGroup.addView(view);
-			return view;
-		}
-		/**
-		 * Adds a view representing a day to the adapter list of views.
-		 * @param day
-		 */
-		public void addPreviousWeek() {
-			RelativeLayout weekLayout = (RelativeLayout) mInflater.inflate(R.layout.element_mood_history_landscape, null);
-			mLatestWeekEnd.setFirstDayOfWeek(Calendar.MONDAY);
-			int currentDayOfWeek = mLatestWeekEnd.get(Calendar.DAY_OF_WEEK);
-			mLatestWeekEnd.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-			int daysInThisWeek = currentDayOfWeek - mLatestWeekEnd.get(Calendar.DAY_OF_WEEK);
-			if (daysInThisWeek < 0) {
-				daysInThisWeek = 6;
-			}
-			LinearLayout dayLayout = (LinearLayout) weekLayout.getChildAt(1);
-			for (int i = 0; i <= daysInThisWeek; i++) {
-				Cursor moods = mDataHandler.getMoodsForDay(mLatestWeekEnd);
-				DayInHistory day = getDateWithMoods(mLatestWeekEnd.getTimeInMillis(), moods);
-				WeekDayView dayView = (WeekDayView) mInflater.inflate(R.layout.element_mood_history_week_day, dayLayout, false);
-				dayView.setDay(day);
-				dayLayout.addView(dayView);
-				mLatestWeekEnd.add(Calendar.DATE, 1);
-			}
-			mLatestWeekEnd.add(Calendar.DATE, (-daysInThisWeek - 1));
-			weekTitles.add("Week " + mLatestWeekEnd.get(Calendar.WEEK_OF_YEAR));
-			mLatestWeekEnd.add(Calendar.DATE, -1);
-			weekViews.add(weekLayout);
-		}
 		
 		@Override 
 		public CharSequence getPageTitle(int position) {
-			return weekTitles.get(position);
-		}
-
-		@Override
-		public boolean isViewFromObject(View view, Object object) {
-			return view == object;
+			long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS) * 7);
+			Calendar date = new GregorianCalendar();
+			date.setTimeInMillis(dateInMillis);
+			return "Week " + date.get(Calendar.WEEK_OF_YEAR);
 		}
 		
+		/**
+		 * Instantiates the MoodHistoryWeekFragment for the position.
+		 */
 		@Override
-		public void destroyItem(ViewGroup viewGroup, int position, Object object) {
-			viewGroup.removeView((View) object);
+		public Fragment getItem(int position) {
+			Fragment fragment;
+			Calendar calendar = new GregorianCalendar();
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.setTimeInMillis(mSprintStartDateInMillis);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
+			calendar.add(Calendar.DATE, position * 7);
+			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
+				days.add(date);
+				calendar.add(Calendar.DATE, 1);
+			}
+			DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
+			days.add(date);
+			// Puts the last day in this week as millisecond value to the arguments.
+			fragment = new MoodHistoryWeekFragment();
+			Bundle b = new Bundle();
+			b.putParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY, days);
+			fragment.setArguments(b);
+			return fragment;
 		}
 		
 	}

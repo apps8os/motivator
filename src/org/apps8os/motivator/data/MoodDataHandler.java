@@ -116,7 +116,6 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     
     public Cursor getMoodsForDay(Calendar day) {
     	Cursor query = null;
-    	UtilityMethods.setToMidnight(day);
     	long[] boundaries = UtilityMethods.getDayInMillis(day);
     	
     	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];

@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="400dp"
-    android:background="@color/white" >
 
-    <LinearLayout
-        android:id="@+id/mood_history_fragment_linearlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/mood_history_fragment_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ImageView
-            android:id="@+id/mood_history_fragment_mood_image"
-            android:layout_width="224dp"
-            android:layout_height="238dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/temp_emoticon" />
-
-        <TextView
-            android:layout_marginTop="48dp"
-            android:id="@+id/mood_history_fragment_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-        
-    </LinearLayout>
-    
-
-</ScrollView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/gray"
+    android:layout_width="match_parent"
+	android:layout_height="match_parent"
+    >
+	<ScrollView 
+	    android:layout_width="300dp"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:background="@drawable/dropshadow"
+	    android:paddingLeft="6dp"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="9dp"
+	     >
+	    <LinearLayout
+	        android:id="@+id/mood_history_fragment_linearlayout"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical"
+	        android:background="@color/white"
+	         >
+	
+	        <TextView
+	            android:layout_marginTop="24dp"
+	            android:id="@+id/mood_history_fragment_title"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:text=""
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	        <ImageView
+	            android:id="@+id/mood_history_fragment_mood_image"
+	            android:layout_width="224dp"
+	            android:layout_height="238dp"
+	            android:layout_gravity="center"
+	            android:layout_marginTop="24dp"
+	            android:src="@drawable/temp_emoticon" />
+	
+	        <TextView
+	            android:layout_marginTop="48dp"
+	            android:id="@+id/mood_history_fragment_comment"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center"
+	            android:layout_marginBottom="24dp"
+	            android:text=""
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	        
+	    </LinearLayout>
+	    
+	
+	</ScrollView>
+</RelativeLayout>

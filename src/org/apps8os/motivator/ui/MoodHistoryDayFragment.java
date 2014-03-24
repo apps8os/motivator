@@ -13,14 +13,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Represents a day in the mood history
+ * @author Toni Järvinen
+ *
+ */
 public class MoodHistoryDayFragment extends Fragment {
 	
 	private static DayInHistory mDay;
 	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Get the DayInHistory from the arguments.
 		Bundle bundle = getArguments();
 		mDay = bundle.getParcelable(MotivatorConstants.DAY_IN_HISTORY);
 	}

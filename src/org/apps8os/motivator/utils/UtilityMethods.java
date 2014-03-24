@@ -46,9 +46,7 @@ public final class UtilityMethods {
 	}
 	
 	/**
-	 * Returns the day boundaries on a 2 long millisecond values. Effectively the times 00:00:00 and 23:59:59
-	 * Returns array with earlier boundary as first value and later second. NOTE: This also sets the original
-	 * calendar instance to 1 23:59:59!
+	 * Returns the day boundaries on a 2 long millisecond values. 
 	 * @param calendar
 	 * @return
 	 */
