@@ -76,21 +76,6 @@ public class TodaySectionFragment extends Fragment {
 			}
 		});
 		
-		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-		mButtonLayout.addView(separator);
-		
-		Button addDrinkButton = (Button) inflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
-		Drawable star = getActivity().getResources().getDrawable(R.drawable.pullo1);
-		addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
-		addDrinkButton.setText(Html.fromHtml("Add Drink"));
-		addDrinkButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO
-			}
-		});
-		mButtonLayout.addView(addDrinkButton);
-		
 		return rootView;
 	}
 	
@@ -196,6 +181,30 @@ public class TodaySectionFragment extends Fragment {
 				mEventLayout.addView(separator);
 			}
 			
+			if (result.size() > 0) {
+				mButtonLayout.removeAllViews();
+				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
+				mButtonLayout.addView(separator);
+				final AnswerCase todaysEvent = result.get(0);
+				final Button addDrinkButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
+				Drawable bottle = getActivity().getResources().getDrawable(R.drawable.pullo1);
+				addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
+				addDrinkButton.setText(Html.fromHtml("Add Drink"));
+				addDrinkButton.setOnClickListener(new OnClickListener() {
+					
+					private int mDrinkCounter = 0;
+					
+					@Override
+					public void onClick(View v) {
+						mDataHandler.open();
+						mDataHandler.addDrink(todaysEvent.getAnsweringId());
+						mDrinkCounter += 1;
+						addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
+						mDataHandler.close();
+					}
+				});
+				mButtonLayout.addView(addDrinkButton);
+			}
 		}
 	}
 }

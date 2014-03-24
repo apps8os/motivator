@@ -22,7 +22,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -79,17 +82,13 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				}
 				// Tomorrow, set the calendar to tomorrow midnight.
 				case 1: {
-					mCalendarCache.set(Calendar.HOUR_OF_DAY, 0);
-					mCalendarCache.set(Calendar.MINUTE, 0);
-					mCalendarCache.set(Calendar.SECOND, 0);
+					UtilityMethods.setToMidnight(mCalendarCache);
 					mCalendarCache.add(Calendar.DAY_OF_MONTH, 1);
 					break;
 				}
 				// Next weekend, set the calendar to next friday at midnight.
 				case 2: {
-					mCalendarCache.set(Calendar.HOUR_OF_DAY, 0);
-					mCalendarCache.set(Calendar.MINUTE, 0);
-					mCalendarCache.set(Calendar.SECOND, 0);
+					UtilityMethods.setToMidnight(mCalendarCache);
 					int daysUntilNextFriday = (Calendar.FRIDAY - mCalendarCache.get(Calendar.DAY_OF_WEEK));
 					mCalendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
 					break;
@@ -106,10 +105,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 */
 	public Cursor getEventsAfterToday() {
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
-		tomorrowMidnight.set(Calendar.HOUR_OF_DAY, 0);
-		tomorrowMidnight.set(Calendar.MINUTE, 0);
-		tomorrowMidnight.set(Calendar.SECOND, 0);
-		tomorrowMidnight.set(Calendar.MILLISECOND, 0);
+		UtilityMethods.setToMidnight(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
 		String selection = KEY_CONTENT + " > " + tomorrowMidnight.getTimeInMillis();
@@ -124,22 +120,30 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 */
 	public Cursor getEventsToday() {
 		GregorianCalendar todayMidnight = new GregorianCalendar();
-		todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
-		todayMidnight.set(Calendar.MINUTE, 0);
-		todayMidnight.set(Calendar.SECOND, 0);
-		todayMidnight.set(Calendar.MILLISECOND, 0);
+		UtilityMethods.setToMidnight(todayMidnight);
 		
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
-		tomorrowMidnight.set(Calendar.HOUR_OF_DAY, 0);
-		tomorrowMidnight.set(Calendar.MINUTE, 0);
-		tomorrowMidnight.set(Calendar.SECOND, 0);
-		tomorrowMidnight.set(Calendar.MILLISECOND, 0);
+		UtilityMethods.setToMidnight(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
 		String selection = KEY_CONTENT + " > " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
 		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER};
 		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		return query;
+	}
+	
+	public void addDrink(int answerId) {
+		String selection = KEY_ID_ANSWERS + " = " + answerId + " AND " + KEY_ID_QUESTION + " = " + MotivatorConstants.DRINK_AMOUNT_ID;
+		String[] columns = {KEY_ANSWER};
+		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, null);
+		int previousAmount = 0;
+		if (query.moveToFirst()) {
+			previousAmount = query.getInt(0);
+		}
+		ContentValues values = new ContentValues();
+		values.put(KEY_ANSWER, previousAmount + 1);
+		db.update(TABLE_NAME, values, selection, null);
+		query.close();
 	}
 	
 	public Cursor getEventWithId(int id) {

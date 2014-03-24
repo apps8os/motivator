@@ -19,6 +19,7 @@ package org.apps8os.motivator.ui;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -162,7 +163,9 @@ public class AddingEventActivity extends Activity {
 				// Determine if the questionnaire is done
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
-				} else {								
+				} else {
+					// Initialize the amount of drinks to zero.
+					mDataHandler.insertAnswer(0, MotivatorConstants.DRINK_AMOUNT_ID, mAnswerId);
 					// Questionnaire is done
 					finish();
 				}

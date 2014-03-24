@@ -45,22 +45,6 @@
 		    style="?android:attr/borderlessButtonStyle" >
 		</Button>
 		
-        <View
-		    android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="@color/gray" >
-		</View>
-		
-        <Button 
-            android:id="@+id/main_activity_today_add_place_button"
-		    android:layout_width="match_parent"
-		    android:layout_height="80dp"
-		    android:text="@string/today_screen_save_location"
-		    android:textColor="@color/blue"
-		    android:visibility="visible"
-		    style="?android:attr/borderlessButtonStyle" >
-		</Button>
-		
         <LinearLayout
             android:id="@+id/main_activity_today_dynamic_buttons2"
             android:layout_width="match_parent"

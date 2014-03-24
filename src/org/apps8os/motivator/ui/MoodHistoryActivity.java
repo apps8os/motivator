@@ -30,6 +30,7 @@ import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -63,6 +64,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 	private FragmentWeekPagerAdapter mPagerAdapterWeek;
 	
 	private static long mSprintStartDateInMillis = 1393632000000L;
+	private static int mDaysInSprint = 105;
 	private int mNumberOfTodayInSprint;
 	private int mNumberOfWeeksInSprint;
 	private int mSelectedDay;
@@ -77,6 +79,9 @@ public class MoodHistoryActivity extends FragmentActivity {
 	    setContentView(R.layout.activity_mood_history);
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
+	    
+	    ActionBar actionBar = getActionBar();
+
 		
 		mToday = new GregorianCalendar();
 		UtilityMethods.setToMidnight(mToday);
@@ -86,6 +91,11 @@ public class MoodHistoryActivity extends FragmentActivity {
 		mNumberOfTodayInSprint = (int) TimeUnit.DAYS.convert(mToday.getTimeInMillis() - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
 		mNumberOfTodayInSprint += 1;
 		
+		if (mNumberOfTodayInSprint > mDaysInSprint) {
+			mNumberOfTodayInSprint = mDaysInSprint;
+		}
+	    actionBar.setTitle(mNumberOfTodayInSprint + " days of glory");
+	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
