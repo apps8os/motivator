@@ -205,7 +205,7 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
 				eventButton.setText(result.get(i).getEventText());
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getId(), mContext));
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				mEventLayout.addView(eventButton);
 				
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);

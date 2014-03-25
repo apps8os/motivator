@@ -17,11 +17,11 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.data.EventDataHandler;
-import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import org.apps8os.motivator.R;
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -37,8 +37,7 @@ import android.widget.TextView;
  */
 public class EventDetailsActivity extends Activity {
 	
-	public final static String KEY_EVENT_ID = "event_id";
-	private int mEventId;
+	private MotivatorEvent mEvent;
 	private EventDataHandler mDataHandler;
 
 	/** Called when the activity is first created. */
@@ -48,38 +47,25 @@ public class EventDetailsActivity extends Activity {
 	    setContentView(R.layout.activity_event_details);
 	    Bundle extras = getIntent().getExtras();
 	    // is represented as answers id in the database
-	    mEventId = extras.getInt(KEY_EVENT_ID);
+	    mEvent = extras.getParcelable(MotivatorConstants.EVENT);
 	    mDataHandler = new EventDataHandler(this);
 	    mDataHandler.open();
 	    
-	    // Get the event answers with the id
-	    Cursor eventData = mDataHandler.getEventWithId(mEventId);
-	    eventData.moveToFirst();
-	    
-	    Question question = mDataHandler.getQuestion(eventData.getInt(0));
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
-	    title.setText(question.getAnswer(eventData.getInt(1)));
-	    eventData.moveToNext();
-	    
-	    // Next answers
+	    title.setText(mEvent.getEventText());
+
 	    TextView text = (TextView) findViewById(R.id.event_detail_text);
-	    question = mDataHandler.getQuestion(eventData.getInt(0));
-	    String textToAdd = question.getAnswer(eventData.getInt(1));
-	    eventData.moveToNext();
-	    question = mDataHandler.getQuestion(eventData.getInt(0));
-	    textToAdd = textToAdd + " <br> " + question.getAnswer(eventData.getInt(1));
+	    String textToAdd = Integer.toString(mEvent.getId());
 	    text.setText(Html.fromHtml(textToAdd));
 	    
-	    
-	    
-	    eventData.close();
 	    final EventDetailsActivity parentActivity = this;
+	    final int eventId = mEvent.getId();
 	    Button cancelButton = (Button) findViewById(R.id.event_detail_cancel_button);
 	    cancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Delete the answers with the event/answers id
-				mDataHandler.deleteEvent(mEventId);
+				mDataHandler.deleteEvent(eventId);
 				parentActivity.finish();
 			}
 	    	

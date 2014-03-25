@@ -1,6 +1,9 @@
 package org.apps8os.motivator.data;
 
-public class MotivatorEvent {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MotivatorEvent implements Parcelable {
 	
 	private long mStartTime;
 	private long mEndTime;
@@ -12,6 +15,29 @@ public class MotivatorEvent {
 	public MotivatorEvent(int eventId) {
 		mId = eventId;
 	}
+	
+	public MotivatorEvent(Parcel source) {
+		mStartTime = source.readLong();
+		mEndTime = source.readLong();
+		mPlannedDrinks = source.readInt();
+		mActualDrinks = source.readInt();
+		mId = source.readInt();
+		mEventAsText = source.readString();
+	}
+
+	public static final Parcelable.Creator<MotivatorEvent> CREATOR = new Parcelable.Creator<MotivatorEvent>() {
+
+		@Override
+		public MotivatorEvent createFromParcel(Parcel source) {
+			return new MotivatorEvent(source);
+		}
+
+		@Override
+		public MotivatorEvent[] newArray(int size) {
+			return new MotivatorEvent[size];
+		}
+		
+	};
 	
 	/**
 	 * @param mStartTime the mStartTime to set
@@ -88,6 +114,21 @@ public class MotivatorEvent {
 	 */
 	public String getEventText() {
 		return mEventAsText;
+	}
+
+	@Override
+	public int describeContents() {
+		return hashCode();
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(mStartTime);
+		dest.writeLong(mEndTime);
+		dest.writeInt(mPlannedDrinks);
+		dest.writeInt(mActualDrinks);
+		dest.writeInt(mId);
+		dest.writeString(mEventAsText);
 	}
 
 }

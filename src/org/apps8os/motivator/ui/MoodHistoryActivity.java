@@ -95,8 +95,7 @@ public class MoodHistoryActivity extends Activity {
 		mToday.setFirstDayOfWeek(Calendar.MONDAY);
 		
 		// Gets the index/amount of days for today for the day view.
-		mNumberOfTodayInSprint = (int) TimeUnit.DAYS.convert(mToday.getTimeInMillis() - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
-		mNumberOfTodayInSprint += 1;
+		mNumberOfTodayInSprint = mCurrentSprint.getCurrentDayOfTheSprint();
 		
 		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;

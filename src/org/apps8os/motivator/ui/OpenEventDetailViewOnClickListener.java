@@ -16,6 +16,9 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.utils.MotivatorConstants;
+
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -28,19 +31,19 @@ import android.view.View.OnClickListener;
  */
 public class OpenEventDetailViewOnClickListener implements OnClickListener {
 	
-	private int mId;
+	private MotivatorEvent mEvent;
 	private Context mContext;
 	
-	public OpenEventDetailViewOnClickListener(int id, Context context) {
+	public OpenEventDetailViewOnClickListener(MotivatorEvent event, Context context) {
 		super();
-		mId = id;
+		mEvent =event;
 		mContext = context;
 	}
 
 	@Override
 	public void onClick(View arg0) {
 		Intent intent = new Intent(mContext, EventDetailsActivity.class);
-		intent.putExtra(EventDetailsActivity.KEY_EVENT_ID, mId);
+		intent.putExtra(MotivatorConstants.EVENT, mEvent);
 		mContext.startActivity(intent);
 	}
 
