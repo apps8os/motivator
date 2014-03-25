@@ -33,7 +33,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -108,7 +108,7 @@ public class TodaySectionFragment extends Fragment {
 		}
 
 		/**
-		 * Load the events that are planned in background to an ArrayList of AnswerCase objects.
+		 * Load the events that are planned in background to an ArrayList of MotivatorEvent objects.
 		 */
 		@Override
 		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
@@ -118,22 +118,28 @@ public class TodaySectionFragment extends Fragment {
  			int lastAnswerId = -1;
  			// Looping through the cursor.
  			if (cursor.getCount() > 0) {
+ 				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
  				MotivatorEvent event = new MotivatorEvent(cursor.getInt(0));
 				while (!cursor.isClosed()) {
-					// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
+					// Check if we have looped through the answers relating to this event with the answerId.
 					if (lastAnswerId != cursor.getInt(0) && lastAnswerId != -1) {
+						// Add the event to the list and initialize a new instance.
 						result.add(event);
 						event = new MotivatorEvent(cursor.getInt(0));
 					}
+					// Get the question with the questionId.
 					Question question = mDataHandler.getQuestion(cursor.getInt(1));
 					
 					if (question != null) {
+						// Handle the different questions/answers.
 						switch (question.getId()) {
 						case MotivatorConstants.QUESTION_ID_WHEN:
 							event.setStartTime(cursor.getLong(3));
 							// All events in this section should have today as the text so get the answer representing today.
 							event.setEventAsText(question.getAnswer(0));
 							break;
+							
+						// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
 						case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
 							long time;
 							switch (cursor.getInt(2)) {
@@ -162,7 +168,7 @@ public class TodaySectionFragment extends Fragment {
 				}
 				result.add(event);
  			}
-			// Sort the list with the sorting helper
+			// Sort the list
 			Collections.sort(result, new Comparator<MotivatorEvent>() {
 				@Override
 				public int compare(MotivatorEvent case1, MotivatorEvent case2) {
@@ -203,6 +209,7 @@ public class TodaySectionFragment extends Fragment {
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
 				mEventLayout.addView(separator);
 				
+				// Add a button for adding drinks when an event is active.
 				if (result.get(i).getStartTime() < System.currentTimeMillis()) {
 					mButtonLayout.removeAllViews();
 					separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
@@ -213,9 +220,7 @@ public class TodaySectionFragment extends Fragment {
 					addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
 					addDrinkButton.setText(Html.fromHtml("Add Drink"));
 					addDrinkButton.setOnClickListener(new OnClickListener() {
-						
 						private int mDrinkCounter = 0;
-						
 						@Override
 						public void onClick(View v) {
 							mDataHandler.open();

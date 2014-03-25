@@ -25,16 +25,16 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,7 +45,7 @@ import android.view.MenuItem;
  * @author Toni Järvinen
  *
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -71,7 +71,7 @@ public class MainActivity extends FragmentActivity {
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+				getFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);

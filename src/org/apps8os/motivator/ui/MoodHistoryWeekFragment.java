@@ -27,7 +27,7 @@ import org.apps8os.motivator.utils.MotivatorConstants;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,12 +114,20 @@ public class MoodHistoryWeekFragment extends Fragment {
 		
 	}
 	
+	/**
+	 * Save the day to the savedInstanceState.
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY, mDays);
 	}
 	
+	/**
+	 * Gets the short format of the week day.
+	 * @param day
+	 * @return
+	 */
 	public String getDay(DayInHistory day) {
 		Calendar date = new GregorianCalendar();
 		date.setTimeInMillis(day.getDateInMillis());

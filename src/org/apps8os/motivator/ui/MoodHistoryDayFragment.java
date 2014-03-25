@@ -20,7 +20,7 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.utils.MotivatorConstants;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -69,6 +69,9 @@ public class MoodHistoryDayFragment extends Fragment {
 		return rootView;
 	}
 	
+	/**
+	 * Save the day to the savedInstanceState.
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);

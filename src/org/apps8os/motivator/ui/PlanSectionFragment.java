@@ -31,7 +31,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,7 +46,7 @@ import android.widget.LinearLayout;
  *
  */
 public class PlanSectionFragment extends Fragment {
-	
+
 	private EventDataHandler mDataHandler;
 	private LinearLayout mEventLayout;
 	private LayoutInflater mInflater;
@@ -130,16 +130,19 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
  			int lastAnswerId = -1;
  			// Looping through the cursor.
  			if (cursor.getCount() > 0) {
+ 				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
  				MotivatorEvent event = new MotivatorEvent(cursor.getInt(0));
 				while (!cursor.isClosed()) {
-					// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
+					// Check if we have looped through the answers relating to this event with the answerId.
 					if (lastAnswerId != cursor.getInt(0) && lastAnswerId != -1) {
+						// Add the event to the list and initialize a new instance.
 						result.add(event);
 						event = new MotivatorEvent(cursor.getInt(0));
 					}
 					Question question = mDataHandler.getQuestion(cursor.getInt(1));
 					
 					if (question != null) {
+						// Handle the different questions/answers.
 						switch (question.getId()) {
 						case MotivatorConstants.QUESTION_ID_WHEN:
 							event.setStartTime(cursor.getLong(3));
@@ -167,7 +170,7 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 				}
 				result.add(event);
  			}
-			// Sort the list with the sorting helper
+			// Sort the list
 			Collections.sort(result, new Comparator<MotivatorEvent>() {
 				@Override
 				public int compare(MotivatorEvent case1, MotivatorEvent case2) {

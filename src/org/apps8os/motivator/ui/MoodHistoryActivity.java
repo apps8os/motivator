@@ -31,18 +31,18 @@ import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
@@ -56,7 +56,7 @@ import android.widget.DatePicker;
  *
  */
 
-public class MoodHistoryActivity extends FragmentActivity {
+public class MoodHistoryActivity extends Activity {
 	
 	private MoodDataHandler mDataHandler;
 	private ViewPager mViewPager;
@@ -152,7 +152,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 		case R.id.mood_history_search:
 			// Spawn a dialog fragment so that the user can select a day.
 			DialogFragment dialog = new DatePickerFragment();
-			dialog.show(getSupportFragmentManager(), "datePicker");
+			dialog.show(getFragmentManager(), "datePicker");
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -220,10 +220,12 @@ public class MoodHistoryActivity extends FragmentActivity {
 	 * @param dayInMillis
 	 */
 	public void setSelectedDay(long dayInMillis) {
+		// Calculate the selected day position in the viewpager
 		mSelectedDay = (int) TimeUnit.DAYS.convert(dayInMillis - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
 		Calendar selectedDayAsCalendar = new GregorianCalendar();
 		selectedDayAsCalendar.setFirstDayOfWeek(Calendar.MONDAY);
 		selectedDayAsCalendar.setTimeInMillis(dayInMillis);
+		// Calculate the selected day position as week in the viewpager
 		mSelectedWeek = selectedDayAsCalendar.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR);
 		// Take into account change of year.
 		if ( mSelectedWeek < 0 ) {
@@ -240,10 +242,9 @@ public class MoodHistoryActivity extends FragmentActivity {
 	
 	/**
 	 * Loads the views and funtionality for landscape orientation.
-	 * TODO: Functionality, DUMMY calendar currently
 	 */
 	public void loadLandscapeView() {
-		mPagerAdapterWeek = new FragmentWeekPagerAdapter(getSupportFragmentManager(), this);
+		mPagerAdapterWeek = new FragmentWeekPagerAdapter(getFragmentManager(), this);
 		mViewPager.setAdapter(mPagerAdapterWeek);
 		mViewPager.setCurrentItem(mSelectedWeek);
 		mViewPager.setOffscreenPageLimit(1);
@@ -254,7 +255,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 	 * In portrait view, days are represented in a horizontially scrollable carousel.
 	 */
 	public void loadPortraitView() {
-	    mPagerAdapterDay = new FragmentDatePagerAdapter(getSupportFragmentManager());
+	    mPagerAdapterDay = new FragmentDatePagerAdapter(getFragmentManager());
 	    mViewPager.setAdapter(mPagerAdapterDay);
 	    mViewPager.setCurrentItem(mSelectedDay);
 	    mViewPager.setOffscreenPageLimit(5);
@@ -337,6 +338,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment;
+			// Get a DayInHistory for the date represented by this position. Calculated from the start date.
 			DayInHistory date = getDateInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
 			fragment = new MoodHistoryDayFragment();
 			Bundle b = new Bundle();
@@ -367,7 +369,9 @@ public class MoodHistoryActivity extends FragmentActivity {
 			return mNumberOfWeeksInSprint;
 		}
 		
-		
+		/**
+		 * Page title with the week number.
+		 */
 		@Override 
 		public CharSequence getPageTitle(int position) {
 			long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS) * 7);
@@ -382,17 +386,23 @@ public class MoodHistoryActivity extends FragmentActivity {
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment;
+			// Create a calendar object and initialize it to the monday of the first week in the sprint.
 			Calendar calendar = new GregorianCalendar();
 			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 			calendar.setTimeInMillis(mSprintStartDateInMillis);
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			
+			// Create an arraylist for all the days in the week represented by the fragment in this position.
 			ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
+			// Add 7 days / a week depending on the position. In the first position 0, this does not do anything and we add the first week.
 			calendar.add(Calendar.DATE, position * 7);
+			// Add days until sunday.
 			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
 				DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
 				days.add(date);
 				calendar.add(Calendar.DATE, 1);
 			}
+			// Add the sunday.
 			DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
 			days.add(date);
 			// Puts the last day in this week as millisecond value to the arguments.
