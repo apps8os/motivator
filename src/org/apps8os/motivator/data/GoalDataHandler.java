@@ -60,6 +60,10 @@ public class GoalDataHandler extends MotivatorDatabaseHelper {
     	super.deleteLastRow(TABLE_NAME);
 	}
 	
+	public void deleteRowsWithAnsweringId(int answerId) {
+		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+	}
+	
 	public Question getQuestion(int id) {
 		return mQuestions.get(id);
 	}

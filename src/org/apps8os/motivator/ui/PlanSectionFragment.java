@@ -21,9 +21,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.AnswerCase;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +48,7 @@ import android.widget.LinearLayout;
 public class PlanSectionFragment extends Fragment {
 	
 	private EventDataHandler mDataHandler;
-	private LinearLayout mButtonLayout;
+	private LinearLayout mEventLayout;
 	private LayoutInflater mInflater;
 	
 	public PlanSectionFragment() {
@@ -61,7 +62,7 @@ public class PlanSectionFragment extends Fragment {
 				R.layout.fragment_main_activity_plan_section, container, false);
 		
 		// The layout which has dynamic amount of future events/buttons.
-		mButtonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_dynamic_buttons);
+		mEventLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_dynamic_buttons);
 		
 		// two buttons that are always present
 		
@@ -101,23 +102,16 @@ public class PlanSectionFragment extends Fragment {
 		super.onResume();
 	}
 	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
-	}
-	
 	/**
 	 * Inner class for loading the plans to the plan section asynchronously.
 	 * @author Toni Järvinen
 	 *
 	 */
-	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<AnswerCase>> {
+private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEvent>> {
 		
 		private Context mContext;
-		
+
 		public LoadPlansTask(Context context) {
-			super();
 			mContext = context;
 			
 			// Open the database connection
@@ -129,35 +123,56 @@ public class PlanSectionFragment extends Fragment {
 		 * Load the events that are planned in background to an ArrayList of AnswerCase objects.
 		 */
 		@Override
-		protected ArrayList<AnswerCase> doInBackground(Void... arg0) {
-			ArrayList<AnswerCase> result = new ArrayList<AnswerCase>();
+		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
+			ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
  			Cursor cursor = mDataHandler.getEventsAfterToday();
  			cursor.moveToFirst();
- 			int lastAnswerId = -1;		
+ 			int lastAnswerId = -1;
  			// Looping through the cursor.
-			while (!cursor.isClosed() && cursor.getCount() > 0) {
-				// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
-				if (lastAnswerId != cursor.getInt(0)) {	
+ 			if (cursor.getCount() > 0) {
+ 				MotivatorEvent event = new MotivatorEvent(cursor.getInt(0));
+				while (!cursor.isClosed()) {
+					// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
+					if (lastAnswerId != cursor.getInt(0) && lastAnswerId != -1) {
+						result.add(event);
+						event = new MotivatorEvent(cursor.getInt(0));
+					}
 					Question question = mDataHandler.getQuestion(cursor.getInt(1));
-					// Sorting helper can be the answer in this case as the answers are in ascending order timewise
-					AnswerCase event = new AnswerCase(cursor.getInt(0), question.getAnswer(cursor.getInt(2)), cursor.getInt(2));
-					result.add(event);
+					
+					if (question != null) {
+						switch (question.getId()) {
+						case MotivatorConstants.QUESTION_ID_WHEN:
+							event.setStartTime(cursor.getLong(3));
+							event.setEventAsText(question.getAnswer(cursor.getInt(2)));
+							break;
+						case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+							switch (cursor.getInt(2)) {
+							case 0:
+								break;
+							case 1:
+								break;
+							case 2:
+								break;
+							default:
+							}
+							break;
+						}
+					}
+					lastAnswerId = cursor.getInt(0);
+					if (cursor.isLast()) {
+						cursor.close();
+					} else {
+						cursor.moveToNext();
+					}
 				}
-				lastAnswerId = cursor.getInt(0);
-				if (cursor.isLast()) {
-					cursor.close();
-				} else {
-					cursor.moveToNext();
-				}
-				
-			}
-			
-			// sort the list with the sorting helper
-			Collections.sort(result, new Comparator<AnswerCase>() {
+				result.add(event);
+ 			}
+			// Sort the list with the sorting helper
+			Collections.sort(result, new Comparator<MotivatorEvent>() {
 				@Override
-				public int compare(AnswerCase case1, AnswerCase case2) {
-					int case1Sorter = case1.getSortingHelper();
-					int case2Sorter = case2.getSortingHelper();
+				public int compare(MotivatorEvent case1, MotivatorEvent case2) {
+					long case1Sorter = case1.getStartTime();
+					long case2Sorter = case2.getStartTime();
 					if (case1Sorter > case2Sorter) {
 						return 1;
 					} else if (case1Sorter == case2Sorter) {
@@ -168,7 +183,7 @@ public class PlanSectionFragment extends Fragment {
 				}
 			});
 			
-			// lastly close the database connection
+			// Lastly close the database connection
 			mDataHandler.close();
 			
 			return result;
@@ -178,24 +193,21 @@ public class PlanSectionFragment extends Fragment {
 		 * Creates buttons for the upcoming events provided by doInBackground.
 		 */
 		@Override
-		protected void onPostExecute(ArrayList<AnswerCase> result) {
-			mButtonLayout.removeAllViews();
-			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-			mButtonLayout.addView(separator);
+		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
+			mEventLayout.removeAllViews();
+			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
+			mEventLayout.addView(separator);
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
-				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
-				eventButton.setText(result.get(i).getButtonText());
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getAnsweringId(), mContext));
-				mButtonLayout.addView(eventButton);
+				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
+				eventButton.setText(result.get(i).getEventText());
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getId(), mContext));
+				mEventLayout.addView(eventButton);
 				
-				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-				mButtonLayout.addView(separator);
+				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
+				mEventLayout.addView(separator);
+				}
 			}
-			
-			
-		}
-		
 	}
 }

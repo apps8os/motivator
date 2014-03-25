@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -137,6 +138,17 @@ public class AddingGoalActivity extends Activity {
 		} else {
 			super.onBackPressed();
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    // Respond to the action bar's Up/Home button
+	    case android.R.id.home:
+	        mDataHandler.deleteRowsWithAnsweringId(mAnswerId);
+	        return super.onOptionsItemSelected(item);
+	    }
+	    return super.onOptionsItemSelected(item);
 	}
 	
 	/**

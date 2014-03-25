@@ -39,15 +39,9 @@ public class MoodHistoryDayFragment extends Fragment {
 	private static DayInHistory mDay;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Get the DayInHistory from the arguments.
+	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 		Bundle bundle = getArguments();
 		mDay = bundle.getParcelable(MotivatorConstants.DAY_IN_HISTORY);
-	}
-	
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(
 				R.layout.fragment_mood_history_day, viewGroup, false);
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
@@ -73,6 +67,12 @@ public class MoodHistoryDayFragment extends Fragment {
 
 		
 		return rootView;
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelable(MotivatorConstants.DAY_IN_HISTORY, mDay);
 	}
 	
 	

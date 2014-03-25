@@ -19,11 +19,13 @@ package org.apps8os.motivator.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.AnswerCase;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -93,7 +95,7 @@ public class TodaySectionFragment extends Fragment {
 	 * @author Toni Järvinen
 	 *
 	 */
-	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<AnswerCase>> {
+	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEvent>> {
 		
 		private Context mContext;
 
@@ -109,42 +111,63 @@ public class TodaySectionFragment extends Fragment {
 		 * Load the events that are planned in background to an ArrayList of AnswerCase objects.
 		 */
 		@Override
-		protected ArrayList<AnswerCase> doInBackground(Void... arg0) {
-			ArrayList<AnswerCase> result = new ArrayList<AnswerCase>();
+		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
+			ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
  			Cursor cursor = mDataHandler.getEventsToday();
  			cursor.moveToFirst();
- 			int lastAnswerId = -1;		
+ 			int lastAnswerId = -1;
  			// Looping through the cursor.
-			while (!cursor.isClosed() && cursor.getCount() > 0) {
-				// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
-				if (lastAnswerId != cursor.getInt(0)) {	
-					Question question = mDataHandler.getQuestion(cursor.getInt(1));
-					AnswerCase event;
-					// Sorting helper can be the answer in this case as the answers are in ascending order timewise
-					// Need to select the texts to correspond change from tomorrow to today and next weekend to this weekend
-					if (cursor.getInt(2) == 1){
-						event = new AnswerCase(cursor.getInt(0), question.getAnswer(0), cursor.getInt(2));
-					} else if (cursor.getInt(2) == 2) {
-						event = new AnswerCase(cursor.getInt(0), getString(R.string.this_weekend), cursor.getInt(2));
-					} else {
-						event = new AnswerCase(cursor.getInt(0), question.getAnswer(cursor.getInt(2)), cursor.getInt(2));
+ 			if (cursor.getCount() > 0) {
+ 				MotivatorEvent event = new MotivatorEvent(cursor.getInt(0));
+				while (!cursor.isClosed()) {
+					// Check if we already made AnswerCase object for the answering instance, only gets the first answer of the instance.
+					if (lastAnswerId != cursor.getInt(0) && lastAnswerId != -1) {
+						result.add(event);
+						event = new MotivatorEvent(cursor.getInt(0));
 					}
-					result.add(event);
+					Question question = mDataHandler.getQuestion(cursor.getInt(1));
+					
+					if (question != null) {
+						switch (question.getId()) {
+						case MotivatorConstants.QUESTION_ID_WHEN:
+							event.setStartTime(cursor.getLong(3));
+							// All events in this section should have today as the text so get the answer representing today.
+							event.setEventAsText(question.getAnswer(0));
+							break;
+						case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+							long time;
+							switch (cursor.getInt(2)) {
+							case 0:
+								time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
+								break;
+							case 1:
+								time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
+								break;
+							case 2:
+								time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
+								break;
+							default:
+								time = 0;
+							}
+							event.setStartTime(event.getStartTime() + time);
+							break;
+						}
+					}
+					lastAnswerId = cursor.getInt(0);
+					if (cursor.isLast()) {
+						cursor.close();
+					} else {
+						cursor.moveToNext();
+					}
 				}
-				lastAnswerId = cursor.getInt(0);
-				if (cursor.isLast()) {
-					cursor.close();
-				} else {
-					cursor.moveToNext();
-				}
-				
-			}
+				result.add(event);
+ 			}
 			// Sort the list with the sorting helper
-			Collections.sort(result, new Comparator<AnswerCase>() {
+			Collections.sort(result, new Comparator<MotivatorEvent>() {
 				@Override
-				public int compare(AnswerCase case1, AnswerCase case2) {
-					int case1Sorter = case1.getSortingHelper();
-					int case2Sorter = case2.getSortingHelper();
+				public int compare(MotivatorEvent case1, MotivatorEvent case2) {
+					long case1Sorter = case1.getStartTime();
+					long case2Sorter = case2.getStartTime();
 					if (case1Sorter > case2Sorter) {
 						return 1;
 					} else if (case1Sorter == case2Sorter) {
@@ -165,7 +188,7 @@ public class TodaySectionFragment extends Fragment {
 		 * Creates buttons for the upcoming events provided by doInBackground.
 		 */
 		@Override
-		protected void onPostExecute(ArrayList<AnswerCase> result) {
+		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
 			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
 			mEventLayout.addView(separator);
@@ -173,37 +196,37 @@ public class TodaySectionFragment extends Fragment {
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
-				eventButton.setText(result.get(i).getButtonText());
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getAnsweringId(), mContext));
+				eventButton.setText(result.get(i).getEventText());
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i).getId(), mContext));
 				mEventLayout.addView(eventButton);
 				
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
 				mEventLayout.addView(separator);
-			}
-			
-			if (result.size() > 0) {
-				mButtonLayout.removeAllViews();
-				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-				mButtonLayout.addView(separator);
-				final AnswerCase todaysEvent = result.get(0);
-				final Button addDrinkButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
-				Drawable bottle = getActivity().getResources().getDrawable(R.drawable.pullo1);
-				addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
-				addDrinkButton.setText(Html.fromHtml("Add Drink"));
-				addDrinkButton.setOnClickListener(new OnClickListener() {
-					
-					private int mDrinkCounter = 0;
-					
-					@Override
-					public void onClick(View v) {
-						mDataHandler.open();
-						mDataHandler.addDrink(todaysEvent.getAnsweringId());
-						mDrinkCounter += 1;
-						addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
-						mDataHandler.close();
-					}
-				});
-				mButtonLayout.addView(addDrinkButton);
+				
+				if (result.get(i).getStartTime() < System.currentTimeMillis()) {
+					mButtonLayout.removeAllViews();
+					separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
+					mButtonLayout.addView(separator);
+					final MotivatorEvent todaysEvent = result.get(i);
+					final Button addDrinkButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
+					Drawable bottle = getActivity().getResources().getDrawable(R.drawable.pullo1);
+					addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
+					addDrinkButton.setText(Html.fromHtml("Add Drink"));
+					addDrinkButton.setOnClickListener(new OnClickListener() {
+						
+						private int mDrinkCounter = 0;
+						
+						@Override
+						public void onClick(View v) {
+							mDataHandler.open();
+							mDataHandler.addDrink(todaysEvent.getId());
+							mDrinkCounter += 1;
+							addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
+							mDataHandler.close();
+						}
+					});
+					mButtonLayout.addView(addDrinkButton);
+				}
 			}
 		}
 	}

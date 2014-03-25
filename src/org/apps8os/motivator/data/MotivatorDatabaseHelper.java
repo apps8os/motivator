@@ -129,6 +129,10 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected void deleteLastRow(String tableName) {
     	db.delete(tableName, "id = (SELECT MAX(id) FROM " + tableName + ")", null);
     }
+	
+	protected void deleteRowsWithAnsweringId(String tableName, int answerId) {
+		db.delete(tableName, KEY_ID_ANSWERS + " = " + answerId, null);
+	}
     
     /**
      * Inserts the answer to the database. Call this from subclass.

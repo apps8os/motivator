@@ -26,7 +26,6 @@ import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -52,17 +51,11 @@ public class MoodHistoryWeekFragment extends Fragment {
 	
 	private ArrayList<DayInHistory> mDays;
 	private Resources mRes;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// Get the millisecond value of the last day in this week from the arguments.
-		Bundle b = getArguments();
-		mDays = b.getParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
+		Bundle b = getArguments();
+		mDays = b.getParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY);
 		final View rootView = (View) inflater.inflate(R.layout.fragment_mood_history_landscape, viewGroup, false);
 		mRes = getActivity().getResources();
 		// Add the days to the layout.
@@ -117,10 +110,14 @@ public class MoodHistoryWeekFragment extends Fragment {
 		li.setRangeY(0, 4);
 		li.setLineToFill(0);
 		
-		
-		
 		return rootView;
 		
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY, mDays);
 	}
 	
 	public String getDay(DayInHistory day) {

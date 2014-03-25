@@ -97,8 +97,8 @@ public class MoodHistoryActivity extends FragmentActivity {
 	    actionBar.setTitle(mNumberOfTodayInSprint + " days of glory");
 	    
 		mStartDate = new GregorianCalendar();
-		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
+		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
 		
 		mNumberOfWeeksInSprint = mToday.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR) + 1;
 		if ( mNumberOfWeeksInSprint < 0 ) {
@@ -222,8 +222,8 @@ public class MoodHistoryActivity extends FragmentActivity {
 	public void setSelectedDay(long dayInMillis) {
 		mSelectedDay = (int) TimeUnit.DAYS.convert(dayInMillis - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
 		Calendar selectedDayAsCalendar = new GregorianCalendar();
-		selectedDayAsCalendar.setTimeInMillis(dayInMillis);
 		selectedDayAsCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+		selectedDayAsCalendar.setTimeInMillis(dayInMillis);
 		mSelectedWeek = selectedDayAsCalendar.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR);
 		// Take into account change of year.
 		if ( mSelectedWeek < 0 ) {
@@ -233,8 +233,7 @@ public class MoodHistoryActivity extends FragmentActivity {
 		// Set the day or week depending on orientation.
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			mViewPager.setCurrentItem(mSelectedDay);
-		} else  {
-			
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			mViewPager.setCurrentItem(mSelectedWeek);
 		}
 	}

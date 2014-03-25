@@ -71,10 +71,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 * @param answersId
 	 */
 	public void insertAnswer(int answer, int questionId, int answersId) {
-		// Check if the question is the one asking when the event will be. (should be the first one)
-		if (questionId == getFirstQuestionId()) {
+		// Check if the question is the one asking when the event will be.
+		if (questionId == MotivatorConstants.QUESTION_ID_WHEN) {
 			// Initialize the cache calendar for today/now
 			mCalendarCache = new GregorianCalendar();
+			UtilityMethods.setToMidnight(mCalendarCache);
 			switch (answer) {
 				// Answer today, no need to do anything
 				case 0: {
@@ -82,13 +83,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				}
 				// Tomorrow, set the calendar to tomorrow midnight.
 				case 1: {
-					UtilityMethods.setToMidnight(mCalendarCache);
 					mCalendarCache.add(Calendar.DAY_OF_MONTH, 1);
 					break;
 				}
 				// Next weekend, set the calendar to next friday at midnight.
 				case 2: {
-					UtilityMethods.setToMidnight(mCalendarCache);
 					int daysUntilNextFriday = (Calendar.FRIDAY - mCalendarCache.get(Calendar.DAY_OF_WEEK));
 					mCalendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
 					break;
@@ -105,11 +104,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 */
 	public Cursor getEventsAfterToday() {
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
+		tomorrowMidnight.setFirstDayOfWeek(Calendar.MONDAY);
 		UtilityMethods.setToMidnight(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
-		String selection = KEY_CONTENT + " > " + tomorrowMidnight.getTimeInMillis();
-		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER};
+		String selection = KEY_CONTENT + " >= " + tomorrowMidnight.getTimeInMillis();
+		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
 		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		return query;
 	}
@@ -126,8 +126,8 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		UtilityMethods.setToMidnight(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
-		String selection = KEY_CONTENT + " > " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
-		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER};
+		String selection = KEY_CONTENT + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
+		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
 		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		return query;
 	}
@@ -161,7 +161,14 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
     	super.deleteLastRow(TABLE_NAME);
 	}
 	
+	public void deleteRowsWithAnsweringId(int answerId) {
+		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+	}
+	
 	public Question getQuestion(int id) {
+		if (id == MotivatorConstants.DRINK_AMOUNT_ID) {
+			return null;
+		}
 		return mQuestions.get(id);
 	}
 	

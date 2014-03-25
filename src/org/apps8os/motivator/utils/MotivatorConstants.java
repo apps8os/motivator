@@ -22,6 +22,9 @@ public final class MotivatorConstants {
 	public static final String DAY_IN_HISTORY_ARRAY = "day_in_history_array";
 	public static final String LAST_DAY_OF_THE_WEEK = "last_day_of_the_week";
 	public static final int DRINK_AMOUNT_ID = 1900;
+	public static final int QUESTION_ID_WHEN = 1000;
+	public static final int QUESTION_ID_WHERE = 1001;
+	public static final int QUESTION_ID_TIME_TO_GO = 1002;
 	
 	/**
 	 * Private empty constructor to make sure instancing this class induces an error.

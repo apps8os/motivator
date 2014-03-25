@@ -68,6 +68,10 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	super.deleteLastRow(TABLE_NAME);
     }
 	
+	public void deleteRowsWithAnsweringId(int answerId) {
+		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+	}
+	
     /**
      * Inserting a mood to the database
      * @param energyLevel
