@@ -28,8 +28,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +63,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		for (int i = 0; i < mDays.size(); i++) {
 			RelativeLayout dayView = (RelativeLayout) inflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
 			TextView dayText = (TextView) dayView.getChildAt(1);
-			dayText.setText(mDays.get(i).getDateInString(getActivity()));
+			dayText.setText(Html.fromHtml(getDay(mDays.get(i)) + "<br><small>" + mDays.get(i).getDateInString(getActivity())));
 			if (mDays.get(i).getAvgMoodLevel() == 0) {
 				ImageView moodImage = (ImageView) dayView.getChildAt(0);
 				moodImage.setImageDrawable(mRes.getDrawable(R.drawable.temp_emoticon_bw));
@@ -72,7 +72,6 @@ public class MoodHistoryWeekFragment extends Fragment {
 			getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 			dayView.getLayoutParams().width = dm.widthPixels / 7;
 			dayLayout.addView(dayView);
-			Log.d(getTag(), mDays.get(i).getDateInString(getActivity()) + " Average Mood " + mDays.get(i).getAvgMoodLevel());
 		}
 	
 		Line l = new Line();

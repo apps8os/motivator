@@ -110,7 +110,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		
 		String selection = KEY_CONTENT + " >= " + tomorrowMidnight.getTimeInMillis();
 		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
-		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		return query;
 	}
 	
@@ -128,28 +128,28 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		
 		String selection = KEY_CONTENT + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
 		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
-		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		return query;
 	}
 	
 	public void addDrink(int answerId) {
 		String selection = KEY_ID_ANSWERS + " = " + answerId + " AND " + KEY_ID_QUESTION + " = " + MotivatorConstants.DRINK_AMOUNT_ID;
 		String[] columns = {KEY_ANSWER};
-		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, null);
+		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
 		int previousAmount = 0;
 		if (query.moveToFirst()) {
 			previousAmount = query.getInt(0);
 		}
 		ContentValues values = new ContentValues();
 		values.put(KEY_ANSWER, previousAmount + 1);
-		db.update(TABLE_NAME, values, selection, null);
+		mDb.update(TABLE_NAME, values, selection, null);
 		query.close();
 	}
 	
 	public Cursor getEventWithId(int id) {
 		String selection = KEY_ID_ANSWERS + " = " + id;
 		String[] columns = {KEY_ID_QUESTION, KEY_ANSWER};
-		Cursor query = db.query(TABLE_NAME, columns, selection, null, null, null, null);
+		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
 		return query;
 	}
 	
@@ -178,7 +178,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 
 	public void deleteEvent(int mEventId) {
 		String selection = KEY_ID_ANSWERS + " = " + mEventId;
-		db.delete(TABLE_NAME, selection, null);
+		mDb.delete(TABLE_NAME, selection, null);
 	}
 	
 }

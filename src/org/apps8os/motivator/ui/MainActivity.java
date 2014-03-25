@@ -22,9 +22,13 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.services.NotificationService;
+import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -57,6 +61,7 @@ public class MainActivity extends Activity {
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	private int mTimeToNotify;					// Hours after midnight when to notify the user
+	private Sprint mCurrentSprint;
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -79,6 +84,14 @@ public class MainActivity extends Activity {
 		
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
+		
+		EventDataHandler dataHandler = new EventDataHandler(this);
+		dataHandler.open();
+		mCurrentSprint = dataHandler.getCurrentSprint();
+		dataHandler.close();
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle("Day " + mCurrentSprint.getCurrentDayOfTheSprint() + " of " + mCurrentSprint.getDaysInSprint());
 		
 		mTimeToNotify = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, "12"));
 		
@@ -142,7 +155,10 @@ public class MainActivity extends Activity {
 			} else if(position == 2) {
 				fragment = new PlanSectionFragment();
 			} else if (position == 0) {
+				Bundle b = new Bundle();
+				b.putParcelable(MotivatorConstants.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new HistorySectionFragment();
+				fragment.setArguments(b);
 			} else {
 				return null;
 			}

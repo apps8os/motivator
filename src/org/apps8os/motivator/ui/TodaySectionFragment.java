@@ -105,6 +105,7 @@ public class TodaySectionFragment extends Fragment {
 			// Open the database connection
 			mDataHandler = new EventDataHandler(getActivity());
 			mDataHandler.open();
+			
 		}
 
 		/**

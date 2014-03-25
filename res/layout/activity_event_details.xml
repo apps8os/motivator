@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:text=""
-        android:textSize="24sp" />
+        android:textAppearance="?android:textAppearanceLarge" />
 
     <TextView
         android:id="@+id/event_detail_text"
@@ -48,6 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/cancel_event" />
+        android:text="@string/cancel_event"
+        android:background="@color/gray"
+        style="?android:attr/borderlessButtonStyle" />
 
 </RelativeLayout>

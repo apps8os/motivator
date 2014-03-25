@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -73,7 +74,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 			KEY_MOODLEVEL + " INTEGER, " +
 			KEY_TIMESTAMP + " INTEGER);";
 	
-	protected SQLiteDatabase db;
+	protected SQLiteDatabase mDb;
 	
 	protected MotivatorDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -94,6 +95,8 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		}
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		db.execSQL(TABLE_CREATE_SPRINTS);
+		
+		insertSprint(1393632000000L, 105, db);
 	}
 
 	@Override
@@ -106,14 +109,14 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public void open(){
-		db = this.getWritableDatabase();
+		mDb = this.getWritableDatabase();
 	}
 	
 	public boolean isOpen() {
-		return db.isOpen();
+		return mDb.isOpen();
 	}
 	
-	public void insertSprint(long startTime, int days) {
+	public void insertSprint(long startTime, int days, SQLiteDatabase db) {
 		ContentValues values = new ContentValues();
 		values.put(KEY_SPRINT_START, startTime);
 		values.put(KEY_SPRINT_DAYS, days);
@@ -122,16 +125,37 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		db.insert(TABLE_NAME_SPRINTS, null, values);
 	}
 	
+	public void insertSprint(long startTime, int days) {
+		ContentValues values = new ContentValues();
+		values.put(KEY_SPRINT_START, startTime);
+		values.put(KEY_SPRINT_DAYS, days);
+		long endTime = startTime + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS);
+		values.put(KEY_SPRINT_END, endTime);
+		mDb.insert(TABLE_NAME_SPRINTS, null, values);
+	}
+	
+	public Sprint getCurrentSprint() {
+		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
+		String columns[] = {KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END};
+		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, null);
+		cursor.moveToFirst();
+		Sprint current = new Sprint(cursor.getLong(0));
+		current.setDaysInSprint(cursor.getInt(1));
+		current.setEndTime(cursor.getLong(2));
+		cursor.close();
+		return current;
+	}
+	
 	/**
 	 * Delete last row from the given table. Call this from subclass.
 	 * @param tableName
 	 */
 	protected void deleteLastRow(String tableName) {
-    	db.delete(tableName, "id = (SELECT MAX(id) FROM " + tableName + ")", null);
+    	mDb.delete(tableName, "id = (SELECT MAX(id) FROM " + tableName + ")", null);
     }
 	
 	protected void deleteRowsWithAnsweringId(String tableName, int answerId) {
-		db.delete(tableName, KEY_ID_ANSWERS + " = " + answerId, null);
+		mDb.delete(tableName, KEY_ID_ANSWERS + " = " + answerId, null);
 	}
     
     /**
@@ -149,7 +173,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
     	values.put(KEY_ID_ANSWERS, answersId);
     	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
     	values.put(KEY_CONTENT, content);
-    	db.insert(tableName, null, values);
+    	mDb.insert(tableName, null, values);
     }
 
 }

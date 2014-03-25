@@ -106,7 +106,19 @@ public class MoodQuestionActivity extends Activity {
         	@Override
 			public void onClick(View v) {
         		saveMood(v);
+        		goToQuestionnaire();
         	}
+        });
+        
+        Button okButton = (Button) findViewById(R.id.mood_question_ok_button);
+        okButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				saveMood(v);
+				finish();
+			}
+        	
         });
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
@@ -138,6 +150,10 @@ public class MoodQuestionActivity extends Activity {
 	public void saveMood(View v) {
 		int mood = mCardsViewPagerMood.getCurrentItem();
 		mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
+	}
+	
+	public void goToQuestionnaire() {
+		int mood = mCardsViewPagerMood.getCurrentItem();
 		Intent intent = new Intent(this, QuestionnaireActivity.class);
 		if (mood < 2) {
 			intent.putExtra(GOODMOOD, false);

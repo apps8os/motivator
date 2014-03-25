@@ -7,19 +7,20 @@
         android:id="@+id/mood_history_week_view_mood_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_alignParentBottom="true"
         android:src="@drawable/temp_emoticon" />
 
     <TextView
         android:id="@+id/mood_history_week_view_day"
+        android:textAlignment="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="9dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

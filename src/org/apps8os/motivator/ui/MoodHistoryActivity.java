@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
@@ -62,9 +63,11 @@ public class MoodHistoryActivity extends Activity {
 	private ViewPager mViewPager;
 	private FragmentDatePagerAdapter mPagerAdapterDay;
 	private FragmentWeekPagerAdapter mPagerAdapterWeek;
+	private Sprint mCurrentSprint;
 	
 	private static long mSprintStartDateInMillis = 1393632000000L;
-	private static int mDaysInSprint = 105;
+	private static long mSprintEndDateInMillis;
+	private static int mDaysInSprint = 200;
 	private int mNumberOfTodayInSprint;
 	private int mNumberOfWeeksInSprint;
 	private int mSelectedDay;
@@ -80,6 +83,10 @@ public class MoodHistoryActivity extends Activity {
 	    mDataHandler = new MoodDataHandler(this);
 	    mDataHandler.open();
 	    
+	    mCurrentSprint = getIntent().getExtras().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+	    
+	    mSprintStartDateInMillis = mCurrentSprint.getStartTime();
+	    mDaysInSprint = mCurrentSprint.getDaysInSprint();
 	    ActionBar actionBar = getActionBar();
 
 		

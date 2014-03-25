@@ -82,7 +82,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	values.put(KEY_ENERGYLEVEL, energyLevel);
     	values.put(KEY_MOODLEVEL, moodLevel);
     	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
-    	db.insert(TABLE_NAME_MOOD, null, values);
+    	mDb.insert(TABLE_NAME_MOOD, null, values);
     }
     
     
@@ -109,7 +109,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	
     	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
     	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
-    	query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
     	
     	if (query.moveToFirst()) {
     		return query;
@@ -124,7 +124,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	
     	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
     	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
-    	query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
     	
     	if (query.moveToFirst()) {
     		return query;
@@ -141,7 +141,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     public long getNextMoodTimestamp(long fromTimestamp) {
     	String selection = KEY_TIMESTAMP + " < " + fromTimestamp;
     	String columns[] = {KEY_TIMESTAMP};
-    	Cursor query = db.query(TABLE_NAME_MOOD, columns, selection, null, null, null, KEY_TIMESTAMP);
+    	Cursor query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, KEY_TIMESTAMP);
     	long result;
     	if (query.moveToLast()) {
     		result = query.getLong(0);
@@ -158,7 +158,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
      */
     public long getMoodTableSize() {
     	String columns[] = {KEY_TIMESTAMP};
-    	Cursor query = db.query(TABLE_NAME_MOOD, columns, null, null, null, null, null);
+    	Cursor query = mDb.query(TABLE_NAME_MOOD, columns, null, null, null, null, null);
     	long size = query.getCount();
     	query.close();
     	return size;

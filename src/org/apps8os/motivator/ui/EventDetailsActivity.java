@@ -23,6 +23,7 @@ import org.apps8os.motivator.R;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -66,19 +67,20 @@ public class EventDetailsActivity extends Activity {
 	    String textToAdd = question.getAnswer(eventData.getInt(1));
 	    eventData.moveToNext();
 	    question = mDataHandler.getQuestion(eventData.getInt(0));
-	    textToAdd = textToAdd + ", " + question.getAnswer(eventData.getInt(1));
-	    text.setText(textToAdd);
+	    textToAdd = textToAdd + " <br> " + question.getAnswer(eventData.getInt(1));
+	    text.setText(Html.fromHtml(textToAdd));
 	    
 	    
 	    
 	    eventData.close();
-	    
+	    final EventDetailsActivity parentActivity = this;
 	    Button cancelButton = (Button) findViewById(R.id.event_detail_cancel_button);
 	    cancelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				// Delete the answers with the event/answers id
 				mDataHandler.deleteEvent(mEventId);
+				parentActivity.finish();
 			}
 	    	
 	    });

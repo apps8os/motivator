@@ -17,6 +17,8 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +45,8 @@ public class HistorySectionFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		final Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+		
 		View rootView = inflater.inflate(
 				R.layout.fragment_main_activity, container, false);
 		LinearLayout buttonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_fragmenet_layout);
@@ -53,12 +57,14 @@ public class HistorySectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), MoodHistoryActivity.class);
+				intent.putExtra(MotivatorConstants.CURRENT_SPRINT, currentSprint);
 				startActivity(intent);
 			}
 		});
 		
 		View separator = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
 		buttonLayout.addView(separator);
+
 		
 		Button moodRelButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
 		moodRelButton.setText("Drinking history");
@@ -66,6 +72,7 @@ public class HistorySectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), MoodRelationHistoryActivity.class);
+				intent.putExtra(MotivatorConstants.CURRENT_SPRINT, currentSprint);
 				startActivity(intent);
 			}
 			

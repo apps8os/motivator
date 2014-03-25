@@ -29,7 +29,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/next" />
+        android:text="@string/next"
+        android:background="@color/gray"
+        style="?android:attr/borderlessButtonStyle" />
 
     <LinearLayout
         android:layout_width="wrap_content"

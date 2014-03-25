@@ -54,5 +54,6 @@
     <string name="saturday_short">Sat</string>
     <string name="sunday_short">Sun</string>
     <string name="action_search">Search</string>
+    <string name="ok">Ok</string>
 
 </resources>

@@ -24,13 +24,32 @@
     android:paddingBottom="18dp"
     xmlns:app="http://schemas.android.com/tools">
     
-    <Button
-        android:id="@+id/mood_question_next_button"
+    <LinearLayout
+        android:id="@+id/mood_question_buttons"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="@string/next" />
+        android:background="@color/gray"
+        style="?android:attr/buttonBarStyle"
+        >
+	    <Button
+	        android:id="@+id/mood_question_ok_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/ok"
+	        style="?android:attr/borderlessButtonStyle" />
+	    <Button
+	        android:id="@+id/mood_question_next_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/next"
+	        style="?android:attr/borderlessButtonStyle" />
+    </LinearLayout>
+    
+    
     
     
     <TextView
@@ -61,7 +80,6 @@
         android:layout_below="@+id/mood_question_energylevel_textview"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_alignLeft="@+id/mood_question_next_button"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
         app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
