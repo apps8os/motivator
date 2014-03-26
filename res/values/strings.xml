@@ -23,7 +23,6 @@
     <string name="title_section2">Today</string>
     <string name="title_section3">Plan</string>
     <string name="today_screen_mood">How are you feeling?</string>
-    <string name="today_screen_save_location">Mark location</string>
     <string name="action_info">Info</string>
     <string name="next">Next</string>
     <string name="mood_selection_image_view_content">Image for the selection of mood</string>
@@ -53,8 +52,15 @@
     <string name="sunday_short">Sun</string>
     <string name="action_search">Search</string>
     <string name="ok">OK</string>
-    <string name="day">In the morning</string>
-    <string name="half_day">In the morning and evening</string>
-    <string name="one_hour">Every hour</string>
+    <string name="in_the_morning">In the morning</string>
+    <string name="morning_and_evening">In the morning and evening</string>
+    <string name="every_hour">Every hour</string>
+    <string name="days_of_glory">days of kudos</string>
+    <string name="day">Day</string>
+    <string name="of_glory">of kudos</string>
+    <string name="no_added_moods">No added moods.</string>
+    <string name="amount_of_drinks">How many drinks.</string>
+    <string name="swipe_right_for_plans">Swipe right to make plans</string>
+    <string name="swipe_left_for_history">Swipe left to see history</string>
 
 </resources>

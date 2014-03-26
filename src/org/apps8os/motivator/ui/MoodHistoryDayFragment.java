@@ -21,6 +21,7 @@ import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.app.Fragment;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -47,6 +48,7 @@ public class MoodHistoryDayFragment extends Fragment {
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
 		TextView comment = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
 		ImageView image = (ImageView) rootView.findViewById(R.id.mood_history_fragment_mood_image);
+		Resources res = getActivity().getResources();
 		// Set default page if the day is null or set the content from day object if it exists.
 		if (mDay != null) {
 			title.setText(R.string.your_mood);
@@ -59,8 +61,8 @@ public class MoodHistoryDayFragment extends Fragment {
 		}
 		
 		if (mDay.getAvgMoodLevel() == 0) {
-			image.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.temp_emoticon_bw));
-			comment.setText("No added moods.");
+			image.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
+			comment.setText(res.getString(R.string.no_added_moods));
 		} else {
 			comment.setText("Best Day EVER!");
 		}

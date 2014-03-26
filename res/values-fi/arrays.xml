@@ -16,16 +16,11 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>    
-    <string-array name="notification_intervals_strings">
-        <item>@string/in_the_morning</item>
-        <item>@string/morning_and_evening</item>
-        <item>@string/every_hour</item>
-    </string-array>
     
     <string-array name="time_frames">
-        <item>Last week</item>
-        <item>Last two weeks</item>
-        <item>Last month</item>
-        <item>Specific timeframe</item>
+        <item>Viime viikko</item>
+        <item>Viimeiset kaksi viikkoa</item>
+        <item>Viime kuukausi</item>
+        <item>Valitse aikajakso</item>
     </string-array>
 </resources>

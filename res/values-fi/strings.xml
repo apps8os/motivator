@@ -23,7 +23,6 @@
     <string name="title_section2">Tänään</string>
     <string name="title_section3">Suunnittele</string>
     <string name="today_screen_mood">Mikä fiilis?</string>
-    <string name="today_screen_save_location">Merkkaa paikka</string>
     <string name="action_info">Info</string>
     <string name="next">Seuraava</string>
     <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
@@ -42,6 +41,7 @@
     <string name="send_notifications">Lähetä muistutuksia?</string>
     <string name="minimum_notification_interval">Milloin haluat muistutuksia?</string>
     <string name="cancel_event">Peru tapahtuma</string>
+    <string name="action_search">Etsi</string>
     <string name="your_mood">Fiiliksesi</string>
     <string name="last_mood">Vastaa fiiliskyselyihin</string>
     <string name="monday_short">Ma</string>
@@ -52,8 +52,15 @@
     <string name="saturday_short">La</string>
     <string name="sunday_short">Su</string>
     <string name="ok">OK</string>
-    <string name="day">Aamulla</string>
-    <string name="half_day">Aamulla ja illalla</string>
-    <string name="one_hour">Joka tunti</string>
-
+    <string name="in_the_morning">Aamulla</string>
+    <string name="morning_and_evening">Aamulla ja illalla</string>
+    <string name="every_hour">Joka tunti</string>
+    <string name="days_of_glory">kunnon päivää</string>
+    <string name="day"></string>
+    <string name="of_glory">kunnon päivä</string>
+    <string name="no_added_moods">Ei lisättyjä fiiliksiä.</string>
+    <string name="amount_of_drinks">Kuinka monta juomaa.</string>
+    <string name="swipe_right_for_plans">Oikealla voit tehdä suunnitelmia</string>
+    <string name="swipe_left_for_history">Vasemmalla näet historiasi</string>
+    
 </resources>

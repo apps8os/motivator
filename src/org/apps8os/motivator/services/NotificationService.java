@@ -45,7 +45,7 @@ public class NotificationService extends IntentService {
 		// Set up the notification with a builder
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentTitle(getString(R.string.today_screen_mood));
-		builder.setSmallIcon(R.drawable.ic_launcher);
+		builder.setSmallIcon(R.drawable.ic_stat_notification_icon_temp1);
 		builder.setTicker(getString(R.string.today_screen_mood));
 		// Remove the notification when the user clicks it.
 		builder.setAutoCancel(true);

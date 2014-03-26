@@ -31,7 +31,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
+	    setContentView(R.layout.activity_mood_relation_history);
 	    SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.time_frames, android.R.layout.simple_spinner_dropdown_item);
 	    
 	    ActionBar bar = getActionBar();

@@ -92,7 +92,7 @@ public class MainActivity extends Activity {
 		dataHandler.close();
 		
 		ActionBar actionBar = getActionBar();
-		actionBar.setTitle("Day " + mCurrentSprint.getCurrentDayOfTheSprint() + " of " + mCurrentSprint.getDaysInSprint());
+		actionBar.setTitle(getResources().getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getResources().getString(R.string.of_glory));
 		
 		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_SEND_NOTIFICATIONS, true) && !getSharedPreferences(MotivatorConstants.MOTIVATOR_PREFS, 0).getBoolean(mHaveSetNotifications, false)) {
 			setNotifications();
@@ -126,7 +126,7 @@ public class MainActivity extends Activity {
 		editor.putBoolean(mHaveSetNotifications, true);
 		editor.commit();
 		
-		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, getResources().getString(R.string.day));
+		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, getResources().getString(R.string.in_the_morning));
 		// Set up notifying user to answer to the mood question
 		// The time to notify the user
 		GregorianCalendar notificationTime = new GregorianCalendar();
@@ -139,11 +139,11 @@ public class MainActivity extends Activity {
 		Intent notificationIntent = new Intent(this, NotificationService.class);
 		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		alarmManager.cancel(pendingNotificationIntent);
-		if (mTimeToNotify == getResources().getString(R.string.day)) {
+		if (mTimeToNotify == getResources().getString(R.string.in_the_morning)) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
-		} else if (mTimeToNotify == getResources().getString(R.string.half_day)) {
+		} else if (mTimeToNotify == getResources().getString(R.string.morning_and_evening)) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, pendingNotificationIntent);
-		} else if (mTimeToNotify == getResources().getString(R.string.one_hour)) {
+		} else if (mTimeToNotify == getResources().getString(R.string.every_hour)) {
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingNotificationIntent);
 		}
 	}

@@ -17,6 +17,7 @@
 -->
 <resources>
     <color name="gray">#EDEDED</color>
+    <color name="medium_gray">#919191</color>
     <color name="light_blue">#F0FFFF</color>
     <color name="lime">#E5FF54</color>
     <color name="blue">#33B5E5</color>

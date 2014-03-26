@@ -100,7 +100,7 @@ public class MoodHistoryActivity extends Activity {
 		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
-	    actionBar.setTitle(mNumberOfTodayInSprint + " days of glory");
+	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getResources().getString(R.string.days_of_glory));
 	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
