@@ -40,7 +40,7 @@
     <string name="add_goal">Lisää tavoite</string>
     <string name="this_weekend">Tänä viikonloppuna</string>
     <string name="send_notifications">Lähetä muistutuksia?</string>
-    <string name="minimum_notification_interval">Pienin notifikaatioiden aikaväli</string>
+    <string name="minimum_notification_interval">Milloin haluat muistutuksia?</string>
     <string name="cancel_event">Peru tapahtuma</string>
     <string name="your_mood">Fiiliksesi</string>
     <string name="last_mood">Vastaa fiiliskyselyihin</string>
@@ -51,5 +51,9 @@
     <string name="friday_short">Pe</string>
     <string name="saturday_short">La</string>
     <string name="sunday_short">Su</string>
+    <string name="ok">OK</string>
+    <string name="day">Aamulla</string>
+    <string name="half_day">Aamulla ja illalla</string>
+    <string name="one_hour">Joka tunti</string>
 
 </resources>

@@ -17,11 +17,11 @@
 package org.apps8os.motivator.ui;
 
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
+import org.apps8os.motivator.R;
 import org.apps8os.motivator.services.NotificationService;
-import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -37,7 +38,8 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	
 	public static final String KEY_SEND_NOTIFICATIONS = "send_notifications";
 	public static final String KEY_NOTIFICATION_INTERVAL = "minimum_notification_interval";
-	private int mTimeToNotify;
+	private String mTimeToNotify;
+	private Resources mRes;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -46,7 +48,8 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	    getFragmentManager().beginTransaction()
         .replace(android.R.id.content, new SettingsFragment())
         .commit();
-	    mTimeToNotify = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, "12"));
+	    mRes = getResources();
+	    mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.day));
 	}
 	
 	@Override
@@ -64,30 +67,59 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		GregorianCalendar notificationTime = new GregorianCalendar();
-		UtilityMethods.setToMidnight(notificationTime);
-		notificationTime.add(GregorianCalendar.HOUR, mTimeToNotify);	
-		// Set the notification to repeat over the given time at notificationTime
-		Intent notificationIntent = new Intent(this, NotificationService.class);
-		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		// An alarm manager for scheduling notifications
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		
+		// Set the notification to repeat over the given time at notificationTime
+		Intent notificationIntent = new Intent(this, NotificationService.class);
+		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);	
 		// Check if we need to send notifications or not.
 		if (key.equals(KEY_SEND_NOTIFICATIONS)) {
 			if (sharedPreferences.getBoolean(key, true)) {
-				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(mTimeToNotify, TimeUnit.HOURS), pendingNotificationIntent);
+				setNotifications(pendingNotificationIntent, alarmManager);
 			} else {
 				alarmManager.cancel(pendingNotificationIntent);
 			}
 		} 
 		// Check if the interval has changed and update the repeating alarm
 		else if (key.equals(KEY_NOTIFICATION_INTERVAL)) {
-			mTimeToNotify = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, "12"));
-			alarmManager.cancel(pendingNotificationIntent);
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), TimeUnit.MILLISECONDS.convert(mTimeToNotify, TimeUnit.HOURS), pendingNotificationIntent);
+			setNotifications(pendingNotificationIntent, alarmManager);
 		}
 		
+	}
+	
+	/**
+	 * Set the notifications based on the selected interval.
+	 * @param pendingNotificationIntent
+	 * @param alarmManager
+	 */
+	public void setNotifications(PendingIntent pendingNotificationIntent, AlarmManager alarmManager) {
+		// The time to notify the user
+		GregorianCalendar notificationTime = new GregorianCalendar();
+		notificationTime.set(Calendar.MINUTE, 0);
+		notificationTime.set(Calendar.SECOND, 0);
+
+		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.day));
+		alarmManager.cancel(pendingNotificationIntent);
+		if (mTimeToNotify == mRes.getString(R.string.day)) {
+			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
+				notificationTime.add(Calendar.DATE, 1);
+			}
+			notificationTime.set(Calendar.HOUR, 10);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
+		} else if (mTimeToNotify == mRes.getString(R.string.half_day)) {
+			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10 && notificationTime.get(Calendar.HOUR_OF_DAY) < 22) {
+				notificationTime.set(Calendar.HOUR_OF_DAY, 22);
+			} else if (notificationTime.get(Calendar.HOUR_OF_DAY) < 10) {
+				notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+			} else {
+				notificationTime.add(Calendar.DATE, 1);
+				notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+			}
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, pendingNotificationIntent);
+		} else if (mTimeToNotify == mRes.getString(R.string.one_hour)) {
+			notificationTime.add(Calendar.HOUR_OF_DAY, 1);
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingNotificationIntent);
+		}
 	}
 
 }

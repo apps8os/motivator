@@ -16,8 +16,6 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-
-    <string name="default_interval">"12"</string>
     
     <string name="app_name">Motivator</string>
     <string name="action_settings">Settings</string>
@@ -42,7 +40,7 @@
     <string name="add_goal">Add goal</string>
     <string name="this_weekend">This weekend</string>
     <string name="send_notifications">Send notifications?</string>
-    <string name="minimum_notification_interval">Minimum notification interval</string>
+    <string name="minimum_notification_interval">When do we send notifications?</string>
     <string name="cancel_event">Cancel event</string>
     <string name="your_mood">Your mood</string>
     <string name="last_mood">Answer more mood questions</string>
@@ -54,6 +52,9 @@
     <string name="saturday_short">Sat</string>
     <string name="sunday_short">Sun</string>
     <string name="action_search">Search</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="day">In the morning</string>
+    <string name="half_day">In the morning and evening</string>
+    <string name="one_hour">Every hour</string>
 
 </resources>

@@ -23,6 +23,7 @@ public final class MotivatorConstants {
 	public static final String CURRENT_SPRINT = "current_sprint";
 	public static final String EVENT = "event";
 	public static final String LAST_DAY_OF_THE_WEEK = "last_day_of_the_week";
+	public static final String MOTIVATOR_PREFS = "motivator_prefs";
 	public static final int DRINK_AMOUNT_ID = 1900;
 	public static final int QUESTION_ID_WHEN = 1000;
 	public static final int QUESTION_ID_WHERE = 1001;

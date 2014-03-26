@@ -17,10 +17,9 @@
 -->
 <resources>    
     <string-array name="notification_intervals_strings">
-        <item>3</item>
-        <item>6</item>
-        <item>12</item>
-        <item>24</item>
+        <item>@string/day</item>
+        <item>@string/half_day</item>
+        <item>@string/one_hour</item>
     </string-array>
     
     <string-array name="time_frames">

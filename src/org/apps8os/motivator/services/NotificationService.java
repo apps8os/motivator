@@ -19,12 +19,11 @@ package org.apps8os.motivator.services;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 
+import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -33,28 +32,16 @@ import android.support.v4.app.TaskStackBuilder;
  * @author Toni Järvinen
  *
  */
-public class NotificationService extends Service {
+public class NotificationService extends IntentService {
 	
+	public NotificationService() {
+		super("Notification Service");
+	}
+
 	public final static int NOTIFICATION_ID_MOOD = 10;
 
 	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
-	
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		handleCommand(intent);
-		return START_STICKY;
-	}
-
-	
-	private void handleCommand(Intent intent) {
+	protected void onHandleIntent(Intent intent) {
 		// Set up the notification with a builder
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentTitle(getString(R.string.today_screen_mood));
@@ -74,8 +61,6 @@ public class NotificationService extends Service {
 		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID_MOOD, builder.build());
 		
-		// Stop the service after the notification has been sent
-		stopSelf();
 	}
 
 }
