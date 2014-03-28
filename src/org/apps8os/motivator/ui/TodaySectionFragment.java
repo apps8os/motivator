@@ -204,6 +204,7 @@ public class TodaySectionFragment extends Fragment {
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
 				eventButton.setText(result.get(i).getEventText());
+				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				mEventLayout.addView(eventButton);
 				

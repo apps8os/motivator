@@ -36,10 +36,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -92,10 +94,23 @@ public class MainActivity extends Activity {
 		dataHandler.close();
 		
 		ActionBar actionBar = getActionBar();
-		actionBar.setTitle(getResources().getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getResources().getString(R.string.of_glory));
+		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getString(R.string.of_glory));
 		
-		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_SEND_NOTIFICATIONS, true) && !getSharedPreferences(MotivatorConstants.MOTIVATOR_PREFS, 0).getBoolean(mHaveSetNotifications, false)) {
+		int versionNumber = -99;
+		try {
+			versionNumber = this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+		} catch (NameNotFoundException e) {
+			versionNumber = -100;
+			e.printStackTrace();
+			Log.e("notification", "version number not found");
+		}
+		
+		SharedPreferences motivatorPrefs = getSharedPreferences(MotivatorConstants.MOTIVATOR_PREFS, 0);
+		if( versionNumber != motivatorPrefs.getInt(MotivatorConstants.APP_VERSION, -1)) {
 			setNotifications();
+			SharedPreferences.Editor editor = motivatorPrefs.edit();
+			editor.putInt(MotivatorConstants.APP_VERSION, versionNumber);
+			editor.commit();
 		}
 	}
 
@@ -121,16 +136,10 @@ public class MainActivity extends Activity {
 	 * Set the notifications for the first time. After this, the notifications are controlled from the settings activity.
 	 */
 	public void setNotifications() {
-		SharedPreferences motivatorPrefs = getSharedPreferences(MotivatorConstants.MOTIVATOR_PREFS, 0);
-		SharedPreferences.Editor editor = motivatorPrefs.edit();
-		editor.putBoolean(mHaveSetNotifications, true);
-		editor.commit();
-		
-		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, getResources().getString(R.string.in_the_morning));
+		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, getResources().getString(R.string.in_the_morning_value));
 		// Set up notifying user to answer to the mood question
 		// The time to notify the user
 		GregorianCalendar notificationTime = new GregorianCalendar();
-		notificationTime.set(Calendar.HOUR_OF_DAY, 10);
 		notificationTime.set(Calendar.MINUTE, 0);
 		notificationTime.set(Calendar.SECOND, 0);	
 		// An alarm manager for scheduling notifications
@@ -139,11 +148,24 @@ public class MainActivity extends Activity {
 		Intent notificationIntent = new Intent(this, NotificationService.class);
 		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		alarmManager.cancel(pendingNotificationIntent);
-		if (mTimeToNotify == getResources().getString(R.string.in_the_morning)) {
+		if (mTimeToNotify == getString(R.string.in_the_morning_value)) {
+			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
+				notificationTime.add(Calendar.DATE, 1);
+			}
+			notificationTime.set(Calendar.HOUR_OF_DAY, 10);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
-		} else if (mTimeToNotify == getResources().getString(R.string.morning_and_evening)) {
+		} else if (mTimeToNotify == getString(R.string.morning_and_evening_value)) {
+			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10 && notificationTime.get(Calendar.HOUR_OF_DAY) < 22) {
+				notificationTime.set(Calendar.HOUR_OF_DAY, 22);
+			} else if (notificationTime.get(Calendar.HOUR_OF_DAY) < 10) {
+				notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+			} else {
+				notificationTime.add(Calendar.DATE, 1);
+				notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+			}
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, pendingNotificationIntent);
-		} else if (mTimeToNotify == getResources().getString(R.string.every_hour)) {
+		} else if (mTimeToNotify == getString(R.string.every_hour_value)) {
+			notificationTime.add(Calendar.HOUR_OF_DAY, 1);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingNotificationIntent);
 		}
 	}

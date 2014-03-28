@@ -62,5 +62,8 @@
     <string name="amount_of_drinks">How many drinks.</string>
     <string name="swipe_right_for_plans">Swipe right to make plans</string>
     <string name="swipe_left_for_history">Swipe left to see history</string>
+    <string name="data_analysis">View your sprint</string>
+    <string name="week">Week</string>
+    <string name="today_is_the_day">Today is the day</string>
 
 </resources>

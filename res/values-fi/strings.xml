@@ -62,5 +62,8 @@
     <string name="amount_of_drinks">Kuinka monta juomaa.</string>
     <string name="swipe_right_for_plans">Oikealla voit tehdä suunnitelmia</string>
     <string name="swipe_left_for_history">Vasemmalla näet historiasi</string>
+    <string name="data_analysis">Tarkastele jaksoa</string>
+    <string name="week">Viikko</string>
+    <string name="today_is_the_day">Tänään on</string>
     
 </resources>

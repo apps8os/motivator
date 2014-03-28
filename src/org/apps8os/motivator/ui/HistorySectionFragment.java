@@ -67,7 +67,8 @@ public class HistorySectionFragment extends Fragment {
 
 		
 		Button moodRelButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
-		moodRelButton.setText("Drinking history");
+		moodRelButton.setText(getString(R.string.data_analysis));
+		moodRelButton.setTextColor(getResources().getColor(R.color.blue));
 		moodRelButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -84,9 +85,9 @@ public class HistorySectionFragment extends Fragment {
 		buttonLayout.addView(separator2);
 		
 		Button achievementButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
-		achievementButton.setTextColor(getActivity().getResources().getColor(R.color.blue));
+		achievementButton.setTextColor(getResources().getColor(R.color.blue));
 		achievementButton.setShadowLayer(2, 1, 1, Color.CYAN);
-		Drawable star = getActivity().getResources().getDrawable(R.drawable.star1_small);
+		Drawable star = getResources().getDrawable(R.drawable.star1_small);
 		achievementButton.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
 		achievementButton.setText(Html.fromHtml("Achievement<br><small>Do not drink for 2 weeks</small>"));
 		buttonLayout.addView(achievementButton);

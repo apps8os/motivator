@@ -17,6 +17,12 @@
 -->
 <resources>    
     
+    <!-- No need to translate as they are used only as programmatic selector -->
+    <string name="in_the_morning_value">AM</string>
+    <string name="morning_and_evening_value">AMPM</string>
+    <string name="every_hour_value">HOURLY</string>
+    
+    
     <string-array name="time_frames">
         <item>Viime viikko</item>
         <item>Viimeiset kaksi viikkoa</item>

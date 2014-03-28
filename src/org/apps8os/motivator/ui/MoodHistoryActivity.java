@@ -100,7 +100,7 @@ public class MoodHistoryActivity extends Activity {
 		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
-	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getResources().getString(R.string.days_of_glory));
+	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days_of_glory));
 	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
@@ -383,7 +383,7 @@ public class MoodHistoryActivity extends Activity {
 			long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS) * 7);
 			Calendar date = new GregorianCalendar();
 			date.setTimeInMillis(dateInMillis);
-			return "Week " + date.get(Calendar.WEEK_OF_YEAR);
+			return getString(R.string.week)+ " " + date.get(Calendar.WEEK_OF_YEAR);
 		}
 		
 		/**

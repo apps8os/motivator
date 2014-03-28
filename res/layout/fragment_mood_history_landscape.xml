@@ -21,6 +21,14 @@
     android:layout_height="fill_parent"
     android:id="@+id/mood_history_week_root" >
 
+    <RelativeLayout
+    style="@style/GenericProgressBackground"
+    android:id="@+id/mood_history_loading_panel"
+    >
+    <ProgressBar
+        style="@style/GenericProgressIndicator"/>
+	</RelativeLayout>
+    
     <FrameLayout
         android:id="@+id/mood_history_week_graph"
         android:layout_width="match_parent"

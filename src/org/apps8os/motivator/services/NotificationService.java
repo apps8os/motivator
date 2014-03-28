@@ -17,6 +17,8 @@
 package org.apps8os.motivator.services;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 
 import android.app.IntentService;
@@ -45,6 +47,13 @@ public class NotificationService extends IntentService {
 		// Set up the notification with a builder
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentTitle(getString(R.string.today_screen_mood));
+		
+		EventDataHandler dataHandler = new EventDataHandler(this);
+		dataHandler.open();
+		Sprint currentSprint = dataHandler.getCurrentSprint();
+		dataHandler.close();
+		int currentDateInSprint = currentSprint.getCurrentDayOfTheSprint();
+		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
 		builder.setSmallIcon(R.drawable.ic_stat_notification_icon_temp1);
 		builder.setTicker(getString(R.string.today_screen_mood));
 		// Remove the notification when the user clicks it.
@@ -60,7 +69,6 @@ public class NotificationService extends IntentService {
 		builder.setContentIntent(pendingResultIntent);
 		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID_MOOD, builder.build());
-		
 	}
 
 }

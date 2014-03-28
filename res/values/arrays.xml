@@ -22,6 +22,17 @@
         <item>@string/every_hour</item>
     </string-array>
     
+    <string-array name="notification_intervals_entryvalues">
+        <item>@string/in_the_morning_value</item>
+        <item>@string/morning_and_evening_value</item>
+        <item>@string/every_hour_value</item>
+    </string-array>
+    
+    <!-- No need to translate as they are used only as programmatic selector -->
+    <string name="in_the_morning_value">AM</string>
+    <string name="morning_and_evening_value">AMPM</string>
+    <string name="every_hour_value">HOURLY</string>
+
     <string-array name="time_frames">
         <item>Last week</item>
         <item>Last two weeks</item>
