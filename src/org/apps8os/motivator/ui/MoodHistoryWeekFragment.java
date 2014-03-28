@@ -26,6 +26,7 @@ import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.text.Html;
@@ -49,67 +50,26 @@ import com.echo.holographlibrary.LinePoint;
  */
 public class MoodHistoryWeekFragment extends Fragment {
 	
-	private ArrayList<DayInHistory> mDays;
 	private Resources mRes;
+	private View mRootView;
+	private LayoutInflater mInflater;
+	private long mSprintStartDate;
+	private int mPosition;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 		Bundle b = getArguments();
-		mDays = b.getParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY);
-		final View rootView = (View) inflater.inflate(R.layout.fragment_mood_history_landscape, viewGroup, false);
+		mRootView = (View) inflater.inflate(R.layout.fragment_mood_history_landscape, viewGroup, false);
+		mInflater = inflater;
 		mRes = getActivity().getResources();
-		// Add the days to the layout.
-		LinearLayout dayLayout = (LinearLayout) rootView.findViewById(R.id.mood_history_weekview);
-		for (int i = 0; i < mDays.size(); i++) {
-			RelativeLayout dayView = (RelativeLayout) inflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
-			TextView dayText = (TextView) dayView.getChildAt(1);
-			dayText.setText(Html.fromHtml(getDay(mDays.get(i)) + "<br><small>" + mDays.get(i).getDateInString(getActivity())));
-			if (mDays.get(i).getAvgMoodLevel() == 0) {
-				ImageView moodImage = (ImageView) dayView.getChildAt(0);
-				moodImage.setImageDrawable(mRes.getDrawable(R.drawable.temp_emoticon_bw));
-			}
-			DisplayMetrics dm = new DisplayMetrics();
-			getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-			dayView.getLayoutParams().width = dm.widthPixels / 7;
-			dayLayout.addView(dayView);
-		}
-	
-		Line l = new Line();
-		LinePoint p = new LinePoint();
-		p.setX(0);
-		p.setY(2);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(1);
-		p.setY(1);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(2);
-		p.setY(1);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(3);
-		p.setY(1);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(4);
-		p.setY(2);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(5);
-		p.setY(4);
-		l.addPoint(p);
-		p = new LinePoint();
-		p.setX(6);
-		p.setY(3);
-		l.addPoint(p);
-		l.setColor(Color.parseColor("#FFBB33"));
-		LineGraph li = (LineGraph) rootView.findViewById(R.id.graph);
-		li.addLine(l);
-		li.setRangeY(0, 4);
-		li.setLineToFill(0);
+		mSprintStartDate = b.getLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE);
+		mPosition = b.getInt(MotivatorConstants.FRAGMENT_POSITION);
 		
-		return rootView;
+		// Loading the days on a different thread.
+		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition, (MoodHistoryActivity) getActivity());
+		loadingTask.execute();
+		
+		return mRootView;
 		
 	}
 	
@@ -119,7 +79,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY, mDays);
+		outState.putLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE, mSprintStartDate);
+		outState.putInt(MotivatorConstants.FRAGMENT_POSITION, mPosition);
 	}
 	
 	/**
@@ -148,5 +109,102 @@ public class MoodHistoryWeekFragment extends Fragment {
 		default:
 			return "NOT FOUND";
 		}
+	}
+	
+	private class LoadDaysAsyncTask extends AsyncTask<Void, Void, ArrayList<DayInHistory>> {
+		
+		private long mSprintStartDateInMillis;
+		private int mPosition;
+		private MoodHistoryActivity mActivity;
+		
+		public LoadDaysAsyncTask(long startDateInMillis, int position, MoodHistoryActivity activity) {
+			mSprintStartDateInMillis = startDateInMillis;
+			mPosition = position;
+			mActivity = activity;
+		}
+
+		@Override
+		protected ArrayList<DayInHistory> doInBackground(Void... params) {
+			ArrayList<DayInHistory> result = new ArrayList<DayInHistory>();
+			
+			// Get the first week in the sprint.
+			Calendar calendar = new GregorianCalendar();
+			calendar.setFirstDayOfWeek(Calendar.MONDAY);
+			calendar.setTimeInMillis(mSprintStartDateInMillis);
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			// Add 7 days / a week depending on the position. In the first position 0, this does not do anything and we add the first week.
+			calendar.add(Calendar.DATE, mPosition * 7);
+			// Add days until sunday.
+			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+				DayInHistory date = mActivity.getDateInHistory(calendar.getTimeInMillis());
+				result.add(date);
+				calendar.add(Calendar.DATE, 1);
+			}
+			// Add the sunday.
+			DayInHistory date = mActivity.getDateInHistory(calendar.getTimeInMillis());
+			result.add(date);
+			return result;
+		}
+		
+		@Override
+		public void onPostExecute(ArrayList<DayInHistory> result) {
+			LinearLayout dayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
+			
+			// Add the lower half with day views.
+			for (int i = 0; i < result.size(); i++) {
+				RelativeLayout dayView = (RelativeLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
+				TextView dayText = (TextView) dayView.getChildAt(1);
+				dayText.setText(Html.fromHtml(getDay(result.get(i)) + "<br><small>" + result.get(i).getDateInString(getActivity())));
+				if (result.get(i).getAvgMoodLevel() == 0) {
+					ImageView moodImage = (ImageView) dayView.getChildAt(0);
+					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.temp_emoticon_bw));
+				}
+				DisplayMetrics dm = new DisplayMetrics();
+				getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+				dayView.getLayoutParams().width = dm.widthPixels / 7;
+				dayLayout.addView(dayView);
+			}
+			// add the line graph.
+			Line l = new Line();
+			LinePoint p = new LinePoint();
+			p.setX(0);
+			p.setY(2);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(1);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(2);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(3);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(4);
+			p.setY(2);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(5);
+			p.setY(4);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(6);
+			p.setY(3);
+			l.addPoint(p);
+			l.setColor(Color.parseColor("#FFBB33"));
+			LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
+			li.addLine(l);
+			li.setRangeY(0, 4);
+			li.setLineToFill(0);
+			
+			// Remove the loading indicator from the layout.
+			RelativeLayout loadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
+			loadingView.setVisibility(View.GONE);
+			
+		}
+		
 	}
 }

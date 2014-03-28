@@ -88,14 +88,6 @@ public class MainActivity extends Activity {
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
 		
-		EventDataHandler dataHandler = new EventDataHandler(this);
-		dataHandler.open();
-		mCurrentSprint = dataHandler.getCurrentSprint();
-		dataHandler.close();
-		
-		ActionBar actionBar = getActionBar();
-		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getString(R.string.of_glory));
-		
 		int versionNumber = -99;
 		try {
 			versionNumber = this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -112,6 +104,18 @@ public class MainActivity extends Activity {
 			editor.putInt(MotivatorConstants.APP_VERSION, versionNumber);
 			editor.commit();
 		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		EventDataHandler dataHandler = new EventDataHandler(this);
+		dataHandler.open();
+		mCurrentSprint = dataHandler.getCurrentSprint();
+		dataHandler.close();
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getString(R.string.of_glory));
 	}
 
 	@Override

@@ -392,29 +392,12 @@ public class MoodHistoryActivity extends Activity {
 		@Override
 		public Fragment getItem(int position) {
 			Fragment fragment;
-			// Create a calendar object and initialize it to the monday of the first week in the sprint.
-			Calendar calendar = new GregorianCalendar();
-			calendar.setFirstDayOfWeek(Calendar.MONDAY);
-			calendar.setTimeInMillis(mSprintStartDateInMillis);
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-			
-			// Create an arraylist for all the days in the week represented by the fragment in this position.
-			ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
-			// Add 7 days / a week depending on the position. In the first position 0, this does not do anything and we add the first week.
-			calendar.add(Calendar.DATE, position * 7);
-			// Add days until sunday.
-			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-				DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
-				days.add(date);
-				calendar.add(Calendar.DATE, 1);
-			}
-			// Add the sunday.
-			DayInHistory date = getDateInHistory(calendar.getTimeInMillis());
-			days.add(date);
-			// Puts the last day in this week as millisecond value to the arguments.
 			fragment = new MoodHistoryWeekFragment();
 			Bundle b = new Bundle();
-			b.putParcelableArrayList(MotivatorConstants.DAY_IN_HISTORY_ARRAY, days);
+
+			b.putLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE, mSprintStartDateInMillis);
+			b.putInt(MotivatorConstants.FRAGMENT_POSITION, position);
+			
 			fragment.setArguments(b);
 			return fragment;
 		}
