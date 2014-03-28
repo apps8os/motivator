@@ -53,15 +53,21 @@ public class GoalDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	public void insertAnswer(int answer, int questionId, int answersId, long content) {
+		open();
 		super.insertAnswer(answer, questionId, answersId, content, TABLE_NAME);
+		close();
 	}
 	
 	public void deleteLastRow() {
+		open();
     	super.deleteLastRow(TABLE_NAME);
+    	close();
 	}
 	
 	public void deleteRowsWithAnsweringId(int answerId) {
+		open();
 		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+		close();
 	}
 	
 	public Question getQuestion(int id) {

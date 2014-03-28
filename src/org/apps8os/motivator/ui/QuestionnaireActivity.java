@@ -60,7 +60,6 @@ public class QuestionnaireActivity extends Activity {
 		
 		mInflater = getLayoutInflater();
 		mDataHandler = new MoodDataHandler(this);
-		mDataHandler.open();
 		
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
@@ -73,12 +72,6 @@ public class QuestionnaireActivity extends Activity {
 		mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
 		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
 		incrementQuestion(true);
-	}
-	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
 	}
 	
 	/**

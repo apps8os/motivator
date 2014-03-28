@@ -26,6 +26,11 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
 public class MoodRelationHistoryActivity extends Activity {
+	
+	private long[] mTimeframe = new long[2];
+	private String mCaseSelector;
+	
+	private static final String AMOUNT_OF_DRINKS = "amount_of_drinks";
 
 	/** Called when the activity is first created. */
 	@Override
@@ -34,6 +39,8 @@ public class MoodRelationHistoryActivity extends Activity {
 	    setContentView(R.layout.activity_mood_relation_history);
 	    SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.time_frames, android.R.layout.simple_spinner_dropdown_item);
 	    
+	    mCaseSelector = AMOUNT_OF_DRINKS;
+	    
 	    ActionBar bar = getActionBar();
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 	    
@@ -41,6 +48,15 @@ public class MoodRelationHistoryActivity extends Activity {
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition,
 					long itemId) {
+				
+				if (itemPosition == 0) {
+					
+					
+					if (mCaseSelector == AMOUNT_OF_DRINKS) {
+						
+					}
+				}
+				
 				return false;
 			}
 	    	

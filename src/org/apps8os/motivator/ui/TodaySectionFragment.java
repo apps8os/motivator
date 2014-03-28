@@ -17,23 +17,17 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
-import org.apps8os.motivator.data.Question;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +45,7 @@ public class TodaySectionFragment extends Fragment {
 	private LinearLayout mEventLayout;
 	private LinearLayout mButtonLayout;
 	private LayoutInflater mInflater;
+	private int mDrinkCounter = 0;
 	
 	public TodaySectionFragment() {
 	}
@@ -101,11 +96,7 @@ public class TodaySectionFragment extends Fragment {
 
 		public LoadPlansTask(Context context) {
 			mContext = context;
-			
-			// Open the database connection
 			mDataHandler = new EventDataHandler(getActivity());
-			mDataHandler.open();
-			
 		}
 
 		/**
@@ -113,82 +104,7 @@ public class TodaySectionFragment extends Fragment {
 		 */
 		@Override
 		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
-			ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
- 			Cursor cursor = mDataHandler.getEventsToday();
- 			cursor.moveToFirst();
- 			int lastAnswerId = -1;
- 			// Looping through the cursor.
- 			if (cursor.getCount() > 0) {
- 				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
- 				MotivatorEvent event = new MotivatorEvent(cursor.getInt(0));
-				while (!cursor.isClosed()) {
-					// Check if we have looped through the answers relating to this event with the answerId.
-					if (lastAnswerId != cursor.getInt(0) && lastAnswerId != -1) {
-						// Add the event to the list and initialize a new instance.
-						result.add(event);
-						event = new MotivatorEvent(cursor.getInt(0));
-					}
-					// Get the question with the questionId.
-					Question question = mDataHandler.getQuestion(cursor.getInt(1));
-					
-					if (question != null) {
-						// Handle the different questions/answers.
-						switch (question.getId()) {
-						case MotivatorConstants.QUESTION_ID_WHEN:
-							event.setStartTime(cursor.getLong(3));
-							// All events in this section should have today as the text so get the answer representing today.
-							event.setEventAsText(question.getAnswer(0));
-							break;
-							
-						// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
-						case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
-							long time;
-							switch (cursor.getInt(2)) {
-							case 0:
-								time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
-								break;
-							case 1:
-								time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
-								break;
-							case 2:
-								time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
-								break;
-							default:
-								time = 0;
-							}
-							event.setStartTime(event.getStartTime() + time);
-							break;
-						}
-					}
-					lastAnswerId = cursor.getInt(0);
-					if (cursor.isLast()) {
-						cursor.close();
-					} else {
-						cursor.moveToNext();
-					}
-				}
-				result.add(event);
- 			}
-			// Sort the list
-			Collections.sort(result, new Comparator<MotivatorEvent>() {
-				@Override
-				public int compare(MotivatorEvent case1, MotivatorEvent case2) {
-					long case1Sorter = case1.getStartTime();
-					long case2Sorter = case2.getStartTime();
-					if (case1Sorter > case2Sorter) {
-						return 1;
-					} else if (case1Sorter == case2Sorter) {
-						return 0;
-					} else {
-						return -1;
-					}
-				}
-			});
-			
-			// Lastly close the database connection
-			mDataHandler.close();
-			
-			return result;
+			return mDataHandler.getEventsToday();
 		}
 		
 		/**
@@ -221,15 +137,15 @@ public class TodaySectionFragment extends Fragment {
 					Drawable bottle = getActivity().getResources().getDrawable(R.drawable.pullo1);
 					addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
 					addDrinkButton.setText(Html.fromHtml("Add Drink"));
+					if (mDrinkCounter > 0) {
+						addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
+					}
 					addDrinkButton.setOnClickListener(new OnClickListener() {
-						private int mDrinkCounter = 0;
 						@Override
 						public void onClick(View v) {
-							mDataHandler.open();
 							mDataHandler.addDrink(todaysEvent.getId());
 							mDrinkCounter += 1;
 							addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
-							mDataHandler.close();
 						}
 					});
 					mButtonLayout.addView(addDrinkButton);

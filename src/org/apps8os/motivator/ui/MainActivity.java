@@ -109,9 +109,7 @@ public class MainActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		EventDataHandler dataHandler = new EventDataHandler(this);
-		dataHandler.open();
 		mCurrentSprint = dataHandler.getCurrentSprint();
-		dataHandler.close();
 		
 		ActionBar actionBar = getActionBar();
 		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getString(R.string.of_glory));
@@ -207,6 +205,7 @@ public class MainActivity extends Activity {
 			} else {
 				return null;
 			}
+			fragment.setRetainInstance(true);
 			return fragment;
 		}
 

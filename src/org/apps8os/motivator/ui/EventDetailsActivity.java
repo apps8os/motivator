@@ -49,7 +49,6 @@ public class EventDetailsActivity extends Activity {
 	    // is represented as answers id in the database
 	    mEvent = extras.getParcelable(MotivatorConstants.EVENT);
 	    mDataHandler = new EventDataHandler(this);
-	    mDataHandler.open();
 	    
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
 	    title.setText(mEvent.getEventText());
@@ -70,17 +69,6 @@ public class EventDetailsActivity extends Activity {
 			}
 	    	
 	    });
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		mDataHandler.open();
-	}
-	
-	public void onStop() {
-		super.onStart();
-		mDataHandler.close();
 	}
 
 }

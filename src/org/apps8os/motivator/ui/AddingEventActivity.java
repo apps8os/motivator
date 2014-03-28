@@ -22,6 +22,7 @@ import org.apps8os.motivator.data.Question;
 import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,10 +57,8 @@ public class AddingEventActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_questionnaire);
-		
 		mInflater = getLayoutInflater();
 		mDataHandler = new EventDataHandler(this);
-		mDataHandler.open();
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
@@ -71,12 +70,6 @@ public class AddingEventActivity extends Activity {
 		mAnswerId = incrementAnswersId();
 		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
 		incrementQuestion(true);
-	}
-	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
 	}
 	
 	/**

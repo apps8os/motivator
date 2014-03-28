@@ -49,9 +49,7 @@ public class NotificationService extends IntentService {
 		builder.setContentTitle(getString(R.string.today_screen_mood));
 		
 		EventDataHandler dataHandler = new EventDataHandler(this);
-		dataHandler.open();
 		Sprint currentSprint = dataHandler.getCurrentSprint();
-		dataHandler.close();
 		int currentDateInSprint = currentSprint.getCurrentDayOfTheSprint();
 		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
 		builder.setSmallIcon(R.drawable.ic_stat_notification_icon_temp1);

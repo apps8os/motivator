@@ -19,7 +19,6 @@ package org.apps8os.motivator.ui;
 
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
@@ -35,13 +34,12 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.os.Bundle;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -81,7 +79,6 @@ public class MoodHistoryActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_mood_history);
 	    mDataHandler = new MoodDataHandler(this);
-	    mDataHandler.open();
 	    
 	    mCurrentSprint = getIntent().getExtras().getParcelable(MotivatorConstants.CURRENT_SPRINT);
 	    
@@ -211,14 +208,7 @@ public class MoodHistoryActivity extends Activity {
 	
 	@Override
 	public void onResume() {
-		mDataHandler.open();
 		super.onResume();
-	}
-	
-	@Override
-	public void onStop() {
-		mDataHandler.close();
-		super.onStop();
 	}
 	
 	/**
@@ -284,30 +274,6 @@ public class MoodHistoryActivity extends Activity {
 	    });
 	}
 	
-	/**
-	 * Gets a DayInHistory object for the day represented as millisecond value.
-	 * @param dayInMillis
-	 * @return
-	 */
-	protected DayInHistory getDateInHistory(long dayInMillis) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTimeInMillis(dayInMillis);
-		Cursor cursor = mDataHandler.getMoodsForDay(calendar);
-		// Initialize the DayInHistory object with the first timestamp on the constructor.
-	    DayInHistory previousDayWithMoods = new DayInHistory(dayInMillis);
-	    // Add all moods to the DayInHistory object.
-	    while (cursor != null && !cursor.isClosed()) {
-	    	previousDayWithMoods.addMoodLevel(cursor.getInt(0));
-	    	previousDayWithMoods.addEnergyLevel(cursor.getInt(1));
-	    	if (cursor.isLast()) {
-	    		cursor.close();
-	    	} else {
-	    		cursor.moveToNext();
-	    	}
-	    }
-	    return previousDayWithMoods;
-	}
-	
 	
 	/**
 	 * Fragment adapter for the date view in the activity. Extends FragmentStatePagerAdapter so that it can destroy
@@ -345,12 +311,14 @@ public class MoodHistoryActivity extends Activity {
 		public Fragment getItem(int position) {
 			Fragment fragment;
 			// Get a DayInHistory for the date represented by this position. Calculated from the start date.
-			DayInHistory date = getDateInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
+			DayInHistory date = mDataHandler.getDayInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
 			fragment = new MoodHistoryDayFragment();
 			Bundle b = new Bundle();
 			// Send the DayInHistory for the fragment as parcelable.
 			b.putParcelable(MotivatorConstants.DAY_IN_HISTORY, date);
 			fragment.setArguments(b);
+			
+			fragment.setRetainInstance(true);
 			return fragment;
 		}
 		
@@ -400,6 +368,8 @@ public class MoodHistoryActivity extends Activity {
 			b.putInt(MotivatorConstants.FRAGMENT_POSITION, position);
 			
 			fragment.setArguments(b);
+			
+			fragment.setRetainInstance(true);
 			return fragment;
 		}
 		

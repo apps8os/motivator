@@ -18,7 +18,9 @@
         android:id="@+id/mood_relation_history_top_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@color/light_blue"
+        style="?android:attr/buttonBarStyle" >
 
         <Button
             android:id="@+id/mood_relation_history_top_button1"
@@ -26,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="0"
-            style="?android:attr/buttonBarStyle" />
+            style="?android:attr/borderlessButtonStyle" />
 
         <Button
             android:id="@+id/mood_relation_history_top_button2"
@@ -65,7 +67,16 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center"
 	        android:src="@drawable/temp_emoticon" />
+	    
     </FrameLayout>
+    
+    <TextView
+        android:id="@+id/mood_relation_history_average_mood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
    
 

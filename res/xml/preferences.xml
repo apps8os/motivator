@@ -28,7 +28,7 @@
         android:dialogTitle="@string/minimum_notification_interval"
         android:entries="@array/notification_intervals_strings"
         android:entryValues="@array/notification_intervals_entryvalues"
-        android:defaultValue="@string/in_the_morning"
+        android:defaultValue="@string/in_the_morning_value"
         android:persistent="true"/>
     
 </PreferenceScreen>

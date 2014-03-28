@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.res.Resources;
@@ -51,6 +52,7 @@ import com.echo.holographlibrary.LinePoint;
 public class MoodHistoryWeekFragment extends Fragment {
 	
 	private Resources mRes;
+	private MoodDataHandler mDataHandler;
 	private View mRootView;
 	private LayoutInflater mInflater;
 	private long mSprintStartDate;
@@ -64,6 +66,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mRes = getActivity().getResources();
 		mSprintStartDate = b.getLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE);
 		mPosition = b.getInt(MotivatorConstants.FRAGMENT_POSITION);
+		mDataHandler = new MoodDataHandler(getActivity());
 		
 		// Loading the days on a different thread.
 		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition, (MoodHistoryActivity) getActivity());
@@ -144,12 +147,12 @@ public class MoodHistoryWeekFragment extends Fragment {
 			calendar.add(Calendar.DATE, mPosition * 7);
 			// Add days until sunday.
 			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-				DayInHistory date = mActivity.getDateInHistory(calendar.getTimeInMillis());
+				DayInHistory date = mDataHandler.getDayInHistory(calendar.getTimeInMillis());
 				result.add(date);
 				calendar.add(Calendar.DATE, 1);
 			}
 			// Add the sunday.
-			DayInHistory date = mActivity.getDateInHistory(calendar.getTimeInMillis());
+			DayInHistory date = mDataHandler.getDayInHistory(calendar.getTimeInMillis());
 			result.add(date);
 			return result;
 		}

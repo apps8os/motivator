@@ -61,15 +61,21 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	public void insertAnswer(int answer, int questionId, int answersId, long content) {
+		open();
 		super.insertAnswer(answer, questionId, answersId, content, TABLE_NAME);
+		close();
 	}
 	
 	public void deleteLastRow() {
+		open();
     	super.deleteLastRow(TABLE_NAME);
+    	close();
     }
 	
 	public void deleteRowsWithAnsweringId(int answerId) {
+		open();
 		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+		close();
 	}
 	
     /**
@@ -78,11 +84,13 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
      * @param moodLevel
      */
     public void insertMood(int energyLevel, int moodLevel) {
+    	open();
     	ContentValues values = new ContentValues();
     	values.put(KEY_ENERGYLEVEL, energyLevel);
     	values.put(KEY_MOODLEVEL, moodLevel);
     	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
     	mDb.insert(TABLE_NAME_MOOD, null, values);
+    	close();
     }
     
     
@@ -131,6 +139,34 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	} else {
     		return null;
     	}
+    }
+    
+    public DayInHistory getDayInHistory(long dayInMillis) {
+    	open();
+    	Calendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(dayInMillis);
+    	Cursor query = null;
+    	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
+    	
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
+    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
+    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	
+    	query.moveToFirst();
+    	// Initialize the DayInHistory object with the first timestamp on the constructor.
+	    DayInHistory result = new DayInHistory(dayInMillis);
+	    // Add all moods to the DayInHistory object.
+	    while (query.getCount() > 0 && !query.isClosed()) {
+	    	result.addMoodLevel(query.getInt(0));
+	    	result.addEnergyLevel(query.getInt(1));
+	    	if (query.isLast()) {
+	    		query.close();
+	    	} else {
+	    		query.moveToNext();
+	    	}
+	    }
+	    close();
+	    return result;
     }
     
     /**

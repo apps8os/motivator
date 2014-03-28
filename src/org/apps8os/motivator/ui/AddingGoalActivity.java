@@ -59,7 +59,6 @@ public class AddingGoalActivity extends Activity {
 		
 		mInflater = getLayoutInflater();
 		mDataHandler = new GoalDataHandler(this);
-		mDataHandler.open();
 		
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
@@ -71,12 +70,6 @@ public class AddingGoalActivity extends Activity {
 		mAnswerId = incrementAnswersId();
 		mQuestionId = 0;
 		incrementQuestion(true);
-	}
-	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
 	}
 	
 	/**

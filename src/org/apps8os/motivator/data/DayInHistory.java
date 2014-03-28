@@ -17,6 +17,7 @@
 package org.apps8os.motivator.data;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -41,6 +42,8 @@ public class DayInHistory implements Parcelable{
 	private int mAlcoholDrinks = 0;
 	private String mComment;
 	private long mDateInMillis;
+	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
+	
 	/**
 	 * Create an instance. Set the date in millis to midnight of the day.
 	 * @param dayInMillis
@@ -168,5 +171,13 @@ public class DayInHistory implements Parcelable{
 		dest.writeInt(mAlcoholDrinks);
 		dest.writeString(mComment);
 		dest.writeLong(mDateInMillis);
+	}
+
+	public ArrayList<MotivatorEvent> getEvents() {
+		return mEvents;
+	}
+
+	public void setEvent(MotivatorEvent event) {
+		mEvents.add(event);
 	}
 }

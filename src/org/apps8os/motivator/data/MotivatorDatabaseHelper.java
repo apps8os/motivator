@@ -135,6 +135,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public Sprint getCurrentSprint() {
+		open();
 		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
 		String columns[] = {KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END};
 		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, null);
@@ -143,6 +144,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		current.setDaysInSprint(cursor.getInt(1));
 		current.setEndTime(cursor.getLong(2));
 		cursor.close();
+		close();
 		return current;
 	}
 	

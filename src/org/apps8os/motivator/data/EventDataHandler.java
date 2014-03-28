@@ -17,9 +17,13 @@
 package org.apps8os.motivator.data;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.utils.MotivatorConstants;
@@ -71,6 +75,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 * @param answersId
 	 */
 	public void insertAnswer(int answer, int questionId, int answersId) {
+		open();
 		// Check if the question is the one asking when the event will be.
 		if (questionId == MotivatorConstants.QUESTION_ID_WHEN) {
 			// Initialize the cache calendar for today/now
@@ -96,13 +101,16 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 		// Insert the answer with the calendar timestamp
 		super.insertAnswer(answer, questionId, answersId, mCalendarCache.getTimeInMillis(), TABLE_NAME);
+		close();
 	}
 	
 	/**
 	 * Used to get events after today.
 	 * @return	Cursor over the results
 	 */
-	public Cursor getEventsAfterToday() {
+	public ArrayList<MotivatorEvent> getEventsAfterToday() {
+		open();
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
 		tomorrowMidnight.setFirstDayOfWeek(Calendar.MONDAY);
 		UtilityMethods.setToMidnight(tomorrowMidnight);
@@ -111,14 +119,77 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		String selection = KEY_CONTENT + " >= " + tomorrowMidnight.getTimeInMillis();
 		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
 		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
-		return query;
+		
+		query.moveToFirst();
+			int lastAnswerId = -1;
+			// Looping through the cursor.
+			if (query.getCount() > 0) {
+				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
+				MotivatorEvent event = new MotivatorEvent(query.getInt(0));
+			while (!query.isClosed()) {
+				// Check if we have looped through the answers relating to this event with the answerId.
+				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
+					// Add the event to the list and initialize a new instance.
+					events.add(event);
+					event = new MotivatorEvent(query.getInt(0));
+				}
+				Question question = getQuestion(query.getInt(1));
+				
+				if (question != null) {
+					// Handle the different questions/answers.
+					switch (question.getId()) {
+					case MotivatorConstants.QUESTION_ID_WHEN:
+						event.setStartTime(query.getLong(3));
+						event.setEventAsText(question.getAnswer(query.getInt(2)));
+						break;
+					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+						switch (query.getInt(2)) {
+						case 0:
+							break;
+						case 1:
+							break;
+						case 2:
+							break;
+						default:
+						}
+						break;
+					}
+				}
+				lastAnswerId = query.getInt(0);
+				if (query.isLast()) {
+					query.close();
+				} else {
+					query.moveToNext();
+				}
+			}
+			events.add(event);
+			}
+		// Sort the list
+		Collections.sort(events, new Comparator<MotivatorEvent>() {
+			@Override
+			public int compare(MotivatorEvent case1, MotivatorEvent case2) {
+				long case1Sorter = case1.getStartTime();
+				long case2Sorter = case2.getStartTime();
+				if (case1Sorter > case2Sorter) {
+					return 1;
+				} else if (case1Sorter == case2Sorter) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+		});
+		close();
+		return events;
 	}
 	
 	/**
 	 * Used to get events that are today.
 	 * @return
 	 */
-	public Cursor getEventsToday() {
+	public ArrayList<MotivatorEvent> getEventsToday() {
+		open();
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		GregorianCalendar todayMidnight = new GregorianCalendar();
 		UtilityMethods.setToMidnight(todayMidnight);
 		
@@ -129,10 +200,82 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		String selection = KEY_CONTENT + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
 		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
 		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
-		return query;
+		
+		query.moveToFirst();
+			int lastAnswerId = -1;
+			// Looping through the cursor.
+			if (query.getCount() > 0) {
+				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
+				MotivatorEvent event = new MotivatorEvent(query.getInt(0));
+			while (!query.isClosed()) {
+				// Check if we have looped through the answers relating to this event with the answerId.
+				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
+					// Add the event to the list and initialize a new instance.
+					events.add(event);
+					event = new MotivatorEvent(query.getInt(0));
+				}
+				// Get the question with the questionId.
+				Question question = getQuestion(query.getInt(1));
+				
+				if (question != null) {
+					// Handle the different questions/answers.
+					switch (question.getId()) {
+					case MotivatorConstants.QUESTION_ID_WHEN:
+						event.setStartTime(query.getLong(3));
+						// All events in this section should have today as the text so get the answer representing today.
+						event.setEventAsText(question.getAnswer(0));
+						break;
+						
+					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
+					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+						long time;
+						switch (query.getInt(2)) {
+						case 0:
+							time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
+							break;
+						case 1:
+							time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
+							break;
+						case 2:
+							time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
+							break;
+						default:
+							time = 0;
+						}
+						event.setStartTime(event.getStartTime() + time);
+						break;
+					}
+				}
+				lastAnswerId = query.getInt(0);
+				if (query.isLast()) {
+					query.close();
+				} else {
+					query.moveToNext();
+				}
+			}
+			events.add(event);
+			}
+		// Sort the list
+		Collections.sort(events, new Comparator<MotivatorEvent>() {
+			@Override
+			public int compare(MotivatorEvent case1, MotivatorEvent case2) {
+				long case1Sorter = case1.getStartTime();
+				long case2Sorter = case2.getStartTime();
+				if (case1Sorter > case2Sorter) {
+					return 1;
+				} else if (case1Sorter == case2Sorter) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+		});
+		close();
+		return events;
 	}
 	
 	public void addDrink(int answerId) {
+		open();
 		String selection = KEY_ID_ANSWERS + " = " + answerId + " AND " + KEY_ID_QUESTION + " = " + MotivatorConstants.DRINK_AMOUNT_ID;
 		String[] columns = {KEY_ANSWER};
 		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
@@ -144,13 +287,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		values.put(KEY_ANSWER, previousAmount + 1);
 		mDb.update(TABLE_NAME, values, selection, null);
 		query.close();
-	}
-	
-	public Cursor getEventWithId(int id) {
-		String selection = KEY_ID_ANSWERS + " = " + id;
-		String[] columns = {KEY_ID_QUESTION, KEY_ANSWER};
-		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
-		return query;
+		close();
 	}
 	
 	public int getAmountOfQuestions() {
@@ -158,11 +295,15 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	public void deleteLastRow() {
+		open();
     	super.deleteLastRow(TABLE_NAME);
+    	close();
 	}
 	
 	public void deleteRowsWithAnsweringId(int answerId) {
+		open();
 		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
+		close();
 	}
 	
 	public Question getQuestion(int id) {
@@ -177,8 +318,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	}
 
 	public void deleteEvent(int mEventId) {
+		open();
 		String selection = KEY_ID_ANSWERS + " = " + mEventId;
 		mDb.delete(TABLE_NAME, selection, null);
+		close();
 	}
 	
 }

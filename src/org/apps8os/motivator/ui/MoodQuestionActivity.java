@@ -30,6 +30,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -64,7 +65,7 @@ public class MoodQuestionActivity extends Activity {
 	    		R.string.mood_level1, R.string.mood_level2, R.string.mood_level3
 	    		};
 	
-	private static final int MARGIN_DP = 100;
+	private static final int MARGIN_DP = 50;
 	private static final int DEFAULT_MOOD_SELECTION = 1;
 	public static final String GOODMOOD = "good_mood";
 	
@@ -75,8 +76,7 @@ public class MoodQuestionActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mood_question);
 		mDataHandler = new MoodDataHandler(this);
-		mDataHandler.open();
-		
+
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
         
@@ -122,12 +122,6 @@ public class MoodQuestionActivity extends Activity {
         });
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
-	}
-	
-	@Override
-	public void onDestroy() {
-		mDataHandler.close();
-		super.onDestroy();
 	}
 	
 	/**
