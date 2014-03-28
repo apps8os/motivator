@@ -27,6 +27,8 @@ public final class MotivatorConstants {
 	public static final String APP_VERSION = "application_version";
 	public static final String FRAGMENT_POSITION = "fragment_position";
 	public static final String CURRENT_SPRINT_STARTDATE = "current_sprint_start_date";
+	public static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
+	public static final String ANSWER_ID = "incrementing_id";
 	public static final int DRINK_AMOUNT_ID = 1900;
 	public static final int QUESTION_ID_WHEN = 1000;
 	public static final int QUESTION_ID_WHERE = 1001;

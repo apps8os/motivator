@@ -50,8 +50,6 @@ public class AddingEventActivity extends Activity {
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
-	private static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
-	private static final String ANSWER_ID = "incrementing_id";
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -87,10 +85,10 @@ public class AddingEventActivity extends Activity {
 	 */
 	private int incrementAnswersId() {
 		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
-		SharedPreferences answerIdIncrement = getSharedPreferences(ANSWER_ID_INCREMENT_PREFS, 0);
-		int answerId = answerIdIncrement.getInt(ANSWER_ID, 1);
+		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorConstants.ANSWER_ID_INCREMENT_PREFS, 0);
+		int answerId = answerIdIncrement.getInt(MotivatorConstants.ANSWER_ID, 1);
 		SharedPreferences.Editor editor = answerIdIncrement.edit();
-		editor.putInt(ANSWER_ID, answerId + 1);
+		editor.putInt(MotivatorConstants.ANSWER_ID, answerId + 1);
 		editor.commit();
 		return answerId;
 	}

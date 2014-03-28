@@ -94,9 +94,9 @@ public class MoodHistoryActivity extends Activity {
 		UtilityMethods.setToMidnight(mToday);
 		mToday.setFirstDayOfWeek(Calendar.MONDAY);
 		
-		// Gets the index/amount of days for today for the day view.
 		mNumberOfTodayInSprint = mCurrentSprint.getCurrentDayOfTheSprint();
 		
+		// Check if the sprint is already over.
 		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
@@ -387,7 +387,8 @@ public class MoodHistoryActivity extends Activity {
 		}
 		
 		/**
-		 * Instantiates the MoodHistoryWeekFragment for the position.
+		 * Instantiates the MoodHistoryWeekFragment for the position. Gives the current sprint start as milliseconds and
+		 * the fragments position as extras in a bundle.
 		 */
 		@Override
 		public Fragment getItem(int position) {

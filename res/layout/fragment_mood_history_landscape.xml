@@ -22,11 +22,11 @@
     android:id="@+id/mood_history_week_root" >
 
     <RelativeLayout
-    style="@style/GenericProgressBackground"
+    style="@style/LoadingBackground"
     android:id="@+id/mood_history_loading_panel"
     >
     <ProgressBar
-        style="@style/GenericProgressIndicator"/>
+        style="@style/LoadingIndicator"/>
 	</RelativeLayout>
     
     <FrameLayout

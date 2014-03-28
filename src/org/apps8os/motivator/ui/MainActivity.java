@@ -64,7 +64,6 @@ public class MainActivity extends Activity {
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	private String mTimeToNotify;					// Hours after midnight when to notify the user
 	private Sprint mCurrentSprint;
-	private final String mHaveSetNotifications = "have_we_initialized_notifications";
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.

@@ -111,6 +111,11 @@ public class MoodHistoryWeekFragment extends Fragment {
 		}
 	}
 	
+	/**
+	 * Inner class for loading the days in a different thread and the publishing the results to the UI thread.
+	 * @author Toni Järvinen
+	 *
+	 */
 	private class LoadDaysAsyncTask extends AsyncTask<Void, Void, ArrayList<DayInHistory>> {
 		
 		private long mSprintStartDateInMillis;
@@ -123,6 +128,9 @@ public class MoodHistoryWeekFragment extends Fragment {
 			mActivity = activity;
 		}
 
+		/**
+		 * Load the days in background.
+		 */
 		@Override
 		protected ArrayList<DayInHistory> doInBackground(Void... params) {
 			ArrayList<DayInHistory> result = new ArrayList<DayInHistory>();
@@ -146,6 +154,9 @@ public class MoodHistoryWeekFragment extends Fragment {
 			return result;
 		}
 		
+		/**
+		 * Publish the results to the UI thread.
+		 */
 		@Override
 		public void onPostExecute(ArrayList<DayInHistory> result) {
 			LinearLayout dayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
