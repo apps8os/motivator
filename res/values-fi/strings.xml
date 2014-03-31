@@ -56,7 +56,8 @@
     <string name="morning_and_evening">Aamulla ja illalla</string>
     <string name="every_hour">Joka tunti</string>
     <string name="days_of_glory">kunnon päivää</string>
-    <string name="day"></string>
+    <string name="day">Päivä</string>
+    <string name="days">päivää</string>
     <string name="of_glory">kunnon päivä</string>
     <string name="no_added_moods">Ei lisättyjä fiiliksiä.</string>
     <string name="amount_of_drinks">Kuinka monta juomaa.</string>
@@ -65,5 +66,7 @@
     <string name="data_analysis">Tarkastele jaksoa</string>
     <string name="week">Viikko</string>
     <string name="today_is_the_day">Tänään on</string>
+    <string name="select_a_timeframe">Valitse aikaväli</string>
+    <string name="default_sprint_title">105 Kunnon päivää</string>
     
 </resources>

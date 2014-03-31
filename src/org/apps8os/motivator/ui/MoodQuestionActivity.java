@@ -30,7 +30,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -142,7 +141,7 @@ public class MoodQuestionActivity extends Activity {
 
 	// Saves the mood to the database.
 	public void saveMood(View v) {
-		int mood = mCardsViewPagerMood.getCurrentItem();
+		int mood = mCardsViewPagerMood.getCurrentItem() + 1;
 		mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
 	}
 	

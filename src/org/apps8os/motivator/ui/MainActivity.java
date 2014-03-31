@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.MotivatorConstants;
@@ -37,6 +38,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -102,6 +104,10 @@ public class MainActivity extends Activity {
 			SharedPreferences.Editor editor = motivatorPrefs.edit();
 			editor.putInt(MotivatorConstants.APP_VERSION, versionNumber);
 			editor.commit();
+			
+			// DEBUG
+			MoodDataHandler handler = new MoodDataHandler(this);
+			handler.insertSprint(1393632000000L, 105, getString(R.string.default_sprint_title));
 		}
 	}
 	
@@ -112,7 +118,8 @@ public class MainActivity extends Activity {
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
 		ActionBar actionBar = getActionBar();
-		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + " " + getString(R.string.of_glory));
+		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
+		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
 	}
 
 	@Override

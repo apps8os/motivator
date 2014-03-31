@@ -72,6 +72,7 @@ public class MoodHistoryActivity extends Activity {
 	private int mSelectedWeek;
 	private Calendar mToday;
 	private static Calendar mStartDate;
+	private String mSprintTitle;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -97,7 +98,8 @@ public class MoodHistoryActivity extends Activity {
 		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
-	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days_of_glory));
+		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
+	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days));
 	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);

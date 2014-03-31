@@ -41,9 +41,11 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	private static final String TABLE_NAME_MOOD = TABLE_NAME_MOOD_LEVELS;
 	
 	private SparseArray<Question> mQuestions;
+	private Context mContext;
 	
 	public MoodDataHandler(Context context) {
 		super(context);
+		mContext = context;
 		
 		mQuestions = new SparseArray<Question>();
 		Resources res = context.getResources();
@@ -93,54 +95,6 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	close();
     }
     
-    
-    /**
-     * Give the date, return cursor over moods from the previous date that had moods. Note: Not yesterday if it did
-     * not have any mood data recorded.
-     * @return
-     */
-    public Cursor getPreviousMoodFrom(long timeStamp) {
-    	Cursor query = null;
-    	
-    	// Get the time stamp for the next mood data from the given timestamp.
-    	long nextMood = getNextMoodTimestamp(timeStamp);
-    	
-    	// If one was not found, return null
-    	if (nextMood == 0) {
-    		return null;
-    	}
-    	// Create a Calendar object for the nextMood timestamp.
-    	Calendar date = new GregorianCalendar();
-    	date.setTimeInMillis(nextMood);
-    	// Get the day boundaries for the day.
-    	long[] boundaries = UtilityMethods.getDayInMillis(date);
-    	
-    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
-    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
-    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
-    	
-    	if (query.moveToFirst()) {
-    		return query;
-    	} else {
-    		return null;
-    	}
-    }
-    
-    public Cursor getMoodsForDay(Calendar day) {
-    	Cursor query = null;
-    	long[] boundaries = UtilityMethods.getDayInMillis(day);
-    	
-    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
-    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
-    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
-    	
-    	if (query.moveToFirst()) {
-    		return query;
-    	} else {
-    		return null;
-    	}
-    }
-    
     public DayInHistory getDayInHistory(long dayInMillis) {
     	open();
     	Calendar calendar = new GregorianCalendar();
@@ -154,7 +108,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	
     	query.moveToFirst();
     	// Initialize the DayInHistory object with the first timestamp on the constructor.
-	    DayInHistory result = new DayInHistory(dayInMillis);
+	    DayInHistory result = new DayInHistory(dayInMillis, mContext);
 	    // Add all moods to the DayInHistory object.
 	    while (query.getCount() > 0 && !query.isClosed()) {
 	    	result.addMoodLevel(query.getInt(0));
@@ -169,35 +123,15 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	    return result;
     }
     
-    /**
-     * Gets the next latest mood data from the given timestamp.
-     * @param fromTimestamp
-     * @return
-     */
-    public long getNextMoodTimestamp(long fromTimestamp) {
-    	String selection = KEY_TIMESTAMP + " < " + fromTimestamp;
-    	String columns[] = {KEY_TIMESTAMP};
-    	Cursor query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, KEY_TIMESTAMP);
-    	long result;
-    	if (query.moveToLast()) {
-    		result = query.getLong(0);
-    	} else {
-    		result = 0;
+    public DayInHistory[] getDaysAfter(long fromInMillis, int amountOfDays) {
+    	DayInHistory[] days = new DayInHistory[amountOfDays];
+    	GregorianCalendar calendar = new GregorianCalendar();
+    	calendar.setTimeInMillis(fromInMillis);
+    	for (int i = 0; i < amountOfDays; i++) {
+    		days[i] = getDayInHistory(calendar.getTimeInMillis());
+    		calendar.add(Calendar.DATE, 1);
     	}
-    	query.close();
-    	return result;
-    }
-    
-    /**
-     * Gets the size of the mood table.
-     * @return
-     */
-    public long getMoodTableSize() {
-    	String columns[] = {KEY_TIMESTAMP};
-    	Cursor query = mDb.query(TABLE_NAME_MOOD, columns, null, null, null, null, null);
-    	long size = query.getCount();
-    	query.close();
-    	return size;
+    	return days;
     }
     
 	public Question getQuestion(int id) {

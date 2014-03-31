@@ -10,6 +10,7 @@ public class Sprint implements Parcelable {
 	private long mStartTime;
 	private long mEndTime;
 	private int mDaysInSprint;
+	private String mSprintTitle;
 	
 	public Sprint(long startTime) {
 		mStartTime = startTime;
@@ -27,6 +28,7 @@ public class Sprint implements Parcelable {
 		mStartTime = source.readLong();
 		mEndTime = source.readLong();
 		mDaysInSprint = source.readInt();
+		mSprintTitle = source.readString();
 	}
 	public static final Parcelable.Creator<Sprint> CREATOR = new Parcelable.Creator<Sprint>() {
 		@Override
@@ -91,6 +93,15 @@ public class Sprint implements Parcelable {
 		dest.writeLong(mStartTime);
 		dest.writeLong(mEndTime);
 		dest.writeInt(mDaysInSprint);
+		dest.writeString(mSprintTitle);
+	}
+
+	public String getSprintTitle() {
+		return mSprintTitle;
+	}
+
+	public void setSprintTitle(String mSprintTitle) {
+		this.mSprintTitle = mSprintTitle;
 	}
 	
 	

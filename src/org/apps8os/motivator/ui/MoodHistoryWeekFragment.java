@@ -69,7 +69,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mDataHandler = new MoodDataHandler(getActivity());
 		
 		// Loading the days on a different thread.
-		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition, (MoodHistoryActivity) getActivity());
+		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition);
 		loadingTask.execute();
 		
 		return mRootView;
@@ -123,12 +123,10 @@ public class MoodHistoryWeekFragment extends Fragment {
 		
 		private long mSprintStartDateInMillis;
 		private int mPosition;
-		private MoodHistoryActivity mActivity;
 		
-		public LoadDaysAsyncTask(long startDateInMillis, int position, MoodHistoryActivity activity) {
+		public LoadDaysAsyncTask(long startDateInMillis, int position) {
 			mSprintStartDateInMillis = startDateInMillis;
 			mPosition = position;
-			mActivity = activity;
 		}
 
 		/**

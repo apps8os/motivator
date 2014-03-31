@@ -43,16 +43,18 @@ public class DayInHistory implements Parcelable{
 	private String mComment;
 	private long mDateInMillis;
 	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
+	private Context mContext;
 	
 	/**
 	 * Create an instance. Set the date in millis to midnight of the day.
 	 * @param dayInMillis
 	 */
-	public DayInHistory(long dayInMillis) {
+	public DayInHistory(long dayInMillis, Context context) {
 		Calendar mDate = new GregorianCalendar();
 		mDate.setTimeInMillis(dayInMillis);
 		mDate = UtilityMethods.setToMidnight(mDate);
 		mDateInMillis = mDate.getTimeInMillis();
+		mContext = context;
 	}
 	
 	/**
@@ -177,7 +179,8 @@ public class DayInHistory implements Parcelable{
 		return mEvents;
 	}
 
-	public void setEvent(MotivatorEvent event) {
-		mEvents.add(event);
+	public void setEvents() {
+		EventDataHandler eventData = new EventDataHandler(mContext);
+		mEvents = eventData.getEventsForDay(mDateInMillis);
 	}
 }

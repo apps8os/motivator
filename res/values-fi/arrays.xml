@@ -26,7 +26,7 @@
     <string-array name="time_frames">
         <item>Viime viikko</item>
         <item>Viimeiset kaksi viikkoa</item>
-        <item>Viime kuukausi</item>
+        <item>Viimeiset 30 päivää</item>
         <item>Valitse aikajakso</item>
     </string-array>
 </resources>

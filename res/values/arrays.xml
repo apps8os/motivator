@@ -36,7 +36,7 @@
     <string-array name="time_frames">
         <item>Last week</item>
         <item>Last two weeks</item>
-        <item>Last month</item>
+        <item>Last 30 days</item>
         <item>Specific timeframe</item>
     </string-array>
 </resources>

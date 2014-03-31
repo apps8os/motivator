@@ -202,11 +202,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		
 		query.moveToFirst();
-			int lastAnswerId = -1;
-			// Looping through the cursor.
-			if (query.getCount() > 0) {
-				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
-				MotivatorEvent event = new MotivatorEvent(query.getInt(0));
+		int lastAnswerId = -1;
+		// Looping through the cursor.
+		if (query.getCount() > 0) {
+			// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
+			MotivatorEvent event = new MotivatorEvent(query.getInt(0));
 			while (!query.isClosed()) {
 				// Check if we have looped through the answers relating to this event with the answerId.
 				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
@@ -272,6 +272,98 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		});
 		close();
 		return events;
+	}
+	
+	private ArrayList<MotivatorEvent> getEvents(Cursor query) {
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
+		open();
+		query.moveToFirst();
+		int lastAnswerId = -1;
+		// Looping through the cursor.
+		if (query.getCount() > 0) {
+			// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
+			MotivatorEvent event = new MotivatorEvent(query.getInt(0));
+			while (!query.isClosed()) {
+				// Check if we have looped through the answers relating to this event with the answerId.
+				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
+					// Add the event to the list and initialize a new instance.
+					events.add(event);
+					event = new MotivatorEvent(query.getInt(0));
+				}
+				// Get the question with the questionId.
+				Question question = getQuestion(query.getInt(1));
+				
+				if (question != null) {
+					// Handle the different questions/answers.
+					switch (question.getId()) {
+					case MotivatorConstants.QUESTION_ID_WHEN:
+						event.setStartTime(query.getLong(3));
+						// All events in this section should have today as the text so get the answer representing today.
+						event.setEventAsText(question.getAnswer(0));
+						break;
+						
+					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
+					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+						long time;
+						switch (query.getInt(2)) {
+						case 0:
+							time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
+							break;
+						case 1:
+							time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
+							break;
+						case 2:
+							time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
+							break;
+						default:
+							time = 0;
+						}
+						event.setStartTime(event.getStartTime() + time);
+						break;
+					}
+				}
+				lastAnswerId = query.getInt(0);
+				if (query.isLast()) {
+					query.close();
+				} else {
+					query.moveToNext();
+				}
+			}
+			events.add(event);
+			}
+		// Sort the list
+		Collections.sort(events, new Comparator<MotivatorEvent>() {
+			@Override
+			public int compare(MotivatorEvent case1, MotivatorEvent case2) {
+				long case1Sorter = case1.getStartTime();
+				long case2Sorter = case2.getStartTime();
+				if (case1Sorter > case2Sorter) {
+					return 1;
+				} else if (case1Sorter == case2Sorter) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+		});
+		close();
+		return events;
+	}
+	
+	public ArrayList<MotivatorEvent> getEventsForDay(long dayInMillis) {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(dayInMillis);
+		UtilityMethods.setToMidnight(calendar);
+		long dayStartInMillis = calendar.getTimeInMillis();
+		calendar.add(Calendar.DATE, 1);
+		long dayEndInMillis = calendar.getTimeInMillis();
+		
+		open();
+		String selection = KEY_CONTENT + " >= " + dayStartInMillis + " AND " + KEY_CONTENT + " < " + dayEndInMillis;
+		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
+		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		
+		return getEvents(query);
 	}
 	
 	public void addDrink(int answerId) {

@@ -22,8 +22,11 @@ package org.apps8os.motivator.data;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apps8os.motivator.R;
+
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -53,6 +56,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String KEY_ANSWER = "answer";				// The answer to the question
 	protected static final String KEY_TIMESTAMP = "timestamp";			// Timestamp of when the record was created.
 	protected static final String KEY_CONTENT = "specific_content";		// A special column, which is specific for the different tables. Handled differently on subclasses.
+	protected static final String KEY_SPRINT_TITLE = "sprint_title";
 	
 	protected static final String TABLE_NAME_QUESTIONNAIRE = "mood_answers";
 	protected static final String TABLE_NAME_EVENTS = "event_answers";
@@ -66,7 +70,8 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 			"id INTEGER PRIMARY KEY, " +
 			KEY_SPRINT_START + " INTEGER, " +
 			KEY_SPRINT_DAYS + " INTEGER, " +
-			KEY_SPRINT_END + " INTEGER);";
+			KEY_SPRINT_END + " INTEGER, " +
+			KEY_SPRINT_TITLE + " TEXT);";
 	private static final String TABLE_CREATE_MOOD_LEVELS =
 			"CREATE TABLE " + TABLE_NAME_MOOD_LEVELS + " (" +
 			"id INTEGER PRIMARY KEY, " +
@@ -95,8 +100,6 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		}
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		db.execSQL(TABLE_CREATE_SPRINTS);
-		
-		insertSprint(1393632000000L, 105, db);
 	}
 
 	@Override
@@ -116,33 +119,28 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		return mDb.isOpen();
 	}
 	
-	public void insertSprint(long startTime, int days, SQLiteDatabase db) {
+	public void insertSprint(long startTime, int days, String sprintTitle) {
+		open();
 		ContentValues values = new ContentValues();
 		values.put(KEY_SPRINT_START, startTime);
 		values.put(KEY_SPRINT_DAYS, days);
-		long endTime = startTime + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS);
-		values.put(KEY_SPRINT_END, endTime);
-		db.insert(TABLE_NAME_SPRINTS, null, values);
-	}
-	
-	public void insertSprint(long startTime, int days) {
-		ContentValues values = new ContentValues();
-		values.put(KEY_SPRINT_START, startTime);
-		values.put(KEY_SPRINT_DAYS, days);
+		values.put(KEY_SPRINT_TITLE, sprintTitle);
 		long endTime = startTime + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS);
 		values.put(KEY_SPRINT_END, endTime);
 		mDb.insert(TABLE_NAME_SPRINTS, null, values);
+		close();
 	}
 	
 	public Sprint getCurrentSprint() {
 		open();
 		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
-		String columns[] = {KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END};
+		String columns[] = {KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
 		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, null);
 		cursor.moveToFirst();
 		Sprint current = new Sprint(cursor.getLong(0));
 		current.setDaysInSprint(cursor.getInt(1));
 		current.setEndTime(cursor.getLong(2));
+		current.setSprintTitle(cursor.getString(3));
 		cursor.close();
 		close();
 		return current;
