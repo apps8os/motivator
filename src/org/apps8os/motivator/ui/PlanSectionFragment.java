@@ -22,14 +22,18 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -132,11 +136,35 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
-				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
+				final Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
 				eventButton.setText(result.get(i).getEventDateAsText());
 				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
+				final int eventId = result.get(i).getId();
 				mEventLayout.addView(eventButton);
+				
+				// Make it possible to cancel the event with long click.
+				eventButton.setOnLongClickListener(new OnLongClickListener() {
+					@Override
+					public boolean onLongClick(View v) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						builder.setMessage(getString(R.string.cancel_event)+ "?").setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mDataHandler.deleteEvent(eventId);
+								mEventLayout.removeView(eventButton);
+							}
+						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+							}
+						});
+						Dialog dialog = builder.create();
+						dialog.show();
+						return true;
+					}
+				});
 				
 				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
 				mEventLayout.addView(separator);
