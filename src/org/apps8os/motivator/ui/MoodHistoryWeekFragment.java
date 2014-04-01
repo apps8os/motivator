@@ -29,6 +29,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -161,6 +163,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		@Override
 		public void onPostExecute(ArrayList<DayInHistory> result) {
 			LinearLayout dayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
+			dayLayout.setVisibility(View.GONE);
 			
 			// Add the lower half with day views.
 			for (int i = 0; i < result.size(); i++) {
@@ -212,9 +215,38 @@ public class MoodHistoryWeekFragment extends Fragment {
 			li.setRangeY(0, 4);
 			li.setLineToFill(0);
 			
-			// Remove the loading indicator from the layout.
-			RelativeLayout loadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
-			loadingView.setVisibility(View.GONE);
+			final RelativeLayout loadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
+			
+			
+			// Animate the switch from the loading view to the week view.
+			int animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+			
+			dayLayout.setAlpha(0f);
+			dayLayout.setVisibility(View.VISIBLE);
+			li.setAlpha(0f);
+			
+			dayLayout.animate()
+	            .alpha(1f)
+	            .setDuration(animationDuration)
+	            .setListener(null);
+			
+			li.animate()
+            .alpha(1f)
+            .setDuration(animationDuration)
+            .setListener(null);
+			
+			// Animate the fading out of the loading view.
+			loadingView.animate()
+					.alpha(0f)
+					.setDuration(animationDuration)
+					.setListener(new AnimatorListenerAdapter() {
+						
+						// Set the visibility to gone when animation has ended.
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							loadingView.setVisibility(View.GONE);
+						}
+					});
 			
 		}
 		

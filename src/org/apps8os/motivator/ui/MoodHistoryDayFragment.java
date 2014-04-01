@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,9 +46,17 @@ public class MoodHistoryDayFragment extends Fragment {
 		mDay = bundle.getParcelable(MotivatorConstants.DAY_IN_HISTORY);
 		View rootView = inflater.inflate(
 				R.layout.fragment_mood_history_day, viewGroup, false);
+		
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
 		TextView comment = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
-		ImageView image = (ImageView) rootView.findViewById(R.id.mood_history_fragment_mood_image);
+		final ImageView mainMoodImage = (ImageView) rootView.findViewById(R.id.mood_history_fragment_mood_image);
+		mainMoodImage.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mainMoodImage.animate().rotationBy(360).setDuration(1000);
+			}
+		});
+		
 		Resources res = getActivity().getResources();
 		// Set default page if the day is null or set the content from day object if it exists.
 		if (mDay != null) {
@@ -61,12 +70,11 @@ public class MoodHistoryDayFragment extends Fragment {
 		}
 		
 		if (mDay.getAvgMoodLevel() == 0) {
-			image.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
+			mainMoodImage.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
 			comment.setText(res.getString(R.string.no_added_moods));
 		} else {
 			comment.setText("Best Day EVER!");
 		}
-
 		
 		return rootView;
 	}

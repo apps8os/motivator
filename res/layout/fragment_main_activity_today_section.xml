@@ -32,9 +32,43 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".MainScreen$TodaySectionFragment" >      
+        tools:context=".MainScreen$TodaySectionFragment" >
         
-        <Button 
+       <LinearLayout
+           android:layout_height="80dp"
+           android:layout_width="match_parent"
+           android:orientation="vertical" >
+           
+           <TextView
+               android:id="@+id/today_section_sprint_progress_text"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:textColor="@color/blue"
+               android:gravity="center_vertical|center"
+               android:textAlignment="gravity"
+               android:layout_weight="1"
+               android:text=""
+               android:textAppearance="?android:attr/textAppearanceLarge" />
+
+           <ProgressBar
+               android:id="@+id/today_section_sprint_progress_bar"
+               style="?android:attr/progressBarStyleHorizontal"
+               android:layout_width="match_parent"
+               android:layout_gravity="center"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
+               android:layout_weight="2"
+               android:layout_height="match_parent" />
+           
+       </LinearLayout>
+       
+       <View 
+		    android:layout_width="fill_parent"
+			android:layout_height="1dp"
+			android:background="@color/gray" >
+		</View>
+        
+       <Button 
             android:id="@+id/main_activity_today_mood_button"
 	      	android:layout_width="match_parent"
    			android:layout_height="80dp"
@@ -49,6 +83,7 @@
             android:id="@+id/main_activity_today_dynamic_buttons2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical" >
         </LinearLayout>
 
@@ -56,6 +91,7 @@
             android:id="@+id/main_activity_today_dynamic_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical" >
         </LinearLayout>
         <LinearLayout

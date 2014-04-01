@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class AddingEventActivity extends Activity {
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
+	private ProgressBar mProgressBar;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -63,12 +65,17 @@ public class AddingEventActivity extends Activity {
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
 		
+		mProgressBar = (ProgressBar) findViewById(R.id.questionnaire_progress);
+		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
 		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
 		mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
 		mAnswerId = incrementAnswersId();
 		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
+		mProgressBar.setMax(mNumberOfQuestions);
+		mProgressBar.setProgress(1);
+		
 		incrementQuestion(true);
 	}
 	
@@ -126,6 +133,7 @@ public class AddingEventActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId != mDataHandler.getFirstQuestionId()) {
 			incrementQuestion(false);
+			mProgressBar.incrementProgressBy(-1);
 			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
@@ -167,6 +175,7 @@ public class AddingEventActivity extends Activity {
 				// Determine if the questionnaire is done
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
+					mProgressBar.incrementProgressBy(1);
 				} else {
 					// Initialize the amount of drinks to zero.
 					mDataHandler.insertAnswer(0, MotivatorConstants.DRINK_AMOUNT_ID, mAnswerId);

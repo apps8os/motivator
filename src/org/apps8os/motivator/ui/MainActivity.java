@@ -38,7 +38,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -85,6 +84,7 @@ public class MainActivity extends Activity {
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOffscreenPageLimit(3);
 		
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
@@ -201,7 +201,10 @@ public class MainActivity extends Activity {
 			Fragment fragment;
 			// Set the second tab as today fragment
 			if (position == 1) {
+				Bundle b = new Bundle();
+				b.putParcelable(MotivatorConstants.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new TodaySectionFragment();
+				fragment.setArguments(b);
 			} else if(position == 2) {
 				fragment = new PlanSectionFragment();
 			} else if (position == 0) {

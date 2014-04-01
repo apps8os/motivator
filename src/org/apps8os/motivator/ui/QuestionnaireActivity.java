@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -47,6 +48,7 @@ public class QuestionnaireActivity extends Activity {
 	private TextView mQuestionTextView;
 	private RadioGroup mAnswerGroupView;
 	private TextView mPromptMessageTextView;
+	private ProgressBar mProgressBar;
 	private int mNumberOfQuestions;
 	private LayoutInflater mInflater;
 	
@@ -61,6 +63,7 @@ public class QuestionnaireActivity extends Activity {
 		mInflater = getLayoutInflater();
 		mDataHandler = new MoodDataHandler(this);
 		
+		mProgressBar = (ProgressBar) findViewById(R.id.questionnaire_progress);
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
@@ -71,6 +74,8 @@ public class QuestionnaireActivity extends Activity {
 		mAnswerId = incrementAnswersId();
 		mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
 		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
+		mProgressBar.setMax(mNumberOfQuestions);
+		mProgressBar.setProgress(1);
 		incrementQuestion(true);
 	}
 	
@@ -128,6 +133,7 @@ public class QuestionnaireActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId != mDataHandler.getFirstQuestionId()) {
 			incrementQuestion(false);
+			mProgressBar.incrementProgressBy(-1);
 			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
@@ -169,6 +175,7 @@ public class QuestionnaireActivity extends Activity {
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
+					mProgressBar.incrementProgressBy(1);
 				} else {								
 					// Questionnaire is done
 					String toastMsg;

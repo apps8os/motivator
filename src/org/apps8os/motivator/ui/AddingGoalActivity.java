@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class AddingGoalActivity extends Activity {
 	private LayoutInflater mInflater;
 	
 	private int mAnswerId;
+	private ProgressBar mProgressBar;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -64,11 +66,16 @@ public class AddingGoalActivity extends Activity {
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
 		
+		mProgressBar = (ProgressBar) findViewById(R.id.questionnaire_progress);
+		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
 		nextButton.setOnClickListener(new NextButtonOnClickListener());
 		
 		mAnswerId = incrementAnswersId();
 		mQuestionId = 0;
+		mProgressBar.setMax(mNumberOfQuestions);
+		mProgressBar.setProgress(1);
+		
 		incrementQuestion(true);
 	}
 	
@@ -126,6 +133,7 @@ public class AddingGoalActivity extends Activity {
 	public void onBackPressed() {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
+			mProgressBar.incrementProgressBy(-1);
 			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
@@ -168,6 +176,7 @@ public class AddingGoalActivity extends Activity {
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
+					mProgressBar.incrementProgressBy(1);
 				} else {								
 					// Questionnaire is done
 					

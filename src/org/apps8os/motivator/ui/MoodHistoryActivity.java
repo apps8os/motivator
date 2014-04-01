@@ -72,7 +72,7 @@ public class MoodHistoryActivity extends Activity {
 	private int mSelectedWeek;
 	private Calendar mToday;
 	private static Calendar mStartDate;
-	private String mSprintTitle;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -310,8 +310,8 @@ public class MoodHistoryActivity extends Activity {
 		 * Instantiates the MoodHistoryDayFragment for the position.
 		 */
 		@Override
-		public Fragment getItem(int position) {
-			Fragment fragment;
+		public MoodHistoryDayFragment getItem(int position) {
+			MoodHistoryDayFragment fragment;
 			// Get a DayInHistory for the date represented by this position. Calculated from the start date.
 			DayInHistory date = mDataHandler.getDayInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
 			fragment = new MoodHistoryDayFragment();

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -35,6 +37,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * Represents the today section in the UI.
@@ -59,6 +63,15 @@ public class TodaySectionFragment extends Fragment {
 		
 		// The layout which has dynamic amount of future events/buttons.
 		mEventLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		
+		Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+		
+		ProgressBar sprintProgress = (ProgressBar) rootView.findViewById(R.id.today_section_sprint_progress_bar);
+		TextView sprintTextView = (TextView) rootView.findViewById(R.id.today_section_sprint_progress_text);
+		
+		sprintProgress.setMax(currentSprint.getDaysInSprint());
+		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
+		sprintTextView.setText(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint());
 		
 		mButtonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
 		

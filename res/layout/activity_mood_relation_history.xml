@@ -21,6 +21,7 @@
         android:orientation="horizontal"
         android:background="@color/light_blue"
         style="?android:attr/buttonBarStyle" >
+        
 
         <Button
             android:id="@+id/mood_relation_history_top_button1"
