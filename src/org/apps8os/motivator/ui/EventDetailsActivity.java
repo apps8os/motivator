@@ -51,10 +51,11 @@ public class EventDetailsActivity extends Activity {
 	    mDataHandler = new EventDataHandler(this);
 	    
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
-	    title.setText(mEvent.getEventText());
+	    title.setText(mEvent.getEventDateAsText());
+	    
 
 	    TextView text = (TextView) findViewById(R.id.event_detail_text);
-	    String textToAdd = Integer.toString(mEvent.getId());
+	    String textToAdd = mEvent.getStartTimeAsText();
 	    text.setText(Html.fromHtml(textToAdd));
 	    
 	    final EventDetailsActivity parentActivity = this;

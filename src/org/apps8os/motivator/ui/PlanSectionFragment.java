@@ -133,7 +133,7 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
-				eventButton.setText(result.get(i).getEventText());
+				eventButton.setText(result.get(i).getEventDateAsText());
 				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				mEventLayout.addView(eventButton);

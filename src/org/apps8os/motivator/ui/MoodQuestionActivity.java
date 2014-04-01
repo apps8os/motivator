@@ -24,13 +24,18 @@ import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents the mood question activity.
@@ -115,6 +120,26 @@ public class MoodQuestionActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				saveMood(v);
+				
+				String toastMsg;
+				if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
+					toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
+				} else {
+					toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
+				}
+				LayoutInflater inflater = getLayoutInflater();
+				View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+				toastLayout.setBackgroundColor(Color.DKGRAY);
+				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+				toastText.setText(toastMsg);
+				toastText.setTextColor(Color.WHITE);
+				
+				Toast questionnaireDone = new Toast(getApplicationContext());
+				questionnaireDone.setGravity(Gravity.CENTER_VERTICAL, 0, 50);
+				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+				questionnaireDone.setView(toastLayout);
+				questionnaireDone.show();
+				
 				finish();
 			}
         	

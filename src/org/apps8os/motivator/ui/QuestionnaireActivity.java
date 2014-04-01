@@ -21,17 +21,24 @@ import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Question;
 import org.apps8os.motivator.utils.MotivatorConstants;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +59,10 @@ public class QuestionnaireActivity extends Activity {
 	private int mNumberOfQuestions;
 	private LayoutInflater mInflater;
 	
+	private RelativeLayout mOuterBackground;
+	
 	private int mAnswerId;
+	private TransitionDrawable mTransition;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -67,6 +77,11 @@ public class QuestionnaireActivity extends Activity {
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) findViewById(R.id.questionnaire_question);
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
+		
+		mOuterBackground = (RelativeLayout) findViewById(R.id.questionnaire_layout_outer);
+		mOuterBackground.setBackgroundResource(R.drawable.backgrounds);
+		
+		mTransition = (TransitionDrawable) mOuterBackground.getBackground();
 		
 		Button nextButton = (Button) findViewById(R.id.questionnaire_next_button);
 		nextButton.setOnClickListener(new NextButtonOnClickListener());
@@ -134,6 +149,7 @@ public class QuestionnaireActivity extends Activity {
 		if (mQuestionId != mDataHandler.getFirstQuestionId()) {
 			incrementQuestion(false);
 			mProgressBar.incrementProgressBy(-1);
+			mTransition.reverseTransition(1000);
 			mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
@@ -176,15 +192,26 @@ public class QuestionnaireActivity extends Activity {
 				if (mNumberOfQuestions > 0) {
 					incrementQuestion(true);
 					mProgressBar.incrementProgressBy(1);
+					mTransition.startTransition(1000);
+					
 				} else {								
 					// Questionnaire is done
 					String toastMsg;
 					if ( getIntent().getBooleanExtra(MoodQuestionActivity.GOODMOOD, false) ) {
-						toastMsg = "woot";
+						toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
 					} else {
 						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
 					}
-					Toast questionnaireDone = Toast.makeText(getApplicationContext(), toastMsg, Toast.LENGTH_SHORT);
+					View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					toastLayout.setBackgroundColor(Color.DKGRAY);
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(toastMsg);
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast questionnaireDone = new Toast(getApplicationContext());
+					questionnaireDone.setGravity(Gravity.CENTER_VERTICAL, 0, 50);
+					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+					questionnaireDone.setView(toastLayout);
 					questionnaireDone.show();
 					finish();
 				}

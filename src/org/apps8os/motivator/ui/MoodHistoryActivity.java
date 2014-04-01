@@ -187,6 +187,7 @@ public class MoodHistoryActivity extends Activity {
 			// Set the minimun and maximum dates based on the sprint and today.
 			pickerDialog.getDatePicker().setMinDate(mSprintStartDateInMillis);
 			pickerDialog.getDatePicker().setMaxDate(mToday.getTimeInMillis());
+			pickerDialog.setTitle(getString(R.string.select_a_day));
 			return pickerDialog;
 		}
 		

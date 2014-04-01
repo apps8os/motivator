@@ -36,6 +36,7 @@
     <string name="add_event">Add event</string>
     <string name="show_mood_history">Your moods</string>
     <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
+    <string name="questionnaire_done_toast_good_mood">Awesome!</string>
     <string name="add_goal">Add goal</string>
     <string name="this_weekend">This weekend</string>
     <string name="send_notifications">Send notifications?</string>
@@ -68,5 +69,6 @@
     <string name="today_is_the_day">Today is the day</string>
     <string name="select_a_timeframe">Select a timeframe</string>
     <string name="default_sprint_title">105 days of Kudos</string>
+    <string name="select_a_day">Select a day</string>
 
 </resources>

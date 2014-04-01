@@ -140,15 +140,18 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 					switch (question.getId()) {
 					case MotivatorConstants.QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
-						event.setEventAsText(question.getAnswer(query.getInt(2)));
+						event.setEventDateAsText(question.getAnswer(query.getInt(2)));
 						break;
 					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
 						switch (query.getInt(2)) {
 						case 0:
+							event.setStartTimeAsText(question.getAnswer(0));
 							break;
 						case 1:
+							event.setStartTimeAsText(question.getAnswer(1));
 							break;
 						case 2:
+							event.setStartTimeAsText(question.getAnswer(2));
 							break;
 						default:
 						}
@@ -223,7 +226,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 					case MotivatorConstants.QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
 						// All events in this section should have today as the text so get the answer representing today.
-						event.setEventAsText(question.getAnswer(0));
+						event.setEventDateAsText(question.getAnswer(0));
 						break;
 						
 					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
@@ -232,12 +235,15 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 						switch (query.getInt(2)) {
 						case 0:
 							time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
+							event.setStartTimeAsText(question.getAnswer(0));
 							break;
 						case 1:
 							time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
+							event.setStartTimeAsText(question.getAnswer(1));
 							break;
 						case 2:
 							time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
+							event.setStartTimeAsText(question.getAnswer(2));
 							break;
 						default:
 							time = 0;
@@ -299,7 +305,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 					case MotivatorConstants.QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
 						// All events in this section should have today as the text so get the answer representing today.
-						event.setEventAsText(question.getAnswer(0));
+						event.setEventDateAsText(question.getAnswer(0));
 						break;
 						
 					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.

@@ -10,7 +10,8 @@ public class MotivatorEvent implements Parcelable {
 	private int mPlannedDrinks;
 	private int mActualDrinks = 0;
 	private int mId;
-	private String mEventAsText;
+	private String mEventDateAsText;
+	private String mStartTimeAsText = "NOT FOUND";
 	
 	public MotivatorEvent(int eventId) {
 		mId = eventId;
@@ -22,7 +23,8 @@ public class MotivatorEvent implements Parcelable {
 		mPlannedDrinks = source.readInt();
 		mActualDrinks = source.readInt();
 		mId = source.readInt();
-		mEventAsText = source.readString();
+		mEventDateAsText = source.readString();
+		mStartTimeAsText = source.readString();
 	}
 
 	public static final Parcelable.Creator<MotivatorEvent> CREATOR = new Parcelable.Creator<MotivatorEvent>() {
@@ -63,8 +65,8 @@ public class MotivatorEvent implements Parcelable {
 	/**
 	 * @param mEventAsText the mEventAsText to set
 	 */
-	public void setEventAsText(String mEventAsText) {
-		this.mEventAsText = mEventAsText;
+	public void setEventDateAsText(String mEventAsText) {
+		this.mEventDateAsText = mEventAsText;
 	}
 
 	/**
@@ -112,8 +114,8 @@ public class MotivatorEvent implements Parcelable {
 	/**
 	 * @return the mEventAsText
 	 */
-	public String getEventText() {
-		return mEventAsText;
+	public String getEventDateAsText() {
+		return mEventDateAsText;
 	}
 
 	@Override
@@ -128,7 +130,16 @@ public class MotivatorEvent implements Parcelable {
 		dest.writeInt(mPlannedDrinks);
 		dest.writeInt(mActualDrinks);
 		dest.writeInt(mId);
-		dest.writeString(mEventAsText);
+		dest.writeString(mEventDateAsText);
+		dest.writeString(mStartTimeAsText);
+	}
+
+	public String getStartTimeAsText() {
+		return mStartTimeAsText;
+	}
+
+	public void setStartTimeAsText(String mStartTimeAsText) {
+		this.mStartTimeAsText = mStartTimeAsText;
 	}
 
 }

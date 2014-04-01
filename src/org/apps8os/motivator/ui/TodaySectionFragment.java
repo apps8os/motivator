@@ -48,6 +48,7 @@ public class TodaySectionFragment extends Fragment {
 	private EventDataHandler mDataHandler;
 	private LinearLayout mEventLayout;
 	private LinearLayout mButtonLayout;
+	private View mRootView;
 	private LayoutInflater mInflater;
 	private int mDrinkCounter = 0;
 	
@@ -58,26 +59,19 @@ public class TodaySectionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater = inflater;
-		View rootView = mInflater.inflate(
+		mRootView = mInflater.inflate(
 				R.layout.fragment_main_activity_today_section, container, false);
 		
 		// The layout which has dynamic amount of future events/buttons.
-		mEventLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons);
 		
-		Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+
 		
-		ProgressBar sprintProgress = (ProgressBar) rootView.findViewById(R.id.today_section_sprint_progress_bar);
-		TextView sprintTextView = (TextView) rootView.findViewById(R.id.today_section_sprint_progress_text);
-		
-		sprintProgress.setMax(currentSprint.getDaysInSprint());
-		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
-		sprintTextView.setText(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint());
-		
-		mButtonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
+		mButtonLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
 		
 		// two buttons that are always present
 		
-		Button addEventButton = (Button) rootView.findViewById(R.id.main_activity_today_mood_button);
+		Button addEventButton = (Button) mRootView.findViewById(R.id.main_activity_today_mood_button);
 		addEventButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -86,7 +80,7 @@ public class TodaySectionFragment extends Fragment {
 			}
 		});
 		
-		return rootView;
+		return mRootView;
 	}
 	
 	/**
@@ -94,6 +88,15 @@ public class TodaySectionFragment extends Fragment {
 	 */
 	@Override
 	public void onResume() {
+		Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
+		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
+		
+		sprintProgress.setMax(currentSprint.getDaysInSprint());
+		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
+		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "<br><small>"
+				+ currentSprint.getSprintTitle()));
+		
 		new LoadPlansTask(getActivity()).execute();
 		super.onResume();
 	}
@@ -132,7 +135,7 @@ public class TodaySectionFragment extends Fragment {
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
 				Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
-				eventButton.setText(result.get(i).getEventText());
+				eventButton.setText(result.get(i).getEventDateAsText());
 				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				mEventLayout.addView(eventButton);
