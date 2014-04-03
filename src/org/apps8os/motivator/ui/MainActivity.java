@@ -42,6 +42,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,6 +89,24 @@ public class MainActivity extends Activity {
 		
 		// Set the second tab as the default on launch
 		mViewPager.setCurrentItem(1);
+		
+		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageSelected(int arg0) {
+				if (arg0 == 2 || arg0 == 0) {
+				} else {
+				}
+			}
+		});
 		
 		int versionNumber = -99;
 		try {

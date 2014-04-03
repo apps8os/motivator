@@ -77,6 +77,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 			"id INTEGER PRIMARY KEY, " +
 			KEY_ENERGYLEVEL + " INTEGER, " +
 			KEY_MOODLEVEL + " INTEGER, " +
+			KEY_CONTENT + " TEXT, " +
 			KEY_TIMESTAMP + " INTEGER);";
 	
 	protected SQLiteDatabase mDb;

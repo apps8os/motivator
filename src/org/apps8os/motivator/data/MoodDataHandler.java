@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.ContentValues;
@@ -95,6 +96,22 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	close();
     }
     
+    /**
+     * Inserting a mood to the database
+     * @param energyLevel
+     * @param moodLevel
+     */
+    public void insertMood(int energyLevel, int moodLevel, String comment) {
+    	open();
+    	ContentValues values = new ContentValues();
+    	values.put(KEY_ENERGYLEVEL, energyLevel);
+    	values.put(KEY_MOODLEVEL, moodLevel);
+    	values.put(KEY_CONTENT, comment);
+    	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
+    	mDb.insert(TABLE_NAME_MOOD, null, values);
+    	close();
+    }
+    
     public DayInHistory getDayInHistory(long dayInMillis) {
     	open();
     	Calendar calendar = new GregorianCalendar();
@@ -103,7 +120,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
     	
     	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
-    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP};
+    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP, KEY_CONTENT};
     	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
     	
     	query.moveToFirst();
@@ -113,6 +130,10 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	    while (query.getCount() > 0 && !query.isClosed()) {
 	    	result.addMoodLevel(query.getInt(0));
 	    	result.addEnergyLevel(query.getInt(1));
+    		String comment = query.getString(3);
+    		if (comment != MotivatorConstants.NO_COMMENT) {
+    			result.addComment(comment);
+	    	}
 	    	if (query.isLast()) {
 	    		query.close();
 	    	} else {

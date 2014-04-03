@@ -70,7 +70,8 @@
     <string name="select_a_timeframe">Valitse aikaväli</string>
     <string name="default_sprint_title">105 Kunnon päivää</string>
     <string name="select_a_day">Valitse päivä</string>
-     <string name="yes">Kyllä</string>
+    <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
+    <string name="mood_comment">Lisää kommentti</string>
     
 </resources>

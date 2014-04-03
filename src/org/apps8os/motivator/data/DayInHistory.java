@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.Context;
@@ -40,7 +41,7 @@ public class DayInHistory implements Parcelable{
 	private int mEnergySum = 0;
 	private int mEnergyAmount = 0;
 	private int mAlcoholDrinks = 0;
-	private String mComment;
+	private String mComments = "";
 	private long mDateInMillis;
 	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
 	private Context mContext;
@@ -67,7 +68,7 @@ public class DayInHistory implements Parcelable{
 		mEnergyAmount = source.readInt();
 		mEnergySum = source.readInt();
 		mAlcoholDrinks = source.readInt();
-		mComment = source.readString();
+		mComments = source.readString();
 		mDateInMillis = source.readLong();
 	}
 	
@@ -101,10 +102,10 @@ public class DayInHistory implements Parcelable{
 	}
 	
 	public void addComment(String comment) {
-		mComment = comment;
+		mComments = mComments + comment + MotivatorConstants.COMMENT_SEPARATOR;
 	}
 
-	/**
+	/*
 	 * @return the mAvgMoodLevel
 	 */
 	public int getAvgMoodLevel() {
@@ -134,7 +135,7 @@ public class DayInHistory implements Parcelable{
 	 * @return the mComment
 	 */
 	public String getComment() {
-		return mComment;
+		return mComments;
 	}
 
 	/**
@@ -171,7 +172,7 @@ public class DayInHistory implements Parcelable{
 		dest.writeInt(mEnergyAmount);
 		dest.writeInt(mEnergySum);
 		dest.writeInt(mAlcoholDrinks);
-		dest.writeString(mComment);
+		dest.writeString(mComments);
 		dest.writeLong(mDateInMillis);
 	}
 

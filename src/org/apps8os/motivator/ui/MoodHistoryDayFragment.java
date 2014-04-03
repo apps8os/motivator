@@ -48,7 +48,7 @@ public class MoodHistoryDayFragment extends Fragment {
 				R.layout.fragment_mood_history_day, viewGroup, false);
 		
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
-		TextView comment = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
+		TextView commentView = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
 		final ImageView mainMoodImage = (ImageView) rootView.findViewById(R.id.mood_history_fragment_mood_image);
 		mainMoodImage.setOnClickListener(new OnClickListener() {
 			@Override
@@ -65,15 +65,20 @@ public class MoodHistoryDayFragment extends Fragment {
 			
 		} else {
 			// DUMMY
-			comment.setText(R.string.last_mood);
-			comment.setGravity(Gravity.CENTER);
+			commentView.setText(R.string.last_mood);
+			commentView.setGravity(Gravity.CENTER);
 		}
 		
 		if (mDay.getAvgMoodLevel() == 0) {
 			mainMoodImage.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
-			comment.setText(res.getString(R.string.no_added_moods));
+			commentView.setText(res.getString(R.string.no_added_moods));
 		} else {
-			comment.setText("Best Day EVER!");
+			String comment = mDay.getComment();
+			if (comment.indexOf(MotivatorConstants.COMMENT_SEPARATOR) != -1) {
+				commentView.setText(comment.substring(0, comment.indexOf(MotivatorConstants.COMMENT_SEPARATOR, 0)));
+			} else {
+				commentView.setText(comment);
+			}
 		}
 		
 		return rootView;

@@ -19,6 +19,7 @@ package org.apps8os.motivator.ui;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.services.NotificationService;
+import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -34,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -167,7 +169,12 @@ public class MoodQuestionActivity extends Activity {
 	// Saves the mood to the database.
 	public void saveMood(View v) {
 		int mood = mCardsViewPagerMood.getCurrentItem() + 1;
-		mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood);
+		EditText commentText = (EditText) findViewById(R.id.mood_comment_edit_text);
+		if (commentText.getText().length() != 0) {
+			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, commentText.getText().toString());
+		} else {
+			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, MotivatorConstants.NO_COMMENT);
+		}
 	}
 	
 	public void goToQuestionnaire() {

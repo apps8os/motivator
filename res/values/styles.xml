@@ -14,13 +14,14 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
+        
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -30,7 +31,6 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
     
@@ -43,7 +43,11 @@
 	<style name="LoadingIndicator" parent="@android:style/Widget.ProgressBar.Large">
 	    <item name="android:layout_width">wrap_content</item>
 	    <item name="android:layout_height">wrap_content</item>
-	    <item name="android:indeterminate">true</item> 
+	    <item name="android:indeterminate">true</item>
+	</style>
+	
+	<style name="ActionBarStyle" parent="@android:style/Widget.ActionBar">
+	    <item name="android:background">@drawable/action_bar_bg</item>
 	</style>
 
 </resources>

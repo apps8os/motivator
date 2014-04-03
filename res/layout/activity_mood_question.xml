@@ -70,6 +70,16 @@
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
+     <EditText
+        android:id="@+id/mood_comment_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:inputType="textAutoCorrect"
+        android:hint="@string/mood_comment"
+        android:ems="10" >
+    </EditText>
+    
         
     <LinearLayout
         android:id="@+id/mood_question_buttons"

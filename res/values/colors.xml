@@ -23,5 +23,9 @@
     <color name="blue">#33B5E5</color>
     <color name="green">#99CC00</color>
     <color name="white">#FFFFFF</color>
+    <color name="blue_transparent">#4033B5E5</color>
+    <color name="green_transparent">#4099CC00</color>
+    <color name="white_transparent">#BFFFFFFF</color>
+    <color name="actionbar_text">#000000</color>
     
 </resources>

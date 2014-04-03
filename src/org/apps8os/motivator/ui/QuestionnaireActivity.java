@@ -79,7 +79,7 @@ public class QuestionnaireActivity extends Activity {
 		mPromptMessageTextView = (TextView) findViewById(R.id.questionnaire_prompt_message);
 		
 		mOuterBackground = (RelativeLayout) findViewById(R.id.questionnaire_layout_outer);
-		mOuterBackground.setBackgroundResource(R.drawable.backgrounds);
+		mOuterBackground.setBackgroundResource(R.drawable.solid_blue_green_transition);
 		
 		mTransition = (TransitionDrawable) mOuterBackground.getBackground();
 		

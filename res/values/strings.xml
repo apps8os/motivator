@@ -72,5 +72,6 @@
     <string name="select_a_day">Select a day</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="mood_comment">Add a comment</string>
 
 </resources>

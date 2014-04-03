@@ -87,7 +87,6 @@ public class MoodHistoryActivity extends Activity {
 	    mDaysInSprint = mCurrentSprint.getDaysInSprint();
 	    ActionBar actionBar = getActionBar();
 
-		
 		mToday = new GregorianCalendar();
 		UtilityMethods.setToMidnight(mToday);
 		mToday.setFirstDayOfWeek(Calendar.MONDAY);
@@ -116,6 +115,28 @@ public class MoodHistoryActivity extends Activity {
 		mSelectedDay = mNumberOfTodayInSprint - 1;
 		mSelectedWeek = mNumberOfWeeksInSprint - 1;
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
+	    
+	    mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			}
+
+			@Override
+			public void onPageSelected(int arg0) {
+				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			    	mSelectedDay = arg0;
+			    } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			    	mSelectedWeek = arg0;
+			    }
+			}
+	    	
+	    });
+	    
 	    // Load correct layout and functionality based on orientation
 	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 	    	loadPortraitView();
@@ -258,23 +279,6 @@ public class MoodHistoryActivity extends Activity {
 	    mViewPager.setAdapter(mPagerAdapterDay);
 	    mViewPager.setCurrentItem(mSelectedDay);
 	    mViewPager.setOffscreenPageLimit(5);
-	    
-	    mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-			}
-
-			@Override
-			public void onPageSelected(int arg0) {
-				mSelectedDay = arg0;
-			}
-	    	
-	    });
 	}
 	
 	
