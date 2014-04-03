@@ -103,7 +103,7 @@ public class MoodRelationHistoryActivity extends Activity {
 				mAvgMood = getAvgMood(days);
 				mAvgMoodTextView.setText("" + mAvgMood);
 			} else if (itemPosition == 2) {
-				calendar.add(Calendar.DATE, -30);
+				calendar.add(Calendar.DATE, -29);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 30;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
@@ -169,7 +169,7 @@ public class MoodRelationHistoryActivity extends Activity {
 					calendar.set(Calendar.DAY_OF_MONTH, startDate.getDayOfMonth());
 					mFromTimeInMillis = calendar.getTimeInMillis();
 					
-					mAmountOfDays = (int) TimeUnit.DAYS.convert(mEndTimeInMillis - mFromTimeInMillis, TimeUnit.MILLISECONDS);
+					mAmountOfDays = (int) TimeUnit.DAYS.convert(mEndTimeInMillis - mFromTimeInMillis, TimeUnit.MILLISECONDS) + 1;
 					DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
 					mAvgMood = getAvgMood(days);
 					mAvgMoodTextView.setText("" + mAvgMood);
