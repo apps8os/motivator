@@ -27,6 +27,7 @@ import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.utils.MotivatorFonts;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -38,6 +39,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -46,6 +48,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 /**
@@ -137,6 +140,14 @@ public class MainActivity extends Activity {
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
 		ActionBar actionBar = getActionBar();
+		/*
+		int subtitleId = getResources().getIdentifier("action_bar_subtitle", "id", "android");
+		TextView subtitleTextView = (TextView) findViewById(subtitleId);
+		subtitleTextView.setTypeface(MotivatorFonts.getFont(this, MotivatorFonts.CONDENSED_REGULAR));
+		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+		TextView titleTextView = (TextView) findViewById(titleId);
+		titleTextView.setTypeface(MotivatorFonts.getFont(this, MotivatorFonts.CONDENSED_BOLD));
+		*/
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
 	}

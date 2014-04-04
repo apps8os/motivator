@@ -53,6 +53,7 @@
             android:layout_marginBottom="40dp"
             android:layout_marginTop="40dp"
             android:gravity="center"
+            android:fontFamily="sans-serif-light"
             android:text=""
             android:textSize="25sp" />
 
@@ -61,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="10dp"
             android:orientation="vertical" />
     </LinearLayout>

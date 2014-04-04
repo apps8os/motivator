@@ -22,7 +22,6 @@
 
     <LinearLayout
         android:id="@+id/main_activity_fragmenet_layout"
-        style="@style/MainScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white_transparent"

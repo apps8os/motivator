@@ -44,8 +44,10 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 /**
@@ -71,6 +73,7 @@ public class MoodHistoryActivity extends Activity {
 	private int mSelectedDay;
 	private int mSelectedWeek;
 	private Calendar mToday;
+	private Menu mMenu;
 	private static Calendar mStartDate;
 
 
@@ -152,10 +155,13 @@ public class MoodHistoryActivity extends Activity {
 	@Override 
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			loadPortraitView();
+			selectAttribute.setVisible(false);
 		} else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			loadLandscapeView();
+			selectAttribute.setVisible(true);
 		}
 	}
 	
@@ -165,6 +171,13 @@ public class MoodHistoryActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    getMenuInflater().inflate(R.menu.mood_history, menu);
+		mMenu = menu;
+	    MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			selectAttribute.setVisible(false);
+		} else {
+			selectAttribute.setVisible(true);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -173,12 +186,21 @@ public class MoodHistoryActivity extends Activity {
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		MoodHistoryWeekFragment weekFragment;
 		switch (item.getItemId()) {
 		// Search functionality for the search button
 		case R.id.mood_history_search:
 			// Spawn a dialog fragment so that the user can select a day.
 			DialogFragment dialog = new DatePickerFragment();
 			dialog.show(getFragmentManager(), "datePicker");
+			return true;
+		case R.id.mood_history_attribute_drinking:
+			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
+			weekFragment.updateSelectedAttribute(DayInHistory.AMOUNT_OF_DRINKS);
+			return true;
+		case R.id.mood_history_attribute_all:
+			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
+			weekFragment.updateSelectedAttribute(DayInHistory.ALL);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -268,6 +290,9 @@ public class MoodHistoryActivity extends Activity {
 		mViewPager.setAdapter(mPagerAdapterWeek);
 		mViewPager.setCurrentItem(mSelectedWeek);
 		mViewPager.setOffscreenPageLimit(1);
+		
+
+		
 	}
 	
 	/**
@@ -339,6 +364,7 @@ public class MoodHistoryActivity extends Activity {
 	private class FragmentWeekPagerAdapter extends FragmentPagerAdapter {
 
 		private Context mContext;
+		private SparseArray<MoodHistoryWeekFragment> mWeekFragments = new SparseArray<MoodHistoryWeekFragment>();
 
 		public FragmentWeekPagerAdapter(FragmentManager fm, Context context) {
 			super(fm);
@@ -378,6 +404,23 @@ public class MoodHistoryActivity extends Activity {
 			
 			fragment.setRetainInstance(true);
 			return fragment;
+		}
+		
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			MoodHistoryWeekFragment weekFragment = (MoodHistoryWeekFragment) super.instantiateItem(container, position);
+			mWeekFragments.put(position, weekFragment);
+			return weekFragment;
+		}
+		
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			super.destroyItem(container, position, object);
+			mWeekFragments.remove(position);
+		}
+		
+		public MoodHistoryWeekFragment getWeekFragment(int position) {
+			return mWeekFragments.get(position);
 		}
 		
 	}

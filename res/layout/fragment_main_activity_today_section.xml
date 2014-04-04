@@ -23,7 +23,6 @@
 
    <LinearLayout
         android:id="@+id/main_activity_today_layout"
-        style="@style/MainScreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
@@ -50,6 +49,7 @@
                android:layout_weight="1"
                android:text=""
                android:textAppearance="?android:attr/textAppearanceLarge"
+               android:fontFamily="sans-serif-condensed"
                android:textStyle="bold" />
 
            <ProgressBar

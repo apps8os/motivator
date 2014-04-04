@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
+    <item android:id="@+id/mood_history_select_attribute"
+          android:icon="@drawable/ic_action_edit"
+          android:title="@string/action_select_attribute"
+          android:showAsAction="ifRoom">
+          <menu>
+              <item android:id="@+id/mood_history_attribute_drinking"
+                  android:title="@string/action_attribute_drinking" ></item>
+              <item android:id="@+id/mood_history_attribute_all"
+                  android:title="@string/action_attribute_all" ></item>
+          </menu>
+    </item>
+    
     <item android:id="@+id/mood_history_search"
           android:icon="@drawable/ic_action_search"
           android:title="@string/action_search"
-          android:showAsAction="ifRoom"/>
-
+          android:showAsAction="ifRoom"
+          />
 </menu>

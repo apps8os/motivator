@@ -23,6 +23,7 @@ import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.utils.MotivatorFonts;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

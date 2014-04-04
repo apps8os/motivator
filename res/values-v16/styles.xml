@@ -14,7 +14,7 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme for API 14+. This theme completely replaces
@@ -23,6 +23,21 @@
     -->
     <style name="AppBaseTheme" parent="@android:Theme.Holo.Light">
         <!-- API 14 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/AppBaseTheme.ActionBar</item>
     </style>
-
+    
+    <style name="AppBaseTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+    </style>
+    
+    <style name="AppBaseTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+ 
+    <style name="AppBaseTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+	    <item name="android:titleTextStyle">@style/AppBaseTheme.ActionBar.TitleTextStyle</item>
+	    <item name="android:subtitleTextStyle">@style/AppBaseTheme.ActionBar.SubTitleTextStyle</item>
+	</style>
+    
 </resources>

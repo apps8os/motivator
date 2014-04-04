@@ -52,6 +52,9 @@
     <string name="saturday_short">Sat</string>
     <string name="sunday_short">Sun</string>
     <string name="action_search">Search</string>
+    <string name="action_select_attribute">Search</string>
+    <string name="action_attribute_drinking">Amount of drinks</string>
+    <string name="action_attribute_all">All</string>
     <string name="ok">OK</string>
     <string name="in_the_morning">In the morning</string>
     <string name="morning_and_evening">In the morning and evening</string>

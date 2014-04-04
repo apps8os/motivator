@@ -36,6 +36,7 @@ import android.os.Parcelable;
  */
 public class DayInHistory implements Parcelable{
 	
+
 	private int mMoodSum = 0;
 	private int mMoodAmount = 0;
 	private int mEnergySum = 0;
@@ -45,6 +46,9 @@ public class DayInHistory implements Parcelable{
 	private long mDateInMillis;
 	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
 	private Context mContext;
+	
+	public static final int AMOUNT_OF_DRINKS = 1;
+	public static final int ALL = 2;
 	
 	/**
 	 * Create an instance. Set the date in millis to midnight of the day.

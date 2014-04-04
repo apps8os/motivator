@@ -167,11 +167,11 @@ public class MoodHistoryWeekFragment extends Fragment {
 			
 			// Add the lower half with day views.
 			for (int i = 0; i < result.size(); i++) {
-				RelativeLayout dayView = (RelativeLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
-				TextView dayText = (TextView) dayView.getChildAt(1);
+				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
+				TextView dayText = (TextView) dayView.getChildAt(0);
 				dayText.setText(Html.fromHtml(getDay(result.get(i)) + "<br><small>" + result.get(i).getDateInString(getActivity())));
 				if (result.get(i).getAvgMoodLevel() == 0) {
-					ImageView moodImage = (ImageView) dayView.getChildAt(0);
+					ImageView moodImage = (ImageView) dayView.getChildAt(1);
 					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.temp_emoticon_bw));
 				}
 				DisplayMetrics dm = new DisplayMetrics();
@@ -250,5 +250,113 @@ public class MoodHistoryWeekFragment extends Fragment {
 			
 		}
 		
+	}
+
+	public void updateSelectedAttribute(int selector) {
+		Line l = new Line();
+		LinePoint p = new LinePoint();
+		LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
+		switch (selector) {
+		case DayInHistory.AMOUNT_OF_DRINKS:
+			p.setX(0);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(1);
+			p.setY(3);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(2);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(3);
+			p.setY(2);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(4);
+			p.setY(3);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(5);
+			p.setY(4);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(6);
+			p.setY(1);
+			l.addPoint(p);
+			l.setColor(Color.parseColor("#99CC00"));
+
+			li.removeAllLines();
+			li.addLine(l);
+			li.setRangeY(0, 4);
+			li.setLineToFill(0);
+			break;
+		case DayInHistory.ALL:
+			p.setX(0);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(1);
+			p.setY(3);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(2);
+			p.setY(1);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(3);
+			p.setY(2);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(4);
+			p.setY(3);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(5);
+			p.setY(4);
+			l.addPoint(p);
+			p = new LinePoint();
+			p.setX(6);
+			p.setY(1);
+			l.addPoint(p);
+			l.setColor(Color.parseColor("#99CC00"));
+			
+			Line line = new Line();
+			p = new LinePoint();
+			p.setX(0);
+			p.setY(2);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(1);
+			p.setY(1);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(2);
+			p.setY(1);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(3);
+			p.setY(1);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(4);
+			p.setY(2);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(5);
+			p.setY(4);
+			line.addPoint(p);
+			p = new LinePoint();
+			p.setX(6);
+			p.setY(3);
+			line.addPoint(p);
+			line.setColor(Color.parseColor("#FFBB33"));
+			li.addLine(l);
+			li.addLine(line);
+			li.setRangeY(0, 4);
+			li.setLineToFill(0);
+			break;
+		}
 	}
 }
