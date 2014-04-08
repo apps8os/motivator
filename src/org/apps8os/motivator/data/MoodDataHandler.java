@@ -112,6 +112,11 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	close();
     }
     
+    /**
+     * Used to get a DayInHistory representing the day given as milliseconds.
+     * @param dayInMillis
+     * @return
+     */
     public DayInHistory getDayInHistory(long dayInMillis) {
     	open();
     	Calendar calendar = new GregorianCalendar();
@@ -144,6 +149,12 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	    return result;
     }
     
+    /**
+     * Used to get an array of days from given timestamp.
+     * @param fromInMillis from timestamp
+     * @param amountOfDays how many days
+     * @return
+     */
     public DayInHistory[] getDaysAfter(long fromInMillis, int amountOfDays) {
     	DayInHistory[] days = new DayInHistory[amountOfDays];
     	GregorianCalendar calendar = new GregorianCalendar();

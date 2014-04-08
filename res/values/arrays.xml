@@ -39,4 +39,9 @@
         <item>Last 30 days</item>
         <item>Specific timeframe</item>
     </string-array>
+    
+    <string-array name="starting_days">
+        <item>@string/today</item>
+        <item>@string/tomorrow</item>
+    </string-array>
 </resources>

@@ -24,6 +24,7 @@
     <string name="title_section3">Suunnittele</string>
     <string name="today_screen_mood">Mikä fiilis?</string>
     <string name="action_info">Info</string>
+    <string name="action_start_sprint">Aloita kunnon jakso</string>
     <string name="next">Seuraava</string>
     <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
     <string name="prompt_selection">Valitse vastaus</string>
@@ -73,5 +74,10 @@
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
     <string name="mood_comment">Lisää kommentti</string>
+    <string name="today_section">Today section</string>
+    <string name="today_section_help">Here you can see your events for the day and record your mood.</string>
+    <string name="today">Tänään</string>
+    <string name="tomorrow">Huomenna</string>
+    <string name="select_sprint">Valitse jakso</string>
     
 </resources>

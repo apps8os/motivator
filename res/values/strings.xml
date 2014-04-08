@@ -55,6 +55,7 @@
     <string name="action_select_attribute">Search</string>
     <string name="action_attribute_drinking">Amount of drinks</string>
     <string name="action_attribute_all">All</string>
+    <string name="action_start_sprint">Start a sprint</string>
     <string name="ok">OK</string>
     <string name="in_the_morning">In the morning</string>
     <string name="morning_and_evening">In the morning and evening</string>
@@ -76,5 +77,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="mood_comment">Add a comment</string>
+    <string name="today_section">Today section</string>
+    <string name="today_section_help">Here you can see your events for the day and record your mood.</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="select_sprint">Select sprint</string>
 
 </resources>

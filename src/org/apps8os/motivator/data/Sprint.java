@@ -1,7 +1,11 @@
 package org.apps8os.motivator.data;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,11 +15,15 @@ public class Sprint implements Parcelable {
 	private long mEndTime;
 	private int mDaysInSprint;
 	private String mSprintTitle;
+	private int mId;
 	
 	public Sprint(long startTime) {
 		mStartTime = startTime;
 	}
 	
+	/**
+	 * @return The running number of today in the sprint, -1 if today does not belong to the sprint.
+	 */
 	public int getCurrentDayOfTheSprint() {
 		if (System.currentTimeMillis() > mEndTime) {
 			return -1;
@@ -29,6 +37,7 @@ public class Sprint implements Parcelable {
 		mEndTime = source.readLong();
 		mDaysInSprint = source.readInt();
 		mSprintTitle = source.readString();
+		mId = source.readInt();
 	}
 	public static final Parcelable.Creator<Sprint> CREATOR = new Parcelable.Creator<Sprint>() {
 		@Override
@@ -54,6 +63,13 @@ public class Sprint implements Parcelable {
 	public void setStartTime(long mStartTime) {
 		this.mStartTime = mStartTime;
 	}
+	
+	public String getStartTimeInString(Context context) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
+		Calendar date = new GregorianCalendar();
+		date.setTimeInMillis(mStartTime);
+		return sdf.format(date.getTime());
+	}
 
 	/**
 	 * @return the mEndTime
@@ -73,7 +89,7 @@ public class Sprint implements Parcelable {
 	 * @return the mDaysInSprint
 	 */
 	public int getDaysInSprint() {
-		return mDaysInSprint;
+		return (int) TimeUnit.DAYS.convert(mEndTime - mStartTime, TimeUnit.MILLISECONDS) + 1;
 	}
 
 	/**
@@ -94,6 +110,7 @@ public class Sprint implements Parcelable {
 		dest.writeLong(mEndTime);
 		dest.writeInt(mDaysInSprint);
 		dest.writeString(mSprintTitle);
+		dest.writeInt(mId);
 	}
 
 	public String getSprintTitle() {
@@ -102,6 +119,14 @@ public class Sprint implements Parcelable {
 
 	public void setSprintTitle(String mSprintTitle) {
 		this.mSprintTitle = mSprintTitle;
+	}
+
+	public int getId() {
+		return mId;
+	}
+
+	public void setId(int mId) {
+		this.mId = mId;
 	}
 	
 	

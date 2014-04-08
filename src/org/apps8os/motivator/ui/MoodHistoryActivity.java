@@ -32,12 +32,15 @@ import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -97,7 +100,7 @@ public class MoodHistoryActivity extends Activity {
 		mNumberOfTodayInSprint = mCurrentSprint.getCurrentDayOfTheSprint();
 		
 		// Check if the sprint is already over.
-		if (mNumberOfTodayInSprint > mDaysInSprint) {
+		if (mNumberOfTodayInSprint > mDaysInSprint || mNumberOfTodayInSprint == -1) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
@@ -195,13 +198,42 @@ public class MoodHistoryActivity extends Activity {
 			dialog.show(getFragmentManager(), "datePicker");
 			return true;
 		case R.id.mood_history_attribute_drinking:
+			// Setting the selected attribute in landscape view.
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
 			weekFragment.updateSelectedAttribute(DayInHistory.AMOUNT_OF_DRINKS);
 			return true;
 		case R.id.mood_history_attribute_all:
+			// Setting the selected attribute in landscape view.
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
 			weekFragment.updateSelectedAttribute(DayInHistory.ALL);
 			return true;
+		case R.id.mood_history_change_sprint:
+			// Spawn a dialog where the user can select the sprint depicted in this history.
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			final Sprint[] sprints = mDataHandler.getSprints();
+			// Get the string representations of the sprints.
+			String[] sprintsAsString = new String[sprints.length];
+			for (int i = 0; i < sprints.length; i++) {
+				sprintsAsString[i] = sprints[i].getSprintTitle() + " " + sprints[i].getStartTimeInString(this);
+			}
+			builder.setTitle("Select sprint").setSingleChoiceItems(sprintsAsString, sprints.length-1, null);
+			final AlertDialog alertDialog = builder.create();
+			final Activity thisActivity = this;
+			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Start this activity again with the selected sprint as the passed Parcelable Sprint.
+					// This is done so that the activity can update itself to the selected sprint.
+					mCurrentSprint = sprints[alertDialog.getListView().getCheckedItemPosition()];
+					Intent intent = new Intent (thisActivity, MoodHistoryActivity.class);
+					intent.putExtra(MotivatorConstants.CURRENT_SPRINT, mCurrentSprint);
+					startActivity(intent);
+					alertDialog.dismiss();
+					thisActivity.finish();
+				}
+			});
+			alertDialog.show();
 		default:
 			return super.onOptionsItemSelected(item);
 		}

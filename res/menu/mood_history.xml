@@ -18,4 +18,8 @@
           android:title="@string/action_search"
           android:showAsAction="ifRoom"
           />
+    
+    <item android:id="@+id/mood_history_change_sprint"
+          android:title="@string/select_sprint"
+          />
 </menu>

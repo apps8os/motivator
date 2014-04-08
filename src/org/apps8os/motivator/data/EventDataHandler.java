@@ -356,6 +356,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return events;
 	}
 	
+	/**
+	 * Used to get all the events for given day.
+	 * @param dayInMillis
+	 * @return The events as an ArrayList
+	 */
 	public ArrayList<MotivatorEvent> getEventsForDay(long dayInMillis) {
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(dayInMillis);
@@ -372,6 +377,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return getEvents(query);
 	}
 	
+	/**
+	 * Adds a drink to the event with given id.
+	 * @param answerId
+	 */
 	public void addDrink(int answerId) {
 		open();
 		String selection = KEY_ID_ANSWERS + " = " + answerId + " AND " + KEY_ID_QUESTION + " = " + MotivatorConstants.DRINK_AMOUNT_ID;

@@ -14,17 +14,23 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_today_scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
      >
-
+   <FrameLayout 
+       	android:orientation="vertical"
+   		android:layout_width="fill_parent"
+   		android:layout_height="fill_parent"
+    	android:id="@+id/root_view">
    <LinearLayout
         android:id="@+id/main_activity_today_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:background="@color/white_transparent"
@@ -153,5 +159,6 @@
 
     </LinearLayout>
     
+    </FrameLayout>
 
 </ScrollView>

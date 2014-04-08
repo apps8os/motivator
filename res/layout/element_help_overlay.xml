@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/help_overlay"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="20dp"
+    android:background="@color/white_transparent" >
+
+    <TextView
+        android:id="@+id/help_overlay_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_blue_dark"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="bold" />
+    
+    <TextView
+        android:id="@+id/help_overlay_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:fontFamily="sans-serif-condensed"
+        android:layout_marginBottom="24dp" />
+
+    <Button
+        android:id="@+id/help_overlay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OK"
+         />
+
+</LinearLayout>

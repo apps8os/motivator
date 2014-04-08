@@ -27,7 +27,6 @@ import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.MotivatorConstants;
-import org.apps8os.motivator.utils.MotivatorFonts;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -39,7 +38,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -48,7 +46,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 
 /**
@@ -111,6 +108,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		// Check the version number and set notifications again if version has changed.
 		int versionNumber = -99;
 		try {
 			versionNumber = this.getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -126,10 +124,12 @@ public class MainActivity extends Activity {
 			SharedPreferences.Editor editor = motivatorPrefs.edit();
 			editor.putInt(MotivatorConstants.APP_VERSION, versionNumber);
 			editor.commit();
-			
-			// DEBUG
-			MoodDataHandler handler = new MoodDataHandler(this);
-			handler.insertSprint(1393632000000L, 105, getString(R.string.default_sprint_title));
+		}
+		
+		if (!motivatorPrefs.getBoolean(MotivatorConstants.FIRST_SPRINT_SET, false)) {	
+			Intent intent = new Intent(this, StartingSprintActivity.class);
+			finish();
+			startActivity(intent);
 		}
 	}
 	
@@ -140,14 +140,6 @@ public class MainActivity extends Activity {
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
 		ActionBar actionBar = getActionBar();
-		/*
-		int subtitleId = getResources().getIdentifier("action_bar_subtitle", "id", "android");
-		TextView subtitleTextView = (TextView) findViewById(subtitleId);
-		subtitleTextView.setTypeface(MotivatorFonts.getFont(this, MotivatorFonts.CONDENSED_REGULAR));
-		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-		TextView titleTextView = (TextView) findViewById(titleId);
-		titleTextView.setTypeface(MotivatorFonts.getFont(this, MotivatorFonts.CONDENSED_BOLD));
-		*/
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
 	}
@@ -161,10 +153,16 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.action_settings: 
-			Intent intent = new Intent(this, SettingsActivity.class);
+			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
+			return true;
+		case R.id.action_start_sprint:
+			intent = new Intent(this, StartingSprintActivity.class);
+			startActivity(intent);
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

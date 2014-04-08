@@ -29,6 +29,7 @@ public final class MotivatorConstants {
 	public static final String CURRENT_SPRINT_STARTDATE = "current_sprint_start_date";
 	public static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
 	public static final String ANSWER_ID = "incrementing_id";
+	public static final String FIRST_SPRINT_SET = "first_sprint_set";
 	public static final String NO_COMMENT = "";
 	public static final String COMMENT_SEPARATOR = "§";
 	public static final int DRINK_AMOUNT_ID = 1900;

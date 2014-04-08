@@ -51,6 +51,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String KEY_SPRINT_DAYS = "sprint_days";
 	protected static final String KEY_SPRINT_END = "sprint_end";
  	
+	protected static final String KEY_ID = "id";
 	protected static final String KEY_ID_ANSWERS = "answers_id";		// Represents a single answering instance, same for all answers in the same instance of a questionnaire.
 	protected static final String KEY_ID_QUESTION = "question_id"; 		// The question which the answers belongs to.
 	protected static final String KEY_ANSWER = "answer";				// The answer to the question
@@ -67,7 +68,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	private static final String[] TABLE_NAMES = {TABLE_NAME_QUESTIONNAIRE, TABLE_NAME_EVENTS, TABLE_NAME_GOALS};
 	private static final String TABLE_CREATE_SPRINTS =
 			"CREATE TABLE " + TABLE_NAME_SPRINTS + " (" +
-			"id INTEGER PRIMARY KEY, " +
+			KEY_ID + " INTEGER PRIMARY KEY, " +
 			KEY_SPRINT_START + " INTEGER, " +
 			KEY_SPRINT_DAYS + " INTEGER, " +
 			KEY_SPRINT_END + " INTEGER, " +
@@ -122,6 +123,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	
 	public void insertSprint(long startTime, int days, String sprintTitle) {
 		open();
+		endCurrentSprint();
 		ContentValues values = new ContentValues();
 		values.put(KEY_SPRINT_START, startTime);
 		values.put(KEY_SPRINT_DAYS, days);
@@ -132,18 +134,89 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		close();
 	}
 	
-	public Sprint getCurrentSprint() {
+	private void endCurrentSprint() {
+		Sprint current = getCurrentSprintPrivate();
+		if (current != null) {
+			ContentValues values = new ContentValues();
+			values.put(KEY_SPRINT_END, System.currentTimeMillis());
+			mDb.update(TABLE_NAME_SPRINTS, values, KEY_ID + " = " + current.getId(), null);
+		}
+	}
+	
+	public Sprint getSprint(int id) {
 		open();
-		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
-		String columns[] = {KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
+		String selection = KEY_ID + " = " + id;
+		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
 		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, null);
-		cursor.moveToFirst();
-		Sprint current = new Sprint(cursor.getLong(0));
-		current.setDaysInSprint(cursor.getInt(1));
-		current.setEndTime(cursor.getLong(2));
-		current.setSprintTitle(cursor.getString(3));
+		if (cursor.moveToFirst()) {
+			Sprint sprint = new Sprint(cursor.getLong(1));
+			sprint.setId(cursor.getInt(0));
+			sprint.setDaysInSprint(cursor.getInt(2));
+			sprint.setEndTime(cursor.getLong(3));
+			sprint.setSprintTitle(cursor.getString(4));
+			cursor.close();
+			close();
+			return sprint;
+		}
 		cursor.close();
 		close();
+		return null;
+	}
+	
+	public Sprint[] getSprints() {
+		open();
+		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
+		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, null, null, null, null, null);
+		Sprint[] sprints = new Sprint[cursor.getCount()];
+		if (cursor.moveToFirst()) {
+			for (int i = 0; i < cursor.getCount(); i++) {
+				sprints[i] = new Sprint(cursor.getLong(1));
+				sprints[i].setId(cursor.getInt(0));
+				sprints[i].setDaysInSprint(cursor.getInt(2));
+				sprints[i].setEndTime(cursor.getLong(3));
+				sprints[i].setSprintTitle(cursor.getString(4));
+				cursor.moveToNext();
+			}
+			cursor.close();
+			close();
+			return sprints;
+		}
+		cursor.close();
+		close();
+		return null;
+	}
+	
+	private Sprint getCurrentSprintInner() {
+		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
+		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
+		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, KEY_SPRINT_START);
+		cursor.moveToFirst();
+		if (cursor.getCount() > 1) {
+			while (!cursor.isLast()) {
+				cursor.moveToNext();
+			}
+		}
+		Sprint current = null;
+		if (cursor.getCount() > 0) {
+			current = new Sprint(cursor.getLong(1));
+			current.setId(cursor.getInt(0));
+			current.setDaysInSprint(cursor.getInt(2));
+			current.setEndTime(cursor.getLong(3));
+			current.setSprintTitle(cursor.getString(4));
+		}
+		cursor.close();
+		return current;
+	}
+	
+	public Sprint getCurrentSprint() {
+		open();
+		Sprint current = getCurrentSprintInner();
+		close();
+		return current;
+	}
+	
+	private Sprint getCurrentSprintPrivate() {
+		Sprint current = getCurrentSprintInner();
 		return current;
 	}
 	

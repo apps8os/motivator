@@ -25,6 +25,8 @@ import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.MotivatorFonts;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -41,6 +43,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -69,8 +72,34 @@ public class TodaySectionFragment extends Fragment {
 		
 		// The layout which has dynamic amount of future events/buttons.
 		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		final FrameLayout contentRoot = (FrameLayout) mRootView.findViewById(R.id.root_view);
 		
+		// Inflate the help overlay to the fragment.
+		mInflater.inflate(R.layout.element_help_overlay, contentRoot, true);
+		
+		((TextView) contentRoot.findViewById(R.id.help_overlay_title)).setText(getString(R.string.today_section));
+		((TextView) contentRoot.findViewById(R.id.help_overlay_subtitle)).setText(getString(R.string.today_section_help));
+		((Button) contentRoot.findViewById(R.id.help_overlay_button)).setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				final View helpOverlay = (View) contentRoot.findViewById(R.id.help_overlay);
+				helpOverlay.animate()
+					.alpha(0f)
+					.setDuration(500)
+					.setListener(new AnimatorListenerAdapter() {
+						
+						// Set the visibility to gone when animation has ended.
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							helpOverlay.setVisibility(View.GONE);
+						}
+					});
+			}
+			
+		});
+		
+		
 		
 		mButtonLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
 		
