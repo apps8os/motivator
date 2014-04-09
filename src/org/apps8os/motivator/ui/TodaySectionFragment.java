@@ -126,7 +126,7 @@ public class TodaySectionFragment extends Fragment {
 		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
 		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
 		
-		sprintProgress.setMax(currentSprint.getDaysInSprint());
+		sprintProgress.setMax(currentSprint.getDaysInSprint() -1);
 		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
 		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "<br><small>"
 				+ currentSprint.getSprintTitle()));

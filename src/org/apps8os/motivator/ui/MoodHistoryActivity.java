@@ -100,7 +100,7 @@ public class MoodHistoryActivity extends Activity {
 		mNumberOfTodayInSprint = mCurrentSprint.getCurrentDayOfTheSprint();
 		
 		// Check if the sprint is already over.
-		if (mNumberOfTodayInSprint > mDaysInSprint || mNumberOfTodayInSprint == -1) {
+		if (mNumberOfTodayInSprint > mDaysInSprint) {
 			mNumberOfTodayInSprint = mDaysInSprint;
 		}
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());

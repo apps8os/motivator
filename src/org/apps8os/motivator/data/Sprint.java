@@ -22,11 +22,11 @@ public class Sprint implements Parcelable {
 	}
 	
 	/**
-	 * @return The running number of today in the sprint, -1 if today does not belong to the sprint.
+	 * @return The running number of today in the sprint, the amount of days if the sprint has ended.
 	 */
 	public int getCurrentDayOfTheSprint() {
 		if (System.currentTimeMillis() > mEndTime) {
-			return -1;
+			return mDaysInSprint;
 		}
 		long timeDif = System.currentTimeMillis() - mStartTime;
 		return (int) TimeUnit.DAYS.convert(timeDif, TimeUnit.MILLISECONDS) + 1;

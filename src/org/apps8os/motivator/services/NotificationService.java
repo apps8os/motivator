@@ -21,6 +21,7 @@ import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -50,23 +51,32 @@ public class NotificationService extends IntentService {
 		
 		EventDataHandler dataHandler = new EventDataHandler(this);
 		Sprint currentSprint = dataHandler.getCurrentSprint();
-		int currentDateInSprint = currentSprint.getCurrentDayOfTheSprint();
-		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
-		builder.setSmallIcon(R.drawable.ic_stat_notification_icon_temp1);
-		builder.setTicker(getString(R.string.today_screen_mood));
-		// Remove the notification when the user clicks it.
-		builder.setAutoCancel(true);
-		
-		// Where to go when user clicks the notification
-		Intent resultIntent = new Intent(this, MoodQuestionActivity.class);
-		// Preserve the normal navigation of the app by adding the parent stack of the result activity
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		stackBuilder.addParentStack(MoodQuestionActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-		builder.setContentIntent(pendingResultIntent);
-		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		manager.notify(NOTIFICATION_ID_MOOD, builder.build());
+		if (currentSprint == null) {
+			// An alarm manager for scheduling notifications
+			AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			// Set the notification to repeat over the given time at notificationTime
+			Intent notificationIntent = new Intent(this, NotificationService.class);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarmManager.cancel(pendingNotificationIntent);
+		} else {
+			int currentDateInSprint = currentSprint.getCurrentDayOfTheSprint();
+			builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
+			builder.setSmallIcon(R.drawable.ic_stat_notification_icon_1);
+			builder.setTicker(getString(R.string.today_screen_mood));
+			// Remove the notification when the user clicks it.
+			builder.setAutoCancel(true);
+			
+			// Where to go when user clicks the notification
+			Intent resultIntent = new Intent(this, MoodQuestionActivity.class);
+			// Preserve the normal navigation of the app by adding the parent stack of the result activity
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+			stackBuilder.addParentStack(MoodQuestionActivity.class);
+			stackBuilder.addNextIntent(resultIntent);
+			PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+			builder.setContentIntent(pendingResultIntent);
+			NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			manager.notify(NOTIFICATION_ID_MOOD, builder.build());
+		}
 	}
 
 }

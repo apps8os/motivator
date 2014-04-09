@@ -140,8 +140,12 @@ public class MainActivity extends Activity {
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
 		ActionBar actionBar = getActionBar();
-		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
-		actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
+		if (mCurrentSprint == null) {
+			mCurrentSprint = dataHandler.getLatestEndedSprint();
+		} else  {
+			actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
+			actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
+		}
 	}
 
 	@Override

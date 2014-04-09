@@ -220,6 +220,26 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		return current;
 	}
 	
+	public Sprint getLatestEndedSprint() {
+		open();
+		String selection = KEY_SPRINT_END + " < " + System.currentTimeMillis();
+		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
+		Cursor cursor = mDb.query(TABLE_NAME_SPRINTS, columns, selection, null, null, null, KEY_SPRINT_END);
+		if(cursor.moveToLast()) {
+			Sprint latest = new Sprint(cursor.getLong(1));
+			latest.setId(cursor.getInt(0));
+			latest.setDaysInSprint(cursor.getInt(2));
+			latest.setEndTime(cursor.getLong(3));
+			latest.setSprintTitle(cursor.getString(4));
+			close();
+			cursor.close();
+			return latest;
+		}
+		close();
+		cursor.close();
+		return null;
+	}
+	
 	/**
 	 * Delete last row from the given table. Call this from subclass.
 	 * @param tableName
