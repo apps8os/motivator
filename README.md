@@ -3,6 +3,9 @@ motivator
 
 This is the repository for the motivator app. 
 
+**NOTE** This project uses ViewPagerIndicator by JakeWharton. This library is not included in this repository currently.
+https://github.com/JakeWharton/Android-ViewPagerIndicator
+
 
 LICENSE
 =======
