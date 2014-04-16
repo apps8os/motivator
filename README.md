@@ -3,8 +3,12 @@ motivator
 
 This is the repository for the motivator app. 
 
-**NOTE** This project uses ViewPagerIndicator by JakeWharton. This library is not included in this repository currently.
+**NOTE** 
+This project uses ViewPagerIndicator by JakeWharton. This library is not included in this repository currently.
 https://github.com/JakeWharton/Android-ViewPagerIndicator
+
+Additionally, The required images for the mood question are not tracked in this git. The app requires that you
+provide the mood images in resources. (energy1-5 and mood1-5)
 
 
 LICENSE
