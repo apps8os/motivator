@@ -81,7 +81,7 @@
 	      	android:layout_width="match_parent"
    			android:layout_height="80dp"
 		    android:text="@string/today_screen_mood"
-		    android:drawableLeft="@drawable/temp_emoticon_small"
+		    android:drawableLeft="@drawable/icon1"
 		    android:textColor="@color/green"
 		    android:visibility="visible"
 		    style="?android:attr/borderlessButtonStyle" >

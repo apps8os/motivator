@@ -16,9 +16,11 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.ArrayList;
+
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
-import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.data.Mood;
 
 import android.app.Fragment;
 import android.content.res.Resources;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -39,25 +42,27 @@ import android.widget.TextView;
 public class MoodHistoryDayFragment extends Fragment {
 	
 	private static DayInHistory mDay;
+	private LayoutInflater mInflater;
+	private Resources mRes;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
 		Bundle bundle = getArguments();
-		mDay = bundle.getParcelable(MotivatorConstants.DAY_IN_HISTORY);
-		View rootView = inflater.inflate(
+		mDay = bundle.getParcelable(DayInHistory.DAY_IN_HISTORY);
+		mInflater = inflater;
+		View rootView = mInflater.inflate(
 				R.layout.fragment_mood_history_day, viewGroup, false);
+		mRes = getActivity().getResources();
 		
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
 		TextView commentView = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
-		final ImageView mainMoodImage = (ImageView) rootView.findViewById(R.id.mood_history_fragment_mood_image);
+		final LinearLayout mainMoodImage = (LinearLayout) rootView.findViewById(R.id.mood_history_fragment_mood_image);
 		mainMoodImage.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mainMoodImage.animate().rotationBy(360).setDuration(1000);
 			}
 		});
-		
-		Resources res = getActivity().getResources();
 		// Set default page if the day is null or set the content from day object if it exists.
 		if (mDay != null) {
 			title.setText(R.string.your_mood);
@@ -70,18 +75,39 @@ public class MoodHistoryDayFragment extends Fragment {
 		}
 		
 		if (mDay.getAvgMoodLevel() == 0) {
-			mainMoodImage.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
-			commentView.setText(res.getString(R.string.no_added_moods));
+			//mainMoodImage.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
+			commentView.setText(mRes.getString(R.string.no_added_moods));
 		} else {
-			String comment = mDay.getComment();
-			if (comment.indexOf(MotivatorConstants.COMMENT_SEPARATOR) != -1) {
-				commentView.setText(comment.substring(0, comment.indexOf(MotivatorConstants.COMMENT_SEPARATOR, 0)));
-			} else {
-				commentView.setText(comment);
-			}
+			Mood firstMoodOfTheDay = mDay.getFirstMoodOfTheDay();
+			ImageView energyImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_energy);
+			energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + firstMoodOfTheDay.getEnergy(), "drawable", getActivity().getPackageName())));
+			ImageView moodImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_mood);
+			moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + firstMoodOfTheDay.getMood(), "drawable", getActivity().getPackageName())));
+			String comment = firstMoodOfTheDay.getComment();
+			commentView.setText(comment);
 		}
 		
+		loadMoods((LinearLayout) rootView.findViewById(R.id.mood_history_day_moodlist));
+		
 		return rootView;
+	}
+	
+	private void loadMoods(LinearLayout rootLayout) {
+		ArrayList<Mood> moods = mDay.getMoods();
+		if (moods.size() > 1) {
+			for (int i = 1; i < moods.size(); i++) {
+				LinearLayout moodView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_moodlist_mood, rootLayout, false);
+				((TextView) moodView.findViewById(R.id.moodlist_mood_time)).setText(moods.get(i).getTimeAsString(getActivity()));
+				((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setText(moods.get(i).getComment());
+				LinearLayout moodImageRoot = (LinearLayout) moodView.findViewById(R.id.mood_image_root);
+				ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
+				energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + moods.get(i).getEnergy(), "drawable", getActivity().getPackageName())));
+				ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
+				moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + moods.get(i).getMood(), "drawable", getActivity().getPackageName())));
+
+				rootLayout.addView(moodView);
+			}
+		}
 	}
 	
 	/**
@@ -90,7 +116,7 @@ public class MoodHistoryDayFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putParcelable(MotivatorConstants.DAY_IN_HISTORY, mDay);
+		outState.putParcelable(DayInHistory.DAY_IN_HISTORY, mDay);
 	}
 	
 	

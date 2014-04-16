@@ -26,10 +26,8 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -43,6 +41,10 @@ import android.util.SparseArray;
  *
  */
 public class EventDataHandler extends MotivatorDatabaseHelper {
+	
+	public static final int QUESTION_ID_WHEN = 1000;
+	public static final int QUESTION_ID_WHERE = 1001;
+	public static final int QUESTION_ID_TIME_TO_GO = 1002;
 	
 	private static final String TABLE_NAME = TABLE_NAME_EVENTS;
 	private GregorianCalendar mCalendarCache;					// Caching the calendar for all answers belonging to the same instance.
@@ -77,10 +79,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public void insertAnswer(int answer, int questionId, int answersId) {
 		open();
 		// Check if the question is the one asking when the event will be.
-		if (questionId == MotivatorConstants.QUESTION_ID_WHEN) {
+		if (questionId == QUESTION_ID_WHEN) {
 			// Initialize the cache calendar for today/now
 			mCalendarCache = new GregorianCalendar();
-			UtilityMethods.setToMidnight(mCalendarCache);
+			UtilityMethods.setToDayStart(mCalendarCache);
 			switch (answer) {
 				// Answer today, no need to do anything
 				case 0: {
@@ -113,7 +115,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
 		tomorrowMidnight.setFirstDayOfWeek(Calendar.MONDAY);
-		UtilityMethods.setToMidnight(tomorrowMidnight);
+		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
 		String selection = KEY_CONTENT + " >= " + tomorrowMidnight.getTimeInMillis();
@@ -138,11 +140,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				if (question != null) {
 					// Handle the different questions/answers.
 					switch (question.getId()) {
-					case MotivatorConstants.QUESTION_ID_WHEN:
+					case QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
 						event.setEventDateAsText(question.getAnswer(query.getInt(2)));
 						break;
-					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+					case QUESTION_ID_TIME_TO_GO:
 						switch (query.getInt(2)) {
 						case 0:
 							event.setStartTimeAsText(question.getAnswer(0));
@@ -194,10 +196,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		open();
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		GregorianCalendar todayMidnight = new GregorianCalendar();
-		UtilityMethods.setToMidnight(todayMidnight);
+		UtilityMethods.setToDayStart(todayMidnight);
 		
 		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
-		UtilityMethods.setToMidnight(tomorrowMidnight);
+		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
 		String selection = KEY_CONTENT + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
@@ -223,14 +225,14 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				if (question != null) {
 					// Handle the different questions/answers.
 					switch (question.getId()) {
-					case MotivatorConstants.QUESTION_ID_WHEN:
+					case QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
 						// All events in this section should have today as the text so get the answer representing today.
 						event.setEventDateAsText(question.getAnswer(0));
 						break;
 						
 					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
-					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+					case QUESTION_ID_TIME_TO_GO:
 						long time;
 						switch (query.getInt(2)) {
 						case 0:
@@ -302,14 +304,14 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				if (question != null) {
 					// Handle the different questions/answers.
 					switch (question.getId()) {
-					case MotivatorConstants.QUESTION_ID_WHEN:
+					case QUESTION_ID_WHEN:
 						event.setStartTime(query.getLong(3));
 						// All events in this section should have today as the text so get the answer representing today.
 						event.setEventDateAsText(question.getAnswer(0));
 						break;
 						
 					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
-					case MotivatorConstants.QUESTION_ID_TIME_TO_GO:
+					case QUESTION_ID_TIME_TO_GO:
 						long time;
 						switch (query.getInt(2)) {
 						case 0:
@@ -364,7 +366,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public ArrayList<MotivatorEvent> getEventsForDay(long dayInMillis) {
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(dayInMillis);
-		UtilityMethods.setToMidnight(calendar);
+		UtilityMethods.setToDayStart(calendar);
 		long dayStartInMillis = calendar.getTimeInMillis();
 		calendar.add(Calendar.DATE, 1);
 		long dayEndInMillis = calendar.getTimeInMillis();
@@ -375,26 +377,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
 		
 		return getEvents(query);
-	}
-	
-	/**
-	 * Adds a drink to the event with given id.
-	 * @param answerId
-	 */
-	public void addDrink(int answerId) {
-		open();
-		String selection = KEY_ID_ANSWERS + " = " + answerId + " AND " + KEY_ID_QUESTION + " = " + MotivatorConstants.DRINK_AMOUNT_ID;
-		String[] columns = {KEY_ANSWER};
-		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, null);
-		int previousAmount = 0;
-		if (query.moveToFirst()) {
-			previousAmount = query.getInt(0);
-		}
-		ContentValues values = new ContentValues();
-		values.put(KEY_ANSWER, previousAmount + 1);
-		mDb.update(TABLE_NAME, values, selection, null);
-		query.close();
-		close();
 	}
 	
 	public int getAmountOfQuestions() {
@@ -414,7 +396,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	public Question getQuestion(int id) {
-		if (id == MotivatorConstants.DRINK_AMOUNT_ID) {
+		if (id == MotivatorDatabaseHelper.DRINK_AMOUNT_ID) {
 			return null;
 		}
 		return mQuestions.get(id);

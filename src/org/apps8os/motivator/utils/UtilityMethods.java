@@ -16,7 +16,11 @@
  ******************************************************************************/
 package org.apps8os.motivator.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import android.content.Context;
 
 
 /**
@@ -37,8 +41,8 @@ public final class UtilityMethods {
 	 * @param calendar
 	 * @return
 	 */
-	public static Calendar setToMidnight(Calendar calendar) {
-		calendar.set(Calendar.HOUR_OF_DAY, 0);
+	public static Calendar setToDayStart(Calendar calendar) {
+		calendar.set(Calendar.HOUR_OF_DAY, 4);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
@@ -51,13 +55,30 @@ public final class UtilityMethods {
 	 * @return
 	 */
 	public static long[] getDayInMillis(Calendar calendar) {
-		UtilityMethods.setToMidnight(calendar);
+		if (calendar.get(Calendar.HOUR_OF_DAY) < 4) {
+			calendar.add(Calendar.DATE, -1);
+		}
+		UtilityMethods.setToDayStart(calendar);
 		long earlierBoundary = calendar.getTimeInMillis();
     	calendar.add(Calendar.DATE, 1);
     	long laterBoundary = calendar.getTimeInMillis();
     	calendar.add(Calendar.DATE, -1);
     	long result[] = {earlierBoundary, laterBoundary};
     	return result;
+	}
+	
+	public static String getDateAsString(long timestamp, Context context) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
+		Calendar date = new GregorianCalendar();
+		date.setTimeInMillis(timestamp);
+		return sdf.format(date.getTime());
+	}
+	
+	public static String getTimeAsString(long timestamp, Context context) {
+		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm", context.getResources().getConfiguration().locale);
+		Calendar date = new GregorianCalendar();
+		date.setTimeInMillis(timestamp);
+		return sdf.format(date.getTime());
 	}
 
 }

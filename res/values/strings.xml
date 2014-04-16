@@ -27,12 +27,16 @@
     <string name="next">Next</string>
     <string name="mood_selection_image_view_content">Image for the selection of mood</string>
     <string name="prompt_selection">Please select an answer</string>
-    <string name="mood_level1">Depressed</string>
-    <string name="mood_level2">Okay</string>
-    <string name="mood_level3">Happy</string>
-    <string name="energy_level1">Tired</string>
-    <string name="energy_level2">Relaxed</string>
-    <string name="energy_level3">Super</string>
+    <string name="mood_level1">Sad</string>
+    <string name="mood_level2">Moody</string>
+    <string name="mood_level3">Alright</string>
+    <string name="mood_level4">Good</string>
+    <string name="mood_level5">Happy</string>
+    <string name="energy_level1">Exhausted</string>
+    <string name="energy_level2">Tired</string>
+    <string name="energy_level3">Calm</string>
+    <string name="energy_level4">Energized</string>
+    <string name="energy_level5">Super</string>
     <string name="add_event">Add event</string>
     <string name="show_mood_history">Your moods</string>
     <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
@@ -65,7 +69,7 @@
     <string name="days">days</string>
     <string name="of_glory">of kudos</string>
     <string name="no_added_moods">No added moods.</string>
-    <string name="amount_of_drinks">How many drinks.</string>
+    <string name="amount_of_drinks">How many drinks</string>
     <string name="swipe_right_for_plans">Swipe right to make plans</string>
     <string name="swipe_left_for_history">Swipe left to see history</string>
     <string name="data_analysis">View your sprint</string>
@@ -82,5 +86,6 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="select_sprint">Select sprint</string>
+    <string name="when_to_go">Start time</string>
 
 </resources>

@@ -18,23 +18,20 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -100,10 +97,10 @@ public class QuestionnaireActivity extends Activity {
 	 */
 	private int incrementAnswersId() {
 		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
-		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorConstants.ANSWER_ID_INCREMENT_PREFS, 0);
-		int answerId = answerIdIncrement.getInt(MotivatorConstants.ANSWER_ID, 1);
+		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorDatabaseHelper.ANSWER_ID_INCREMENT_PREFS, 0);
+		int answerId = answerIdIncrement.getInt(MotivatorDatabaseHelper.ANSWER_ID, 1);
 		SharedPreferences.Editor editor = answerIdIncrement.edit();
-		editor.putInt(MotivatorConstants.ANSWER_ID, answerId + 1);
+		editor.putInt(MotivatorDatabaseHelper.ANSWER_ID, answerId + 1);
 		editor.commit();
 		return answerId;
 	}
@@ -203,13 +200,11 @@ public class QuestionnaireActivity extends Activity {
 						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
 					}
 					View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
-					toastLayout.setBackgroundColor(Color.DKGRAY);
 					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
 					toastText.setText(toastMsg);
 					toastText.setTextColor(Color.WHITE);
 					
 					Toast questionnaireDone = new Toast(getApplicationContext());
-					questionnaireDone.setGravity(Gravity.CENTER_VERTICAL, 0, 50);
 					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
 					questionnaireDone.setView(toastLayout);
 					questionnaireDone.show();

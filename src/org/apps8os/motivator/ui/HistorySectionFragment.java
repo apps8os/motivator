@@ -18,13 +18,12 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.Sprint;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,7 @@ public class HistorySectionFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+		final Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
 		
 		View rootView = inflater.inflate(
 				R.layout.fragment_main_activity, container, false);
@@ -57,7 +56,7 @@ public class HistorySectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), MoodHistoryActivity.class);
-				intent.putExtra(MotivatorConstants.CURRENT_SPRINT, currentSprint);
+				intent.putExtra(Sprint.CURRENT_SPRINT, currentSprint);
 				startActivity(intent);
 			}
 		});
@@ -73,7 +72,7 @@ public class HistorySectionFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), MoodRelationHistoryActivity.class);
-				intent.putExtra(MotivatorConstants.CURRENT_SPRINT, currentSprint);
+				intent.putExtra(Sprint.CURRENT_SPRINT, currentSprint);
 				startActivity(intent);
 			}
 			
@@ -84,12 +83,21 @@ public class HistorySectionFragment extends Fragment {
 		View separator2 = inflater.inflate(R.layout.element_main_activity_button_separator, buttonLayout, false);
 		buttonLayout.addView(separator2);
 		
+		// TODO: DUmmy
 		Button achievementButton = (Button) inflater.inflate(R.layout.element_main_activity_button, buttonLayout, false);
 		achievementButton.setTextColor(getResources().getColor(R.color.blue));
 		achievementButton.setShadowLayer(2, 1, 1, Color.CYAN);
 		Drawable star = getResources().getDrawable(R.drawable.star1_small);
 		achievementButton.setCompoundDrawablesWithIntrinsicBounds(star, null, null, null);
 		achievementButton.setText(Html.fromHtml("Achievement<br><small>Do not drink for 2 weeks</small>"));
+		achievementButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), QuestionsActivity.class);
+				startActivity(intent);
+			}
+			
+		});
 		buttonLayout.addView(achievementButton);
 		
 		return rootView;

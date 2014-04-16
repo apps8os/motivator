@@ -15,39 +15,34 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="0dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:orientation="vertical">
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    android:layout_gravity="center"
-	    android:background="@drawable/card_background"
-		android:paddingTop="2dp"
-		android:paddingBottom="9dp"
-		android:layout_margin="2dp" >
-	
-	    <TextView
-	        android:id="@+id/mood_history_week_view_day"
-	        android:layout_gravity="center"
-	        android:layout_width="wrap_content"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:fontFamily="sans-serif-condensed"
-	        android:layout_marginLeft="4dp"
-	        android:layout_marginRight="4dp"
-	        android:layout_marginTop="4dp"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
-	    
-	    <include layout="@layout/element_mood_image"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:layout_width="wrap_content"
-	        android:layout_marginBottom="4dp"/>
-	
-	</LinearLayout>
+    android:orientation="vertical" >
+    
+     <TextView
+            android:id="@+id/questionnaire_question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="40dp"
+            android:gravity="left"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/blue"
+            android:text=""
+            android:textSize="25sp" />
+
+        <RadioGroup
+            android:id="@+id/questionnaire_answers_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="vertical"
+            android:divider="?android:attr/dividerHorizontal"
+            android:showDividers="middle" />
+
 </LinearLayout>

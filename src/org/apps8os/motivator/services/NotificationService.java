@@ -19,6 +19,7 @@ package org.apps8os.motivator.services;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 
 import android.app.AlarmManager;
@@ -49,7 +50,7 @@ public class NotificationService extends IntentService {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 		builder.setContentTitle(getString(R.string.today_screen_mood));
 		
-		EventDataHandler dataHandler = new EventDataHandler(this);
+		SprintDataHandler dataHandler = new SprintDataHandler(this);
 		Sprint currentSprint = dataHandler.getCurrentSprint();
 		if (currentSprint == null) {
 			// An alarm manager for scheduling notifications

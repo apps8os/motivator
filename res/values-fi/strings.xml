@@ -28,12 +28,16 @@
     <string name="next">Seuraava</string>
     <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
     <string name="prompt_selection">Valitse vastaus</string>
-    <string name="mood_level1">Masentunut</string>
-    <string name="mood_level2">Ok</string>
-    <string name="mood_level3">Onnellinen</string>
-    <string name="energy_level1">Väsynyt</string>
-    <string name="energy_level2">Rentoutunut</string>
-    <string name="energy_level3">Energinen</string>
+    <string name="mood_level1">Surullinen</string>
+    <string name="mood_level2">Allapäin</string>
+    <string name="mood_level3">Ihan ok</string>
+    <string name="mood_level4">Hyvä</string>
+    <string name="mood_level5">Onnellinen</string>
+    <string name="energy_level1">Ryytynyt</string>
+    <string name="energy_level2">Väsynyt</string>
+    <string name="energy_level3">Rentoutunut</string>
+    <string name="energy_level4">Energinen</string>
+    <string name="energy_level5">Super</string>
     <string name="add_event">Lisää tapahtuma</string>
     <string name="show_mood_history">Fiiliksesi</string>
     <string name="questionnaire_done_toast_bad_mood">Tsemppiä!</string>
@@ -62,7 +66,7 @@
     <string name="days">päivää</string>
     <string name="of_glory">kunnon päivä</string>
     <string name="no_added_moods">Ei lisättyjä fiiliksiä.</string>
-    <string name="amount_of_drinks">Kuinka monta juomaa.</string>
+    <string name="amount_of_drinks">Kuinka monta juomaa</string>
     <string name="swipe_right_for_plans">Oikealla voit tehdä suunnitelmia</string>
     <string name="swipe_left_for_history">Vasemmalla näet historiasi</string>
     <string name="data_analysis">Tarkastele jaksoa</string>
@@ -79,5 +83,6 @@
     <string name="today">Tänään</string>
     <string name="tomorrow">Huomenna</string>
     <string name="select_sprint">Valitse jakso</string>
+    <string name="when_to_go">Aloitus</string>
     
 </resources>

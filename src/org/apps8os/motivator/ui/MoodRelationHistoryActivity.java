@@ -16,12 +16,14 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.MoodDataHandler;
 
 import android.app.ActionBar;
@@ -30,11 +32,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -53,6 +58,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	private int mAvgMood = 0;
 	private TextView mAvgMoodTextView;
 	private Context mContext;
+	private LinearLayout mMoodImageRoot;
 	
 	private static final String AMOUNT_OF_DRINKS = "amount_of_drinks";
 
@@ -70,11 +76,21 @@ public class MoodRelationHistoryActivity extends Activity {
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 	    
 	    mAvgMoodTextView = (TextView) findViewById(R.id.mood_relation_history_average_mood);
+	    mMoodImageRoot = (LinearLayout) findViewById(R.id.mood_image_root);
 	    
 	    OnNavigationListener listener = new TimeframeOnNavigationListener();
 	    
 	    bar.setDisplayShowTitleEnabled(false);
 	    bar.setListNavigationCallbacks(adapter, listener);
+	}
+	
+	private void setMoodImages(Mood mood) {
+		if (mood.getEnergy() > 0) {
+			Drawable energyImage = mContext.getResources().getDrawable(getResources().getIdentifier("energy" + mood.getEnergy(), "drawable", getPackageName()));
+			((ImageView) mMoodImageRoot.getChildAt(0)).setImageDrawable(energyImage);
+			Drawable moodImage = mContext.getResources().getDrawable(getResources().getIdentifier("mood" + mood.getMood(), "drawable", getPackageName()));
+			((ImageView) mMoodImageRoot.getChildAt(1)).setImageDrawable(moodImage);
+		}
 	}
 	
 	/**
@@ -92,23 +108,26 @@ public class MoodRelationHistoryActivity extends Activity {
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 7;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
-				mAvgMood = getAvgMood(days);
-				mAvgMoodTextView.setText("" + mAvgMood);
+				Mood avgMood = getAvgMood(days);
+				setMoodImages(avgMood);
+				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
 			} else if (itemPosition == 1) {
 				calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 				calendar.add(Calendar.DATE, -14);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 14;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
-				mAvgMood = getAvgMood(days);
-				mAvgMoodTextView.setText("" + mAvgMood);
+				Mood avgMood = getAvgMood(days);
+				setMoodImages(avgMood);
+				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
 			} else if (itemPosition == 2) {
 				calendar.add(Calendar.DATE, -29);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 30;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
-				mAvgMood = getAvgMood(days);
-				mAvgMoodTextView.setText("" + mAvgMood);
+				Mood avgMood = getAvgMood(days);
+				setMoodImages(avgMood);
+				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
 			} else if (itemPosition == 3) {
 				showTimeFramePicker();
 			}
@@ -121,22 +140,24 @@ public class MoodRelationHistoryActivity extends Activity {
 		 * @param days
 		 * @return
 		 */
-		private int getAvgMood(DayInHistory[] days) {
-			int moodAmount = 0;
-			int moodSum = 0;
+		private Mood getAvgMood(DayInHistory[] days) {
+			ArrayList<Mood> allMoods = new ArrayList<Mood>();
 			for (int i = 0; i < days.length; i++) {
-				days[i].setEvents();
-				int avgMood = days[i].getAvgMoodLevel();
-				if (avgMood != 0) {
-					moodSum += avgMood;
-					moodAmount += 1;
-				}
+				allMoods.addAll(days[i].getMoods());
 			}
-			if (moodAmount > 0) {
-				return (int) (moodSum / moodAmount + 0.5f);
-			} else {
-				return 0;
+			int avgMood = 0;
+			int avgEnergy = 0;
+			for (int i = 0; i < allMoods.size(); i++) {
+				avgMood += allMoods.get(i).getMood();
+				avgEnergy += allMoods.get(i).getEnergy();
 			}
+			
+			if (allMoods.size() > 0) {
+				avgMood = avgMood / allMoods.size();
+				avgEnergy = avgEnergy / allMoods.size();
+			}
+			
+			return new Mood(avgMood, avgEnergy, 0, "");
 		}
 		
 		/**
@@ -171,8 +192,13 @@ public class MoodRelationHistoryActivity extends Activity {
 					
 					mAmountOfDays = (int) TimeUnit.DAYS.convert(mEndTimeInMillis - mFromTimeInMillis, TimeUnit.MILLISECONDS) + 1;
 					DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
-					mAvgMood = getAvgMood(days);
-					mAvgMoodTextView.setText("" + mAvgMood);
+					Mood avgMood = getAvgMood(days);
+					setMoodImages(avgMood);
+					mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
+					
+					if (avgMood.getMood() <= 0) {
+						mAvgMoodTextView.setText(mContext.getString(R.string.no_added_moods));
+					}
 					
 					dialog.dismiss();
 				}

@@ -23,17 +23,16 @@ import java.util.GregorianCalendar;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.MoodDataHandler;
-import org.apps8os.motivator.utils.MotivatorConstants;
+import org.apps8os.motivator.data.Sprint;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.app.Fragment;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.app.Fragment;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,8 +65,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mRootView = (View) inflater.inflate(R.layout.fragment_mood_history_landscape, viewGroup, false);
 		mInflater = inflater;
 		mRes = getActivity().getResources();
-		mSprintStartDate = b.getLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE);
-		mPosition = b.getInt(MotivatorConstants.FRAGMENT_POSITION);
+		mSprintStartDate = b.getLong(Sprint.CURRENT_SPRINT_STARTDATE);
+		mPosition = b.getInt(MoodHistoryActivity.FRAGMENT_POSITION);
 		mDataHandler = new MoodDataHandler(getActivity());
 		
 		// Loading the days on a different thread.
@@ -84,8 +83,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putLong(MotivatorConstants.CURRENT_SPRINT_STARTDATE, mSprintStartDate);
-		outState.putInt(MotivatorConstants.FRAGMENT_POSITION, mPosition);
+		outState.putLong(Sprint.CURRENT_SPRINT_STARTDATE, mSprintStartDate);
+		outState.putInt(MoodHistoryActivity.FRAGMENT_POSITION, mPosition);
 	}
 	
 	/**
@@ -168,15 +167,18 @@ public class MoodHistoryWeekFragment extends Fragment {
 			// Add the lower half with day views.
 			for (int i = 0; i < result.size(); i++) {
 				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
-				TextView dayText = (TextView) dayView.getChildAt(0);
+				TextView dayText = (TextView) ((LinearLayout) dayView.getChildAt(0)).getChildAt(0);
 				dayText.setText(Html.fromHtml(getDay(result.get(i)) + "<br><small>" + result.get(i).getDateInString(getActivity())));
 				if (result.get(i).getAvgMoodLevel() == 0) {
-					ImageView moodImage = (ImageView) dayView.getChildAt(1);
-					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.temp_emoticon_bw));
+				} else {
+					LinearLayout moodImageRoot = (LinearLayout) dayView.findViewById(R.id.mood_image_root);
+					ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
+					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + result.get(i).getFirstMoodOfTheDay().getEnergy(), "drawable", getActivity().getPackageName())));
+					ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
+					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + result.get(i).getFirstMoodOfTheDay().getMood(), "drawable", getActivity().getPackageName())));
+
 				}
-				DisplayMetrics dm = new DisplayMetrics();
-				getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-				dayView.getLayoutParams().width = dm.widthPixels / 7;
+				
 				dayLayout.addView(dayView);
 			}
 			// add the line graph.

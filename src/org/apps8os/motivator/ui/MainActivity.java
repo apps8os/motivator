@@ -22,11 +22,13 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.EventDataHandler;
-import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.services.NotificationService;
-import org.apps8os.motivator.utils.MotivatorConstants;
+
+import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.LinePageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -54,6 +56,9 @@ import android.view.MenuItem;
  *
  */
 public class MainActivity extends Activity {
+	
+	public static final String MOTIVATOR_PREFS = "motivator_prefs";
+	public static final String APP_VERSION = "application_version";
 	
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -87,10 +92,14 @@ public class MainActivity extends Activity {
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
 		
-		// Set the second tab as the default on launch
-		mViewPager.setCurrentItem(1);
+		//Bind the title indicator to the adapter
+		TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
+		titleIndicator.setViewPager(mViewPager);
 		
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+		// Set the second tab as the default on launch
+		mViewPager.setCurrentItem(1, false);
+		
+		OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
@@ -106,7 +115,10 @@ public class MainActivity extends Activity {
 				} else {
 				}
 			}
-		});
+		};
+		
+		//mViewPager.setOnPageChangeListener(pageChangeListener);
+		titleIndicator.setOnPageChangeListener(pageChangeListener);
 		
 		// Check the version number and set notifications again if version has changed.
 		int versionNumber = -99;
@@ -118,15 +130,15 @@ public class MainActivity extends Activity {
 			Log.e("notification", "version number not found");
 		}
 		
-		SharedPreferences motivatorPrefs = getSharedPreferences(MotivatorConstants.MOTIVATOR_PREFS, 0);
-		if( versionNumber != motivatorPrefs.getInt(MotivatorConstants.APP_VERSION, -1)) {
+		SharedPreferences motivatorPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
+		if( versionNumber != motivatorPrefs.getInt(APP_VERSION, -1)) {
 			setNotifications();
 			SharedPreferences.Editor editor = motivatorPrefs.edit();
-			editor.putInt(MotivatorConstants.APP_VERSION, versionNumber);
+			editor.putInt(APP_VERSION, versionNumber);
 			editor.commit();
 		}
 		
-		if (!motivatorPrefs.getBoolean(MotivatorConstants.FIRST_SPRINT_SET, false)) {	
+		if (!motivatorPrefs.getBoolean(Sprint.FIRST_SPRINT_SET, false)) {	
 			Intent intent = new Intent(this, StartingSprintActivity.class);
 			finish();
 			startActivity(intent);
@@ -136,7 +148,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		EventDataHandler dataHandler = new EventDataHandler(this);
+		SprintDataHandler dataHandler = new SprintDataHandler(this);
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
 		ActionBar actionBar = getActionBar();
@@ -234,14 +246,14 @@ public class MainActivity extends Activity {
 			// Set the second tab as today fragment
 			if (position == 1) {
 				Bundle b = new Bundle();
-				b.putParcelable(MotivatorConstants.CURRENT_SPRINT, mCurrentSprint);
+				b.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new TodaySectionFragment();
 				fragment.setArguments(b);
 			} else if(position == 2) {
 				fragment = new PlanSectionFragment();
 			} else if (position == 0) {
 				Bundle b = new Bundle();
-				b.putParcelable(MotivatorConstants.CURRENT_SPRINT, mCurrentSprint);
+				b.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new HistorySectionFragment();
 				fragment.setArguments(b);
 			} else {

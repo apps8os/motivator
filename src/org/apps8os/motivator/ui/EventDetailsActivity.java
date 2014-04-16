@@ -16,11 +16,10 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
-import org.apps8os.motivator.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
@@ -47,16 +46,18 @@ public class EventDetailsActivity extends Activity {
 	    setContentView(R.layout.activity_event_details);
 	    Bundle extras = getIntent().getExtras();
 	    // is represented as answers id in the database
-	    mEvent = extras.getParcelable(MotivatorConstants.EVENT);
+	    mEvent = extras.getParcelable(MotivatorEvent.EVENT);
 	    mDataHandler = new EventDataHandler(this);
 	    
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
 	    title.setText(mEvent.getEventDateAsText());
 	    
 
-	    TextView text = (TextView) findViewById(R.id.event_detail_text);
+	    TextView text = (TextView) findViewById(R.id.event_time_to_go_entry);
 	    String textToAdd = mEvent.getStartTimeAsText();
 	    text.setText(Html.fromHtml(textToAdd));
+	    
+	    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText("" + mEvent.getPlannedDrinks());
 	    
 	    final EventDetailsActivity parentActivity = this;
 	    final int eventId = mEvent.getId();

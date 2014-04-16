@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.ContentValues;
@@ -37,6 +36,8 @@ import android.util.SparseArray;
  *
  */
 public class MoodDataHandler extends MotivatorDatabaseHelper {
+	
+	public static final String NO_COMMENT = "";
 	
 	private static final String TABLE_NAME = TABLE_NAME_QUESTIONNAIRE;
 	private static final String TABLE_NAME_MOOD = TABLE_NAME_MOOD_LEVELS;
@@ -133,12 +134,8 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	    DayInHistory result = new DayInHistory(dayInMillis, mContext);
 	    // Add all moods to the DayInHistory object.
 	    while (query.getCount() > 0 && !query.isClosed()) {
-	    	result.addMoodLevel(query.getInt(0));
-	    	result.addEnergyLevel(query.getInt(1));
-    		String comment = query.getString(3);
-    		if (comment != MotivatorConstants.NO_COMMENT) {
-    			result.addComment(comment);
-	    	}
+	    	Mood mood = new Mood(query.getInt(0), query.getInt(1), query.getLong(2), query.getString(3));
+	    	result.addMood(mood);
 	    	if (query.isLast()) {
 	    		query.close();
 	    	} else {
@@ -166,14 +163,16 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	return days;
     }
     
+
 	public Question getQuestion(int id) {
 		return mQuestions.get(id);
 	}
 	
+
 	public int getAmountOfQuestions() {
 		return mQuestions.size();
 	}
-	
+
 	public int getFirstQuestionId() {
 		return mQuestions.keyAt(0);
 	}

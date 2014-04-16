@@ -1,57 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/gray"
-    android:layout_width="match_parent"
-	android:layout_height="match_parent"
-    >
-	<ScrollView 
-	    android:layout_width="300dp"
-	    android:layout_height="wrap_content"
+<!--
+  Copyright (c) 2014 Helsingin Diakonissalaitos and the authors
+  
+  The MIT License (MIT)
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+  to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
+  THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
 	    android:layout_centerHorizontal="true"
-	    android:background="@drawable/dropshadow"
-	    android:paddingLeft="6dp"
-        android:paddingTop="4dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="9dp"
+	    android:background="@color/gray"
+	    android:fillViewport="true"
 	     >
+	    <LinearLayout 
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
 	    <LinearLayout
 	        android:id="@+id/mood_history_fragment_linearlayout"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical"
-	        android:background="@color/white"
+	        android:background="@drawable/card_background"
+
+	        android:paddingTop="4dp"
+
+	        android:paddingBottom="9dp"
+	        android:layout_margin="12dp"
 	         >
 	
 	        <TextView
-	            android:layout_marginTop="24dp"
+	            android:layout_marginTop="12dp"
 	            android:id="@+id/mood_history_fragment_title"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
+	            android:layout_marginBottom="12dp"
 	            android:text=""
-	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	            android:textAppearance="?android:attr/textAppearanceLarge"
+	            android:fontFamily="sans-serif-thin" />
 	
-	        <ImageView
+	        <LinearLayout
 	            android:id="@+id/mood_history_fragment_mood_image"
-	            android:layout_width="224dp"
-	            android:layout_height="238dp"
+	            android:layout_width="220dp"
+	            android:layout_height="210dp"
 	            android:layout_gravity="center"
-	            android:layout_marginTop="24dp"
-	            android:src="@drawable/temp_emoticon" />
+	            android:orientation="vertical">
+		        <ImageView
+		            android:id="@+id/mood_history_fragment_mood_image_energy"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="61"
+		            android:src="@drawable/energy3" />
+		        <ImageView
+		            android:id="@+id/mood_history_fragment_mood_image_mood"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="39"
+		            android:src="@drawable/mood2" />
 	
+	        </LinearLayout>
 	        <TextView
-	            android:layout_marginTop="48dp"
+	            android:layout_marginTop="12dp"
 	            android:id="@+id/mood_history_fragment_comment"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="center"
 	            android:layout_marginBottom="24dp"
 	            android:text=""
-	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	            android:textAppearance="?android:attr/textAppearanceLarge"
+	            android:textStyle="italic"
+	             />
+	        
+	        <LinearLayout 
+	            android:id="@+id/mood_history_day_moodlist"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"></LinearLayout>
 	        
 	    </LinearLayout>
-	    
-	
-	</ScrollView>
-</RelativeLayout>
+	    </LinearLayout>
+</ScrollView>

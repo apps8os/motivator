@@ -21,31 +21,60 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-   <com.viewpagerindicator.TitlePageIndicator
+   <com.viewpagerindicator.LinePageIndicator
     android:id="@+id/indicator"
     android:padding="10dip"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
-    android:background="@color/gray"
-    android:textColor="@color/medium_gray"
-    app:footerColor="@color/medium_gray"
-    app:footerLineHeight="1dp"
-    app:footerIndicatorHeight="3dp"
-    app:footerIndicatorStyle="underline"
-    app:selectedColor="@color/dark_blue"
-    app:selectedBold="true" />
+    app:selectedColor="@color/blue"
+    app:lineWidth="40dp"
+    app:strokeWidth="4dp" />
 
 	<android.support.v4.view.ViewPager 
 		xmlns:tools="http://schemas.android.com/tools"
-	    android:id="@+id/main_activity_pager"
+	    android:id="@+id/question_activity_pager"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="8"
 	    tools:context=".MainActivity" >
-	    <!--
-	    This title strip will display the currently visible page title, as well as the page
-	    titles for adjacent pages.
-	    -->
+	</android.support.v4.view.ViewPager>
 
-</android.support.v4.view.ViewPager>
+	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="beginning"
+         >
+	    <LinearLayout 
+	       	android:orientation="horizontal"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    style="?android:attr/buttonBarStyle" >
+		    	<Button
+				    android:id="@+id/questions_previous_button"
+				    android:layout_width="0dp"
+				    android:layout_weight="1"
+				    android:layout_height="match_parent"
+				    android:text="Edellinen"
+				    style="?android:attr/borderlessButtonStyle" />
+        	    <Button
+				    android:id="@+id/questions_complete_button"
+				    android:layout_width="0dp"
+				    android:layout_weight="1"
+				    android:layout_height="match_parent"
+				    android:text="Valmis"
+				    style="?android:attr/borderlessButtonStyle" />
+        	     <Button
+				    android:id="@+id/questions_next_button"
+				    android:layout_width="0dp"
+				    android:layout_weight="1"
+				    android:layout_height="match_parent"
+				    android:text="Seuraava"
+				    style="?android:attr/borderlessButtonStyle" />
+	    </LinearLayout>
+	</LinearLayout>
+	
 </LinearLayout>
 

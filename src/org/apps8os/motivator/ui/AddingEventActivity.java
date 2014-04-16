@@ -18,11 +18,11 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -76,6 +76,9 @@ public class AddingEventActivity extends Activity {
 		mProgressBar.setMax(mNumberOfQuestions);
 		mProgressBar.setProgress(1);
 		
+		ActionBar actionBar = getActionBar();
+		actionBar.setTitle(R.string.add_event);
+		
 		incrementQuestion(true);
 	}
 	
@@ -85,10 +88,10 @@ public class AddingEventActivity extends Activity {
 	 */
 	private int incrementAnswersId() {
 		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
-		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorConstants.ANSWER_ID_INCREMENT_PREFS, 0);
-		int answerId = answerIdIncrement.getInt(MotivatorConstants.ANSWER_ID, 1);
+		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorDatabaseHelper.ANSWER_ID_INCREMENT_PREFS, 0);
+		int answerId = answerIdIncrement.getInt(MotivatorDatabaseHelper.ANSWER_ID, 1);
 		SharedPreferences.Editor editor = answerIdIncrement.edit();
-		editor.putInt(MotivatorConstants.ANSWER_ID, answerId + 1);
+		editor.putInt(MotivatorDatabaseHelper.ANSWER_ID, answerId + 1);
 		editor.commit();
 		return answerId;
 	}
@@ -178,7 +181,7 @@ public class AddingEventActivity extends Activity {
 					mProgressBar.incrementProgressBy(1);
 				} else {
 					// Initialize the amount of drinks to zero.
-					mDataHandler.insertAnswer(0, MotivatorConstants.DRINK_AMOUNT_ID, mAnswerId);
+					mDataHandler.insertAnswer(0, MotivatorDatabaseHelper.DRINK_AMOUNT_ID, mAnswerId);
 					// Questionnaire is done
 					finish();
 				}

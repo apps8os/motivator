@@ -17,7 +17,6 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.data.MotivatorEvent;
-import org.apps8os.motivator.utils.MotivatorConstants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +42,7 @@ public class OpenEventDetailViewOnClickListener implements OnClickListener {
 	@Override
 	public void onClick(View arg0) {
 		Intent intent = new Intent(mContext, EventDetailsActivity.class);
-		intent.putExtra(MotivatorConstants.EVENT, mEvent);
+		intent.putExtra(MotivatorEvent.EVENT, mEvent);
 		mContext.startActivity(intent);
 	}
 

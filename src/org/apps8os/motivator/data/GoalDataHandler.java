@@ -73,4 +73,12 @@ public class GoalDataHandler extends MotivatorDatabaseHelper {
 	public Question getQuestion(int id) {
 		return mQuestions.get(id);
 	}
+
+	public int getAmountOfQuestions() {
+		return mQuestions.size();
+	}
+
+	public int getFirstQuestionId() {
+		return mQuestions.keyAt(0);
+	}
 }

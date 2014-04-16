@@ -16,12 +16,10 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apps8os.motivator.utils.MotivatorConstants;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.Context;
@@ -37,14 +35,13 @@ import android.os.Parcelable;
 public class DayInHistory implements Parcelable{
 	
 
-	private int mMoodSum = 0;
-	private int mMoodAmount = 0;
-	private int mEnergySum = 0;
-	private int mEnergyAmount = 0;
+	public static final String DAY_IN_HISTORY = "day_in_history";
+	public static final String DAY_IN_HISTORY_ARRAY = "day_in_history_array";
+	
 	private int mAlcoholDrinks = 0;
-	private String mComments = "";
 	private long mDateInMillis;
 	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
+	private ArrayList<Mood> mMoods = new ArrayList<Mood>();
 	private Context mContext;
 	
 	public static final int AMOUNT_OF_DRINKS = 1;
@@ -57,7 +54,7 @@ public class DayInHistory implements Parcelable{
 	public DayInHistory(long dayInMillis, Context context) {
 		Calendar mDate = new GregorianCalendar();
 		mDate.setTimeInMillis(dayInMillis);
-		mDate = UtilityMethods.setToMidnight(mDate);
+		mDate = UtilityMethods.setToDayStart(mDate);
 		mDateInMillis = mDate.getTimeInMillis();
 		mContext = context;
 	}
@@ -67,13 +64,10 @@ public class DayInHistory implements Parcelable{
 	 * @param source
 	 */
 	private DayInHistory(Parcel source) {
-		mMoodSum = source.readInt();
-		mMoodAmount = source.readInt();
-		mEnergyAmount = source.readInt();
-		mEnergySum = source.readInt();
 		mAlcoholDrinks = source.readInt();
-		mComments = source.readString();
 		mDateInMillis = source.readLong();
+		source.readTypedList(mEvents, MotivatorEvent.CREATOR);
+		source.readTypedList(mMoods, Mood.CREATOR);
 	}
 	
 	/**
@@ -91,42 +85,50 @@ public class DayInHistory implements Parcelable{
 		}
 	};
 	
-	public void addMoodLevel(int moodLevel) {
-		mMoodAmount += 1;
-		mMoodSum += moodLevel;
-	}
-	
-	public void addEnergyLevel(int moodLevel) {
-		mEnergyAmount += 1;
-		mEnergySum += moodLevel;
-	}
-	
 	public void addAlcoholDrink(int amount) {
 		mAlcoholDrinks += 1;
 	}
 	
-	public void addComment(String comment) {
-		mComments = mComments + comment + MotivatorConstants.COMMENT_SEPARATOR;
+	public void addMood(Mood mood) {
+		mMoods.add(mood);
 	}
 
 	/*
 	 * @return the mAvgMoodLevel
 	 */
 	public int getAvgMoodLevel() {
-		if (mMoodAmount > 0) {
-			return mMoodSum / mMoodAmount;
-		} else {
-			return 0;
+		int avgMood = 0;
+		for (int i = 0; i < mMoods.size(); i++) {
+			avgMood += mMoods.get(i).getMood();
 		}
-		
+		if (mMoods.size() > 0) {
+			avgMood = avgMood / mMoods.size();
+		}
+		return avgMood;
 	}
 
 	/**
 	 * @return the mAvgEnergyLevel
 	 */
 	public int getAvgEnergyLevel() {
-		return mEnergySum / mEnergyAmount;
+		int avgEnergy = 0;
+		for (int i = 0; i < mMoods.size(); i++) {
+			avgEnergy += mMoods.get(i).getEnergy();
+		}
+		if (mMoods.size() > 0) {
+			avgEnergy = avgEnergy / mMoods.size();
+		}
+		return avgEnergy;
 	}
+	
+	public Mood getFirstMoodOfTheDay() {
+		if (mMoods.size() > 0) {
+			return mMoods.get(0);
+		} else {
+			return new Mood(0,0, System.currentTimeMillis(), MoodDataHandler.NO_COMMENT);
+		}
+	}
+
 
 	/**
 	 * @return the mAlcoholDrinks
@@ -135,21 +137,12 @@ public class DayInHistory implements Parcelable{
 		return mAlcoholDrinks;
 	}
 
-	/**
-	 * @return the mComment
-	 */
-	public String getComment() {
-		return mComments;
-	}
 
 	/**
 	 * @return the current date with a legible format
 	 */
 	public String getDateInString(Context context) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
-		Calendar date = new GregorianCalendar();
-		date.setTimeInMillis(mDateInMillis);
-		return sdf.format(date.getTime());
+		return UtilityMethods.getDateAsString(mDateInMillis, context);
 	}
 	
 	/**
@@ -171,17 +164,18 @@ public class DayInHistory implements Parcelable{
 	 */
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeInt(mMoodSum);
-		dest.writeInt(mMoodAmount);
-		dest.writeInt(mEnergyAmount);
-		dest.writeInt(mEnergySum);
 		dest.writeInt(mAlcoholDrinks);
-		dest.writeString(mComments);
 		dest.writeLong(mDateInMillis);
+		dest.writeTypedList(mEvents);
+		dest.writeTypedList(mMoods);
 	}
 
 	public ArrayList<MotivatorEvent> getEvents() {
 		return mEvents;
+	}
+	
+	public ArrayList<Mood> getMoods() {
+		return mMoods;
 	}
 
 	public void setEvents() {

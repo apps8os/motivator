@@ -22,8 +22,6 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
-import org.apps8os.motivator.utils.MotivatorConstants;
-import org.apps8os.motivator.utils.MotivatorFonts;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,8 +29,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -122,7 +120,7 @@ public class TodaySectionFragment extends Fragment {
 	 */
 	@Override
 	public void onResume() {
-		Sprint currentSprint = getArguments().getParcelable(MotivatorConstants.CURRENT_SPRINT);
+		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
 		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
 		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
 		
@@ -217,7 +215,7 @@ public class TodaySectionFragment extends Fragment {
 					addDrinkButton.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							mDataHandler.addDrink(todaysEvent.getId());
+							mDataHandler.addDrink();
 							mDrinkCounter += 1;
 							addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
 						}

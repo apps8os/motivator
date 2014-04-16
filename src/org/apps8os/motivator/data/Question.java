@@ -16,13 +16,16 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 
 /**
  * Represents a Question. Used to store the question information during runtime.
  * @author Toni Järvinen
  *
  */
-public class Question {
+public class Question implements Parcelable{
 	
 	private int mId;
 	private String mQuestion;
@@ -34,6 +37,25 @@ public class Question {
 		mAnswers = answers;
 	}
 
+	public Question(Parcel source) {
+		mId = source.readInt();
+		mQuestion = source.readString();
+		mAnswers = source.createStringArray();
+	}
+
+	public static final Parcelable.Creator<Question> CREATOR = new Parcelable.Creator<Question>() {
+		@Override
+		public Question createFromParcel(Parcel source) {
+			return new Question(source);
+		}
+
+		@Override
+		public Question[] newArray(int size) {
+			return new Question[size];
+		}
+	};
+	
+	
 	public int getId() {
 		return mId;
 	}
@@ -48,6 +70,18 @@ public class Question {
 	
 	public int getAnswerCount() {
 		return mAnswers.length;
+	}
+
+	@Override
+	public int describeContents() {
+		return hashCode();
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(mId);
+		dest.writeString(mQuestion);
+		dest.writeStringArray(mAnswers);
 	}
 	
 }

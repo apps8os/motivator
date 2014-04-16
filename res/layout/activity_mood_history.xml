@@ -15,29 +15,35 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_mood_history_viewpager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+   <com.viewpagerindicator.TitlePageIndicator
+   	android:id="@+id/indicator"
+    android:padding="10dip"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
     android:background="@color/gray"
-    tools:context=".MainActivity" >
+    android:textColor="@color/medium_gray"
+    app:footerColor="@color/medium_gray"
+    app:footerLineHeight="1dp"
+    app:footerIndicatorHeight="5dp"
+    app:footerIndicatorStyle="triangle"
+    app:selectedColor="@color/dark_blue"
+    app:selectedBold="true" />
+	<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+	    xmlns:tools="http://schemas.android.com/tools"
+	    android:id="@+id/activity_mood_history_viewpager"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:background="@color/gray"
+	    tools:context=".MainActivity" >
 
-    <!--
-    This title strip will display the currently visible page title, as well as the page
-    titles for adjacent pages.
-    -->
-
-    <android.support.v4.view.PagerTitleStrip
-        android:id="@+id/activity_mood_history_pager_title_strip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/gray"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textColor="@color/blue" />
-
-</android.support.v4.view.ViewPager>
+	</android.support.v4.view.ViewPager>
+</LinearLayout>
 
 
