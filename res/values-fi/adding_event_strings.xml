@@ -16,45 +16,31 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string name="event_question_1">Milloin?</string>
+    <string name="event_question_1">Minä päivänä?</string>
     <string name="event_question_1_answer_1">Tänään</string>
     <string name="event_question_1_answer_2">Huomenna</string>
     <string name="event_question_1_answer_3">Ensi viikonloppuna</string>
     
-    <string name="event_question_2">Missä?</string>
-    <string name="event_question_2_answer_1">Kotona</string>
-    <string name="event_question_2_answer_2">Kaverin luona</string>
-    <string name="event_question_2_answer_3">Baarissa</string>
+    <string name="event_question_2">Paljon aiot juoda?</string>
+    <string name="event_question_2_answer_1">En yhtään</string>
+    <string name="event_question_2_answer_2">Yhden</string>
+    <string name="event_question_2_answer_3">Pari</string>
+    <string name="event_question_2_answer_4">Kolme tai neljä</string>
+    <string name="event_question_2_answer_5">Enemmän kuin neljä</string>
     
-    <string name="event_question_3">Monen aikaan menet?</string>
-    <string name="event_question_3_answer_1">Ennen iltakuutta</string>
-    <string name="event_question_3_answer_2">Iltakuuden ja -yhdeksän välissä</string>
-    <string name="event_question_3_answer_3">Iltayhdeksän jälkeen</string>
+    <string name="event_question_3">Monelta otat ekan?</string>
+    <string name="event_question_3_answer_1">Ennen kuutta</string>
+    <string name="event_question_3_answer_2">Kuuden ja yhdeksän välissä</string>
+    <string name="event_question_3_answer_3">Yhdeksän jälkeen</string>
     
-    <string-array name="id1000">
-        <item >@string/event_question_1</item>
-        <item >@string/event_question_1_answer_1</item>
-        <item >@string/event_question_1_answer_2</item>
-        <item >@string/event_question_1_answer_3</item>
-    </string-array>
-    <string-array name="id1001">
-        <item >@string/event_question_2</item>
-        <item >@string/event_question_2_answer_1</item>
-        <item >@string/event_question_2_answer_2</item>
-        <item >@string/event_question_2_answer_3</item>
-    </string-array>
-    <string-array name="id1002">
-        <item >@string/event_question_3</item>
-        <item >@string/event_question_3_answer_1</item>
-        <item >@string/event_question_3_answer_2</item>
-        <item >@string/event_question_3_answer_3</item>
-    </string-array>
+    <string name="event_question_4">Monelta otat vikan?</string>
+    <string name="event_question_4_answer_1">Ennen yhdeksää</string>
+    <string name="event_question_4_answer_2">Yhdeksän ja kahdentoista välissä</string>
+    <string name="event_question_4_answer_3">Kahdentoista jälkeen</string>
     
-    <string-array name="event_question_ids">
-        <item >id1000</item>
-        <item >id1001</item>
-        <item >id1002</item>
-    </string-array>
-    
-    <integer name ="adding_event_amount">2</integer>
+    <string name="event_question_5">Kenen kanssa menet?</string>
+    <string name="event_question_5_answer_1">Yksin</string>
+    <string name="event_question_5_answer_2">Perusporukka</string>
+    <string name="event_question_5_answer_3">Työkavereiden</string>
+ 
 </resources>

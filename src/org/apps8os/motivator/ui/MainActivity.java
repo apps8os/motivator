@@ -26,8 +26,6 @@ import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.services.NotificationService;
 
-import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.LinePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.ActionBar;
@@ -40,6 +38,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -76,6 +75,7 @@ public class MainActivity extends Activity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	private ActionBar mActionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +91,10 @@ public class MainActivity extends Activity {
 		mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
+		mActionBar = getActionBar();
 		
 		//Bind the title indicator to the adapter
-		TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
+		final TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
 		
 		// Set the second tab as the default on launch
@@ -111,8 +112,22 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onPageSelected(int arg0) {
-				if (arg0 == 2 || arg0 == 0) {
-				} else {
+				Resources res = getResources();
+				if (arg0 == 2) {
+					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_blue_no_separator));
+					mActionBar.setDisplayShowTitleEnabled(false);
+					mActionBar.setDisplayShowTitleEnabled(true);
+					titleIndicator.setBackgroundResource(R.drawable.action_bar_blue);
+				} else if (arg0 == 1) {
+					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_green_no_separator));
+					mActionBar.setDisplayShowTitleEnabled(false);
+					mActionBar.setDisplayShowTitleEnabled(true);
+					titleIndicator.setBackgroundResource(R.drawable.action_bar_green);
+				} else if (arg0 == 0) {
+					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_orange_no_separator));
+					mActionBar.setDisplayShowTitleEnabled(false);
+					mActionBar.setDisplayShowTitleEnabled(true);
+					titleIndicator.setBackgroundResource(R.drawable.action_bar_orange);
 				}
 			}
 		};
@@ -151,12 +166,11 @@ public class MainActivity extends Activity {
 		SprintDataHandler dataHandler = new SprintDataHandler(this);
 		mCurrentSprint = dataHandler.getCurrentSprint();
 		
-		ActionBar actionBar = getActionBar();
 		if (mCurrentSprint == null) {
 			mCurrentSprint = dataHandler.getLatestEndedSprint();
 		} else  {
-			actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
-			actionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
+			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
+			mActionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
 		}
 	}
 

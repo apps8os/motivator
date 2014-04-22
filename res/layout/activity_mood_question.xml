@@ -21,122 +21,127 @@
     xmlns:app="http://schemas.android.com/tools"
     >
     
-    
-<LinearLayout 
-    android:id="@+id/mood_question_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/gray"
-    >
-
-    <TextView
-        android:id="@+id/mood_question_title"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"
-        android:text="@string/today_screen_mood"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:fontFamily="sans-serif-light" >
-    </TextView>
-    
-    <TextView
-        android:id="@+id/mood_question_energylevel_textview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"
-        android:text=""
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <android.support.v4.view.ViewPager
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mood_question_viewpager_cards"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="61"
-        android:orientation="vertical"
-        app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
-    </android.support.v4.view.ViewPager>
-
-    <android.support.v4.view.ViewPager
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mood_question_viewpager_cards2"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="39"
-        android:orientation="vertical"
-        app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
-    </android.support.v4.view.ViewPager>
-
-    <TextView
-        android:id="@+id/mood_question_moodlevel_textview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"
-        android:text=""
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-     <EditText
-        android:id="@+id/mood_comment_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="20"
-        android:inputType="textAutoCorrect"
-        android:hint="@string/mood_comment"
-        android:ems="10"
-        android:layout_margin="8dp" >
-    </EditText>
-    
-        
-    <LinearLayout
-        android:id="@+id/mood_question_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="bottom"
-        android:background="@color/gray"
-        android:orientation="horizontal"
-        style="?android:attr/buttonBarStyle"
-        >
-    </LinearLayout>
-</LinearLayout>
-
-<ImageView
-    android:id="@+id/imageView1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_centerVertical="true"
-    android:translationY="36dp"
-    android:src="@drawable/ic_action_next_item" />
-
-<ImageView
-    android:id="@+id/imageView1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentRight="true"
-    android:layout_centerVertical="true"
-    android:translationY="-72dp"
-    android:src="@drawable/ic_action_next_item" />
-
-<ImageView
-    android:id="@+id/imageView1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:translationY="36dp"
-    android:src="@drawable/ic_action_previous_item" />
-
-<ImageView
-    android:id="@+id/imageView1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:translationY="-72dp"
-    android:src="@drawable/ic_action_previous_item" />
+	    
+	<LinearLayout 
+	    android:id="@+id/mood_question_layout"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    >
+	
+	    <TextView
+	        android:id="@+id/mood_question_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="20"
+	        android:text="@string/today_screen_mood"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:fontFamily="sans-serif-light" >
+	    </TextView>
+	    
+	    <TextView
+	        android:id="@+id/mood_question_energylevel_textview"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="20"
+	        android:text=""
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    <android.support.v4.view.ViewPager
+	        xmlns:tools="http://schemas.android.com/tools"
+	        android:id="@+id/mood_question_viewpager_cards"
+	        android:layout_width="wrap_content"
+	        android:layout_height="0dp"
+	        android:layout_weight="61"
+	        android:orientation="vertical"
+	        app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
+	    </android.support.v4.view.ViewPager>
+	
+	    <android.support.v4.view.ViewPager
+	        xmlns:tools="http://schemas.android.com/tools"
+	        android:id="@+id/mood_question_viewpager_cards2"
+	        android:layout_width="wrap_content"
+	        android:layout_height="0dp"
+	        android:layout_weight="39"
+	        android:orientation="vertical"
+	        app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
+	    </android.support.v4.view.ViewPager>
+	
+	    <TextView
+	        android:id="@+id/mood_question_moodlevel_textview"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="20"
+	        android:text=""
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	     <EditText
+	        android:id="@+id/mood_comment_edit_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="20"
+	        android:inputType="textAutoCorrect"
+	        android:hint="@string/mood_comment"
+	        android:ems="10"
+	        android:layout_margin="8dp" >
+	    </EditText>
+	    
+	    <LinearLayout 
+		    android:orientation="vertical"
+		    android:layout_width="match_parent"
+		    android:layout_height="48dp"
+		    android:divider="?android:attr/dividerHorizontal"
+	        android:showDividers="beginning"
+	         >
+		    <LinearLayout
+		        android:id="@+id/mood_question_buttons"
+		        android:layout_width="match_parent"
+		        android:layout_height="48dp"
+		        android:gravity="bottom"
+		        android:orientation="horizontal"
+		        style="?android:attr/buttonBarStyle"
+		        >
+		    </LinearLayout>
+	    </LinearLayout>
+	</LinearLayout>
+	
+	<ImageView
+	    android:id="@+id/imageView1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:translationY="36dp"
+	    android:src="@drawable/ic_action_next_item" />
+	
+	<ImageView
+	    android:id="@+id/imageView1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:translationY="-72dp"
+	    android:src="@drawable/ic_action_next_item" />
+	
+	<ImageView
+	    android:id="@+id/imageView1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_centerVertical="true"
+	    android:translationY="36dp"
+	    android:src="@drawable/ic_action_previous_item" />
+	
+	<ImageView
+	    android:id="@+id/imageView1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentLeft="true"
+	    android:layout_centerVertical="true"
+	    android:translationY="-72dp"
+	    android:src="@drawable/ic_action_previous_item" />
 
 </RelativeLayout>

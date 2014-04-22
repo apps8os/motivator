@@ -36,7 +36,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Represents the planning section in the UI.
@@ -65,16 +67,16 @@ public class PlanSectionFragment extends Fragment {
 		
 		// two buttons that are always present
 		
-		Button addEventButton = (Button) rootView.findViewById(R.id.main_activity_plan_add_event_button);
+		LinearLayout addEventButton = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_add_event_button);
 		addEventButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddingEventActivity.class);
+				Intent intent = new Intent(getActivity(), AddEventActivity.class);
 				startActivity(intent);
 			}
 		});
 		
-		Button addGoalButton = (Button) rootView.findViewById(R.id.main_activity_plan_add_goal_button);
+		LinearLayout addGoalButton = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_add_goal_button);
 		addGoalButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -136,9 +138,10 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
-				final Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
-				eventButton.setText(result.get(i).getEventDateAsText());
-				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
+				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
+				((TextView) eventButton.getChildAt(0)).setText(result.get(i).getEventDateAsText());
+				((TextView) eventButton.getChildAt(0)).setTextColor(getActivity().getResources().getColor(R.color.green));
+				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.ic_action_event);
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				final int eventId = result.get(i).getId();
 				mEventLayout.addView(eventButton);

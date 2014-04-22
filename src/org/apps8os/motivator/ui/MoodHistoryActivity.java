@@ -121,6 +121,7 @@ public class MoodHistoryActivity extends Activity {
 		}
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days));
+	    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange_no_separator));
 	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);

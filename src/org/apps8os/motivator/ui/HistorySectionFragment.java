@@ -93,7 +93,7 @@ public class HistorySectionFragment extends Fragment {
 		achievementButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), QuestionsActivity.class);
+				Intent intent = new Intent(getActivity(), AddEventActivity.class);
 				startActivity(intent);
 			}
 			

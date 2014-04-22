@@ -26,6 +26,7 @@ import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.R.array;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.Context;
@@ -57,13 +58,15 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
 		String[] eventQuestionIds =  res.getStringArray(R.array.event_question_ids);
+		String[] requiredQuestionIds = res.getStringArray(R.array.event_required_ids);
 		for (int i = 0; i < eventQuestionIds.length; i++) {
+			boolean required = Arrays.asList(requiredQuestionIds).contains(eventQuestionIds[i]);
 			// String array of questions
 			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(eventQuestionIds[i], "array", context.getPackageName()));
 			// discard the "id" part of the question id
 			int id = Integer.parseInt(eventQuestionIds[i].substring(2));
 			// Creation of new Question object and inserting it to the array.
-			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length));
+			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
 			mQuestions.put(id, question);
 		}
 	}

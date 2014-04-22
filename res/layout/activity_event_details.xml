@@ -25,77 +25,85 @@
         android:layout_marginTop="24dp"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-    <TextView
-        android:id="@+id/event_detail_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:layout_gravity="center"
-        android:text=""
-        android:textAppearance="?android:textAppearanceLarge" />
-    
-    <LinearLayout 
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_margin="8dp">
-        
-        <TextView
-        android:id="@+id/event_time_to_go"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:layout_weight="1"
-        android:text="@string/when_to_go"
-        android:layout_marginRight="8dp"
-        android:textSize="16sp" />
-        
-        <TextView
-        android:id="@+id/event_time_to_go_entry"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:text=""
-        android:textSize="16sp" />
-    </LinearLayout>
-    
-    <LinearLayout 
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_margin="8dp">
-        
-        <TextView
-        android:id="@+id/event_amount_of_drinks"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:layout_weight="1"
-        android:layout_marginRight="8dp"
-        android:text="@string/amount_of_drinks"
-        android:textSize="16sp" />
-        
-        <TextView
-        android:id="@+id/event_amount_of_drinks_entry"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:text=""
-        android:textSize="16sp" />
-    </LinearLayout>
+	    <TextView
+	        android:id="@+id/event_detail_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="12dp"
+	        android:layout_gravity="center"
+	        android:text=""
+	        android:textAppearance="?android:textAppearanceLarge" />
+	    
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_margin="8dp">
+	        
+	        <TextView
+	        android:id="@+id/event_time_to_go"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        android:layout_weight="1"
+	        android:text="@string/when_to_go"
+	        android:layout_marginRight="8dp"
+	        android:textSize="16sp" />
+	        
+	        <TextView
+	        android:id="@+id/event_time_to_go_entry"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_marginLeft="8dp"
+	        android:text=""
+	        android:textSize="16sp" />
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_margin="8dp">
+	        
+	        <TextView
+	        android:id="@+id/event_amount_of_drinks"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        android:layout_weight="1"
+	        android:layout_marginRight="8dp"
+	        android:text="@string/amount_of_drinks"
+	        android:textSize="16sp" />
+	        
+	        <TextView
+	        android:id="@+id/event_amount_of_drinks_entry"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_marginLeft="8dp"
+	        android:text=""
+	        android:textSize="16sp" />
+	    </LinearLayout>
     
     </LinearLayout>
 
-    <Button
-        android:id="@+id/event_detail_cancel_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/cancel_event"
-        android:background="@color/gray"
-        style="?android:attr/borderlessButtonStyle" />
+    <LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="48dp"
+	    android:layout_alignParentBottom="true"
+	    style="?android:attr/buttonBarStyle"
+	    android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="beginning"
+         >
+	    <Button
+	        android:id="@+id/event_detail_cancel_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:text="@string/cancel_event"
+	        style="?android:attr/borderlessButtonStyle" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -17,54 +17,77 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_today_scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true" >
+    style="@style/ScrollViewBackground" >
 
     <LinearLayout
         android:id="@+id/main_activity_plan_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white_transparent"
-        android:animateLayoutChanges="true"
+        style="@style/LinearBackground"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".MainScreen$TodaySectionFragment" >      
         
-        <Button 
+        <LinearLayout
             android:id="@+id/main_activity_plan_add_event_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="80dp"
-		    android:text="@string/add_event"
-		    android:textColor="@color/blue"
-		    android:visibility="visible"
-		    style="?android:attr/borderlessButtonStyle" >
-		</Button>
+		    android:orientation="horizontal"
+		    android:background="@drawable/card_button_background"
+		    android:clickable="true"
+		    android:padding="4dp"
+		    android:layout_marginTop="4dp"
+		    android:layout_marginLeft="4dp"
+		    android:layout_marginRight="4dp" >
+		    <TextView 
+		        android:id="@+id/card_button_middle_text"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:text="@string/add_event"
+		        android:layout_weight="1"
+		        android:textColor="@color/blue"
+		        android:gravity="center"
+		        style="@android:style/TextAppearance.Medium"
+		        />
+		        <ImageView
+		        android:id="@+id/card_button_left_image"
+		        android:src="@drawable/ic_action_event"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="3"
+		         />
+		</LinearLayout>
 		
-        <View
-		    android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="@color/gray" >
-		</View>
-		
-        <Button 
+         <LinearLayout
             android:id="@+id/main_activity_plan_add_goal_button"
 		    android:layout_width="match_parent"
 		    android:layout_height="80dp"
-		    android:text="@string/add_goal"
-		    android:textColor="@color/blue"
-		    android:visibility="visible"
-		    style="?android:attr/borderlessButtonStyle" >
-		</Button>
+		    android:orientation="horizontal"
+		    android:background="@drawable/card_button_background"
+		    android:clickable="true"
+		    android:padding="4dp"
+		    android:layout_marginTop="4dp"
+		    android:layout_marginLeft="4dp"
+		    android:layout_marginRight="4dp" >
+		    <TextView 
+		        android:id="@+id/card_button_middle_text"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:text="@string/add_goal"
+		        android:layout_weight="1"
+		        android:textColor="@color/blue"
+		        android:gravity="center"
+		        style="@android:style/TextAppearance.Medium"
+		        />
+		        <ImageView
+		        android:id="@+id/card_button_left_image"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_weight="3"
+		         />
+		</LinearLayout>
 
         <LinearLayout
             android:id="@+id/main_activity_plan_dynamic_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical" >
         </LinearLayout>
 

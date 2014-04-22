@@ -19,7 +19,7 @@
     android:shape="line" >
      <stroke
         android:width="2dp"
-        android:color="@color/gray" />
+        android:color="@color/light_gray" />
      <size 
          android:width="100dp"/>
 </shape>

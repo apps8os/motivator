@@ -30,11 +30,13 @@ public class Question implements Parcelable{
 	private int mId;
 	private String mQuestion;
 	private String[] mAnswers;
+	private boolean mRequired;
 	
-	public Question(int id, String question, String[] answers) {
+	public Question(int id, String question, String[] answers, boolean required) {
 		mId = id;
 		mQuestion = question;
 		mAnswers = answers;
+		mRequired = required;
 	}
 
 	public Question(Parcel source) {
@@ -82,6 +84,10 @@ public class Question implements Parcelable{
 		dest.writeInt(mId);
 		dest.writeString(mQuestion);
 		dest.writeStringArray(mAnswers);
+	}
+
+	public boolean isRequired() {
+		return mRequired;
 	}
 	
 }

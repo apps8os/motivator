@@ -21,23 +21,24 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="@android:Theme.Holo.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- API 14 theme customizations can go here. -->
         <item name="android:actionBarStyle">@style/AppBaseTheme.ActionBar</item>
     </style>
     
-    <style name="AppBaseTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:fontFamily">sans-serif-condensed</item>
+    <style name="AppBaseTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+        <item name="android:textColor">#FFFFFF</item>
     </style>
     
-    <style name="AppBaseTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+    <style name="AppBaseTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
         <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
  
-    <style name="AppBaseTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+    <style name="AppBaseTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
 	    <item name="android:titleTextStyle">@style/AppBaseTheme.ActionBar.TitleTextStyle</item>
 	    <item name="android:subtitleTextStyle">@style/AppBaseTheme.ActionBar.SubTitleTextStyle</item>
+	    <item name="android:background">@drawable/action_bar_green_no_separator</item>
 	</style>
     
 </resources>

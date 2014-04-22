@@ -117,6 +117,8 @@ public class MoodQuestionActivity extends Activity {
         LayoutInflater inflater = getLayoutInflater();
         LinearLayout buttons = (LinearLayout) findViewById(R.id.mood_question_buttons);
         
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_green));
+        
         /*
         // Set up the next button and save the mood
         Button nextButton = 

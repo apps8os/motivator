@@ -18,9 +18,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_activity_today_scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
+    style="@style/ScrollViewBackground"
      >
    <FrameLayout 
        	android:orientation="vertical"
@@ -29,15 +27,8 @@
     	android:id="@+id/root_view">
    <LinearLayout
         android:id="@+id/main_activity_today_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
         android:orientation="vertical"
-        android:background="@color/white_transparent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        style="@style/LinearBackground"
         tools:context=".MainScreen$TodaySectionFragment" >
         
        <LinearLayout
@@ -81,7 +72,7 @@
 	      	android:layout_width="match_parent"
    			android:layout_height="80dp"
 		    android:text="@string/today_screen_mood"
-		    android:drawableLeft="@drawable/icon1"
+		    android:drawableLeft="@drawable/app_icon_1"
 		    android:textColor="@color/green"
 		    android:visibility="visible"
 		    style="?android:attr/borderlessButtonStyle" >
@@ -91,7 +82,6 @@
             android:id="@+id/main_activity_today_dynamic_buttons2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical" >
         </LinearLayout>
 
@@ -99,7 +89,6 @@
             android:id="@+id/main_activity_today_dynamic_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical" >
         </LinearLayout>
         <LinearLayout

@@ -16,8 +16,10 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <color name="gray">#eeeeee</color>
+    <color name="light_gray">#eeeeee</color>
+    <color name="gray">#aaaaaa</color>
     <color name="medium_gray">#777777</color>
+    <color name="dark_gray">#333333</color>
     <color name="blue">#33b5e5</color>
     <color name="green">#99cc00</color>
     <color name="red">#ff4444</color>

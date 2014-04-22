@@ -26,13 +26,13 @@
     android:padding="10dip"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
-    android:background="@color/gray"
-    android:textColor="@color/medium_gray"
-    app:footerColor="@color/medium_gray"
-    app:footerLineHeight="1dp"
-    app:footerIndicatorHeight="3dp"
+    android:background="@drawable/action_bar_green"
+    android:textColor="@color/white_transparent"
+    app:footerColor="@color/light_gray"
+    app:footerLineHeight="0dp"
+    app:footerIndicatorHeight="6dp"
     app:footerIndicatorStyle="underline"
-    app:selectedColor="@color/dark_blue"
+    app:selectedColor="@color/white"
     app:selectedBold="true" />
 
 	<android.support.v4.view.ViewPager 

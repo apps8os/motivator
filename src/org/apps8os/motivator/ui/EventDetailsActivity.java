@@ -51,8 +51,8 @@ public class EventDetailsActivity extends Activity {
 	    
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
 	    title.setText(mEvent.getEventDateAsText());
+	    getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
 	    
-
 	    TextView text = (TextView) findViewById(R.id.event_time_to_go_entry);
 	    String textToAdd = mEvent.getStartTimeAsText();
 	    text.setText(Html.fromHtml(textToAdd));

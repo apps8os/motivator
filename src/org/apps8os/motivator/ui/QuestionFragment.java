@@ -34,11 +34,12 @@ public class QuestionFragment extends Fragment {
 	private Question mQuestion;
 	private RadioGroup mAnswerGroupView;
 	private TextView mQuestionTextView;
+	private TextView mRequiredTextView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mQuestion = getArguments().getParcelable(QuestionsActivity.QUESTION);
+		mQuestion = getArguments().getParcelable(AddEventActivity.QUESTION);
 	}
 	
 	@Override
@@ -46,6 +47,12 @@ public class QuestionFragment extends Fragment {
 		LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.fragment_question, viewGroup, false);
 		mAnswerGroupView = (RadioGroup) rootView.findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) rootView.findViewById(R.id.questionnaire_question);
+		mRequiredTextView = (TextView) rootView.findViewById(R.id.questionnaire_required);
+		
+		if (mQuestion.isRequired()) {
+			mRequiredTextView.setText("*");
+			mRequiredTextView.setTextColor(getResources().getColor(R.color.red));
+		}
 		
 		mQuestionTextView.setText(mQuestion.getQuestion());
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
@@ -57,6 +64,14 @@ public class QuestionFragment extends Fragment {
 		}
 				
 		return rootView;
+	}
+	
+	public int getAnswer() {
+		return mAnswerGroupView.getCheckedRadioButtonId();
+	}
+	
+	public int getQuestionId() {
+		return mQuestion.getId();
 	}
 
 }

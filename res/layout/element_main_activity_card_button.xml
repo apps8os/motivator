@@ -19,14 +19,12 @@
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:orientation="horizontal"
-    android:background="@drawable/dropshadow" >
-
-    <ImageView
-        android:id="@+id/card_button_left_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-         />
+    android:background="@drawable/card_button_background"
+    android:clickable="true"
+    android:padding="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp" >
     <TextView 
         android:id="@+id/card_button_middle_text"
         android:layout_width="match_parent"
@@ -35,5 +33,10 @@
         android:gravity="center"
         style="@android:style/TextAppearance.Medium"
         />
-
+        <ImageView
+        android:id="@+id/card_button_left_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+         />
 </LinearLayout>

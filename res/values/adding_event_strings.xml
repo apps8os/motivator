@@ -21,15 +21,27 @@
     <string name="event_question_1_answer_2">Tomorrow</string>
     <string name="event_question_1_answer_3">Next weekend</string>
     
-    <string name="event_question_2">Where?</string>
-    <string name="event_question_2_answer_1">Home</string>
-    <string name="event_question_2_answer_2">Friends home</string>
-    <string name="event_question_2_answer_3">Bar</string>
+    <string name="event_question_2">How much do you plan on drinking?</string>
+    <string name="event_question_2_answer_1">Nothing</string>
+    <string name="event_question_2_answer_2">One</string>
+    <string name="event_question_2_answer_3">Couple</string>
+    <string name="event_question_2_answer_4">Three or four</string>
+    <string name="event_question_2_answer_5">More than four</string>
     
-    <string name="event_question_3">At what time will you go?</string>
+    <string name="event_question_3">When will you start drinking?</string>
     <string name="event_question_3_answer_1">Before 6pm</string>
     <string name="event_question_3_answer_2">Between 6pm and 9pm</string>
     <string name="event_question_3_answer_3">After 9pm</string>
+    
+    <string name="event_question_4">When will you stop drinking?</string>
+    <string name="event_question_4_answer_1">Before 6pm</string>
+    <string name="event_question_4_answer_2">Between 6pm and 9pm</string>
+    <string name="event_question_4_answer_3">After 9pm</string>
+    
+    <string name="event_question_5">Who are you going with?</string>
+    <string name="event_question_5_answer_1">Alone</string>
+    <string name="event_question_5_answer_2">Regular group</string>
+    <string name="event_question_5_answer_3">Work friends</string>
     
     <string-array name="id1000">
         <item >@string/event_question_1</item>
@@ -42,6 +54,8 @@
         <item >@string/event_question_2_answer_1</item>
         <item >@string/event_question_2_answer_2</item>
         <item >@string/event_question_2_answer_3</item>
+        <item >@string/event_question_2_answer_4</item>
+        <item >@string/event_question_2_answer_5</item>
     </string-array>
     <string-array name="id1002">
         <item >@string/event_question_3</item>
@@ -49,10 +63,29 @@
         <item >@string/event_question_3_answer_2</item>
         <item >@string/event_question_3_answer_3</item>
     </string-array>
+    <string-array name="id1003">
+        <item >@string/event_question_4</item>
+        <item >@string/event_question_4_answer_1</item>
+        <item >@string/event_question_4_answer_2</item>
+        <item >@string/event_question_4_answer_3</item>
+    </string-array>
+     <string-array name="id1004">
+        <item >@string/event_question_5</item>
+        <item >@string/event_question_5_answer_1</item>
+        <item >@string/event_question_5_answer_2</item>
+        <item >@string/event_question_5_answer_3</item>
+    </string-array>
     
     <string-array name="event_question_ids">
         <item >id1000</item>
         <item >id1001</item>
         <item >id1002</item>
+        <item >id1003</item>
+        <item >id1004</item>
+    </string-array>
+    
+    <string-array name="event_required_ids">
+        <item >id1000</item>
+        <item >id1001</item>
     </string-array>
 </resources>

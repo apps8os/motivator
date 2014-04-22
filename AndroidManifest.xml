@@ -27,6 +27,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon_1"
+        android:logo="@drawable/white_icon1"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         > 
@@ -70,7 +71,7 @@
         <activity android:name="org.apps8os.motivator.ui.StartingSprintActivity"
             ></activity>
         <activity 
-            android:name="org.apps8os.motivator.ui.QuestionsActivity"
+            android:name="org.apps8os.motivator.ui.AddEventActivity"
             android:parentActivityName="org.apps8os.motivator.ui.MainActivity"></activity>
     </application>
 

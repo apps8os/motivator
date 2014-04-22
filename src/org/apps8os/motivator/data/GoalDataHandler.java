@@ -47,7 +47,7 @@ public class GoalDataHandler extends MotivatorDatabaseHelper {
 			String[] questionAndAnswers = res.getStringArray(res.getIdentifier("adding_goal" + i, "array" , context.getPackageName()));
 			int id = i;
 			// Creation of new Question object and inserting it to the array.
-			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length));
+			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), true);
 			mQuestions.put(id, question);
 		}
 	}

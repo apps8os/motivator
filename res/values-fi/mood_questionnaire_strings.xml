@@ -17,7 +17,7 @@
 -->
 <resources>
     <string-array name="id2000">
-        <item >Joitko eilenä?</item>
+        <item >Joitko eilen?</item>
         <item >En</item>
         <item >Kyllä</item>
     </string-array>

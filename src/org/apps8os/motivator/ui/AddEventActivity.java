@@ -17,7 +17,9 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 
 import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
@@ -27,22 +29,30 @@ import com.viewpagerindicator.TitlePageIndicator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 
-public class QuestionsActivity extends Activity {
+public class AddEventActivity extends Activity {
 	
 	public static final String QUESTION = "question";
 
 	private ViewPager mViewPager;
-	private MoodDataHandler mDataHandler;
+	private EventDataHandler mDataHandler;
 	private int mNumberOfQuestions;
 	private int mQuestionId;
+	private int mAnswersId;
+
+	private QuestionsPagerAdapter mQuestionsPagerAdapter;
+
+	private LinePageIndicator titleIndicator;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -50,17 +60,29 @@ public class QuestionsActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_questions);
 	    
-	    mDataHandler = new MoodDataHandler(this);
+	    mDataHandler = new EventDataHandler(this);
 	    mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
 		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
 		
+		getActionBar().setTitle(getString(R.string.add_event));
+		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
+		
 	    mViewPager = (ViewPager) findViewById(R.id.question_activity_pager);
-	    mViewPager.setAdapter(new QuestionsPagerAdapter(
-	    		getFragmentManager(), mNumberOfQuestions));
+	    mQuestionsPagerAdapter = new QuestionsPagerAdapter(
+	    		getFragmentManager(), mNumberOfQuestions);
+	    mViewPager.setAdapter(mQuestionsPagerAdapter);
+	    mViewPager.setOffscreenPageLimit(10);
 	    
-	    LinePageIndicator titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
+	    mAnswersId = incrementAnswersId();
+	    
+	    titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
 		
+		setButtons();
+	    
+	}
+	
+	private void setButtons() {
 		final Button nextButton = (Button) findViewById(R.id.questions_next_button);
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -76,6 +98,22 @@ public class QuestionsActivity extends Activity {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			}
 		});
+		
+		final Button completeButton = (Button) findViewById(R.id.questions_complete_button);
+		completeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				for (int i = 0; i < mNumberOfQuestions; i++) {
+					int answer = mQuestionsPagerAdapter.getFragment(i).getAnswer();
+					if (answer > -1) {
+						int questionId = mQuestionsPagerAdapter.getFragment(i).getQuestionId();
+						mDataHandler.insertAnswer(answer, questionId, mAnswersId);
+					}
+				}
+				finish();
+			}
+		});
+		completeButton.setEnabled(false);
 		
 		previousButton.setEnabled(false);
 		
@@ -101,19 +139,33 @@ public class QuestionsActivity extends Activity {
 				} else {
 					previousButton.setEnabled(true);
 				}
+				
+				if (arg0 == 2 && mQuestionsPagerAdapter.getFragment(0).getAnswer() != -1 && mQuestionsPagerAdapter.getFragment(1).getAnswer() != -1) {
+					completeButton.setEnabled(true);
+				}
 			}
 		});
-	    
+	}
+	
+	/**
+	 * Incrementing the running id for an answering instance.
+	 * @return
+	 */
+	private int incrementAnswersId() {
+		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
+		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorDatabaseHelper.ANSWER_ID_INCREMENT_PREFS, 0);
+		int answerId = answerIdIncrement.getInt(MotivatorDatabaseHelper.ANSWER_ID, 1);
+		SharedPreferences.Editor editor = answerIdIncrement.edit();
+		editor.putInt(MotivatorDatabaseHelper.ANSWER_ID, answerId + 1);
+		editor.commit();
+		return answerId;
 	}
 	
 	
 	
-	private class QuestionsPagerAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-		private final int[] ICONS = new int[] {
-			R.drawable.questionnaire_icon_1,
-			R.drawable.questionnaire_icon_2,
-			R.drawable.questionnaire_icon_3
-		};
+	private class QuestionsPagerAdapter extends FragmentPagerAdapter {
+		
+		private SparseArray<QuestionFragment> fragments = new SparseArray<QuestionFragment>();
 		private int mQuestions;
 		
 		public QuestionsPagerAdapter(FragmentManager fm, int numberOfQuestions) {
@@ -125,19 +177,31 @@ public class QuestionsActivity extends Activity {
 		public Fragment getItem(int arg0) {
 			Fragment questionFragment = new QuestionFragment();
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(QUESTION, mDataHandler.getQuestion(2000 + arg0));
+			bundle.putParcelable(QUESTION, mDataHandler.getQuestion(1000 + arg0));
 			questionFragment.setArguments(bundle);
 			return questionFragment;
 		}
+		
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			QuestionFragment fragment = (QuestionFragment) super.instantiateItem(container, position);
+			fragments.put(position, fragment);
+			return fragment;
+		}
+		
+		@Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        fragments.remove(position);
+	        super.destroyItem(container, position, object);
+	    }
 
 		@Override
 		public int getCount() {
 			return mQuestions;
 		}
-
-		@Override
-		public int getIconResId(int index) {
-			return ICONS[index];
+		
+		public QuestionFragment getFragment(int position) {
+			return fragments.get(position);
 		}
 	}
 

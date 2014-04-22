@@ -20,29 +20,58 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowContentOverlay">@null</item>
     </style>
     
+     <style name="MyActionBar"
+           parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/action_bar_green_no_separator</item>
+        <item name="android:subtitleTextStyle">@style/MyTheme.ActionBar.Subtitle</item>
+        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.Title</item>
+    </style>
+    
+    <style name="MyTheme.ActionBar.Subtitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
+    	<item name="android:textColor">#FFFFFF</item>
+	</style>
+	
+    <style name="MyTheme.ActionBar.Title" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
+    	<item name="android:textColor">#FFFFFF</item>
+	</style>
     
     <style name="LoadingBackground" parent="android:Theme">
 	    <item name="android:layout_width">fill_parent</item>    
 	    <item name="android:layout_height">fill_parent</item>
-	    <item name="android:background">@color/gray</item>    
+	    <item name="android:background">@color/light_gray</item>    
 	    <item name="android:gravity">center</item>  
 	</style>
 	<style name="LoadingIndicator" parent="@android:style/Widget.ProgressBar.Large">
 	    <item name="android:layout_width">wrap_content</item>
 	    <item name="android:layout_height">wrap_content</item>
 	    <item name="android:indeterminate">true</item>
+	</style>
+	
+	<style name="LinearBackground">
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:background">@color/light_gray</item>
+	</style>
+	
+	<style name="ScrollViewBackground">
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">match_parent</item>
+	    <item name="android:background">@color/light_gray</item>
+	    <item name="android:fillViewport">true</item>
 	</style>
 
 </resources>

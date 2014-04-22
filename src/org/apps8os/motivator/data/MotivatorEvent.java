@@ -16,6 +16,8 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
+import java.util.GregorianCalendar;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 

@@ -84,5 +84,7 @@
     <string name="tomorrow">Huomenna</string>
     <string name="select_sprint">Valitse jakso</string>
     <string name="when_to_go">Aloitus</string>
+    <string name="previous">Edellinen</string>
+    <string name="complete">Valmis</string>
     
 </resources>

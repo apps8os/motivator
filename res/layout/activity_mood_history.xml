@@ -27,20 +27,20 @@
     android:padding="10dip"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
-    android:background="@color/gray"
-    android:textColor="@color/medium_gray"
-    app:footerColor="@color/medium_gray"
-    app:footerLineHeight="1dp"
-    app:footerIndicatorHeight="5dp"
+    android:background="@drawable/action_bar_orange"
+    android:textColor="@color/white_transparent"
+    app:footerColor="@color/light_gray"
+    app:footerLineHeight="0dp"
+    app:footerIndicatorHeight="6dp"
     app:footerIndicatorStyle="triangle"
-    app:selectedColor="@color/dark_blue"
+    app:selectedColor="@color/white"
     app:selectedBold="true" />
 	<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:tools="http://schemas.android.com/tools"
 	    android:id="@+id/activity_mood_history_viewpager"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:background="@color/gray"
+	    android:background="@color/light_gray"
 	    tools:context=".MainActivity" >
 
 	</android.support.v4.view.ViewPager>
