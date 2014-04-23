@@ -67,13 +67,14 @@ public class MoodRelationHistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_mood_relation_history);
-	    SpinnerAdapter adapter = ArrayAdapter.createFromResource(this, R.array.time_frames, android.R.layout.simple_spinner_dropdown_item);
+	    ActionBar bar = getActionBar();
+	    SpinnerAdapter adapter = ArrayAdapter.createFromResource(bar.getThemedContext(), R.array.time_frames, android.R.layout.simple_spinner_dropdown_item);
 	    
 	    mCaseSelector = AMOUNT_OF_DRINKS;
 	    mDataHandler = new MoodDataHandler(this);
 	    mContext = this;
-	    ActionBar bar = getActionBar();
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+	    bar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
 	    
 	    mAvgMoodTextView = (TextView) findViewById(R.id.mood_relation_history_average_mood);
 	    mMoodImageRoot = (LinearLayout) findViewById(R.id.mood_image_root);

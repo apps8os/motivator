@@ -17,9 +17,12 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 
@@ -35,6 +38,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +46,9 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,7 +57,8 @@ import android.widget.TextView;
  */
 public class TodaySectionFragment extends Fragment {
 	
-	private EventDataHandler mDataHandler;
+	private EventDataHandler mEventDataHandler;
+	private MoodDataHandler mMoodDataHandler;
 	private LinearLayout mEventLayout;
 	private LinearLayout mButtonLayout;
 	private View mRootView;
@@ -78,7 +85,6 @@ public class TodaySectionFragment extends Fragment {
 		((TextView) contentRoot.findViewById(R.id.help_overlay_title)).setText(getString(R.string.today_section));
 		((TextView) contentRoot.findViewById(R.id.help_overlay_subtitle)).setText(getString(R.string.today_section_help));
 		((Button) contentRoot.findViewById(R.id.help_overlay_button)).setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				final View helpOverlay = (View) contentRoot.findViewById(R.id.help_overlay);
@@ -97,17 +103,19 @@ public class TodaySectionFragment extends Fragment {
 			
 		});
 		
-		
-		
 		mButtonLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons2);
+		mMoodDataHandler = new MoodDataHandler(getActivity());
 		
 		// two buttons that are always present
 		
-		Button addEventButton = (Button) mRootView.findViewById(R.id.main_activity_today_mood_button);
+		LinearLayout addEventButton = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_mood_button);
 		addEventButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				DayInHistory yesterday = mMoodDataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+			    yesterday.setEvents();
 				Intent intent = new Intent(getActivity(), MoodQuestionActivity.class);
+				intent.putExtra(MoodQuestionActivity.YESTERDAY_EVENTS, yesterday.getEvents());
 				startActivity(intent);
 			}
 		});
@@ -126,7 +134,7 @@ public class TodaySectionFragment extends Fragment {
 		
 		sprintProgress.setMax(currentSprint.getDaysInSprint() -1);
 		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
-		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "<br><small>"
+		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "<br><small><i>"
 				+ currentSprint.getSprintTitle()));
 		
 		new LoadPlansTask(getActivity()).execute();
@@ -144,7 +152,7 @@ public class TodaySectionFragment extends Fragment {
 
 		public LoadPlansTask(Context context) {
 			mContext = context;
-			mDataHandler = new EventDataHandler(getActivity());
+			mEventDataHandler = new EventDataHandler(getActivity());
 		}
 
 		/**
@@ -152,7 +160,7 @@ public class TodaySectionFragment extends Fragment {
 		 */
 		@Override
 		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
-			return mDataHandler.getEventsToday();
+			return mEventDataHandler.getEventsToday();
 		}
 		
 		/**
@@ -161,14 +169,16 @@ public class TodaySectionFragment extends Fragment {
 		@Override
 		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
-			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
-			mEventLayout.addView(separator);
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
-				final Button eventButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mEventLayout, false);
-				eventButton.setText(result.get(i).getEventDateAsText());
-				eventButton.setTextColor(getActivity().getResources().getColor(R.color.green));
+				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
+				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
+				((TextView) buttonTextLayout.getChildAt(0)).setText(result.get(i).getEventDateAsText());
+				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
+				((TextView) buttonTextLayout.getChildAt(1)).setText(result.get(i).getStartTimeAsText());
+				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
+				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				mEventLayout.addView(eventButton);
 				final int eventId = result.get(i).getId();
@@ -182,7 +192,7 @@ public class TodaySectionFragment extends Fragment {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								mDataHandler.deleteEvent(eventId);
+								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
 							}
 						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -195,33 +205,6 @@ public class TodaySectionFragment extends Fragment {
 						return true;
 					}
 				});
-				
-				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
-				mEventLayout.addView(separator);
-				
-				// Add a button for adding drinks when an event is active.
-				if (result.get(i).getStartTime() < System.currentTimeMillis()) {
-					mButtonLayout.removeAllViews();
-					separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mButtonLayout, false);
-					mButtonLayout.addView(separator);
-					final MotivatorEvent todaysEvent = result.get(i);
-					final Button addDrinkButton = (Button) mInflater.inflate(R.layout.element_main_activity_button, mButtonLayout, false);
-					Drawable bottle = getActivity().getResources().getDrawable(R.drawable.pullo1);
-					addDrinkButton.setCompoundDrawablesWithIntrinsicBounds(bottle, null, null, null);
-					addDrinkButton.setText(Html.fromHtml("Add Drink"));
-					if (mDrinkCounter > 0) {
-						addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
-					}
-					addDrinkButton.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							mDataHandler.addDrink();
-							mDrinkCounter += 1;
-							addDrinkButton.setText(Html.fromHtml("Add Drink<br> <small>" + mDrinkCounter + " drinks<small>"));
-						}
-					});
-					mButtonLayout.addView(addDrinkButton);
-				}
 			}
 		}
 	}

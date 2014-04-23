@@ -16,7 +16,7 @@
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_activity_today_scroll_view"
+    android:id="@+id/main_activity_fragment_scroll_view"
     style="@style/ScrollViewBackground" >
 
     <FrameLayout 
@@ -25,28 +25,28 @@
    		android:layout_height="fill_parent"
     	android:id="@+id/root_view">
 	    <LinearLayout
-	        android:id="@+id/main_activity_plan_layout"
-	        style="@style/LinearBackground"
-	        android:orientation="vertical"
+	        android:id="@+id/main_activity_fragmenet_layout"
+			style="@style/LinearBackground"
+			android:orientation="vertical"
 	        tools:context=".MainScreen$TodaySectionFragment" >      
-	        
-	        <LinearLayout
-	            android:id="@+id/main_activity_plan_add_event_button"
+	
+	         <LinearLayout
+	            android:id="@+id/main_activity_mood_history_button"
 			    android:orientation="horizontal"
 			    style="@style/CardButtonLinearLayout" >
 			    <TextView 
 			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
-			        android:text="@string/add_event"
+			        android:text="@string/show_mood_history"
 			        android:layout_weight="1"
-			        android:textColor="@color/dark_blue"
+			        android:textColor="@color/orange"
 			        android:gravity="center"
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
-			        android:src="@drawable/add_event_icon"
+			        android:src="@drawable/app_icon_1"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"
@@ -54,40 +54,28 @@
 			</LinearLayout>
 			
 	         <LinearLayout
-	            android:id="@+id/main_activity_plan_add_goal_button"
+	            android:id="@+id/main_activity_relation_history_button"
 			    android:orientation="horizontal"
 			    style="@style/CardButtonLinearLayout" >
 			    <TextView 
 			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
-			        android:text="@string/add_goal"
+			        android:text="@string/data_analysis"
 			        android:layout_weight="1"
-			        android:textColor="@color/dark_blue"
+			        android:textColor="@color/orange"
 			        android:gravity="center"
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
+			        android:src="@drawable/app_icon_1"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"
 			         />
 			</LinearLayout>
 	
-	        <TextView 
-	            style="@style/CardSeparatorTitle"
-	            android:text="@string/planned_events"/>
-	        
-	        <include layout="@layout/element_main_activity_button_separator"/>
-	        <LinearLayout
-	            android:id="@+id/main_activity_plan_dynamic_buttons"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical" >
-	        </LinearLayout>
-	
 	    </LinearLayout>
-    </FrameLayout>
-
+	</FrameLayout>
 </ScrollView>

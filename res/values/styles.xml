@@ -65,6 +65,9 @@
 	    <item name="android:layout_width">match_parent</item>
 	    <item name="android:layout_height">wrap_content</item>
 	    <item name="android:background">@color/light_gray</item>
+	    <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+	    <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+	    <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
 	</style>
 	
 	<style name="ScrollViewBackground">
@@ -72,6 +75,26 @@
 	    <item name="android:layout_height">match_parent</item>
 	    <item name="android:background">@color/light_gray</item>
 	    <item name="android:fillViewport">true</item>
+	</style>
+	
+	<style name="CardButtonLinearLayout">
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">80dp</item>
+	    <item name="android:background">@drawable/card_button_background</item>
+	    <item name="android:clickable">true</item>
+	    <item name="android:padding">4dp</item>
+	    <item name="android:layout_marginTop">@dimen/activity_inner_vertical_margin</item>
+	</style>
+	
+	<style name="CardSeparatorTitle">
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:layout_marginTop">8dp</item>
+	    <item name="android:gravity">center</item>
+	    <item name="android:textColor">@color/medium_gray</item>
+	    <item name="android:textAllCaps">true</item>
+	    <item name="android:textSize">12sp</item>
+	    <item name="android:textStyle">bold</item>
 	</style>
 
 </resources>

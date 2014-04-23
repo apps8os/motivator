@@ -28,10 +28,12 @@
     
     <style name="AppBaseTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
         <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
     </style>
     
     <style name="AppBaseTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
         <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">italic</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
  

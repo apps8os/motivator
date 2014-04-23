@@ -16,8 +16,12 @@
  ******************************************************************************/
 package org.apps8os.motivator.services;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
@@ -69,6 +73,10 @@ public class NotificationService extends IntentService {
 			
 			// Where to go when user clicks the notification
 			Intent resultIntent = new Intent(this, MoodQuestionActivity.class);
+			MoodDataHandler moodDataHandler = new MoodDataHandler(this);
+			DayInHistory yesterday = moodDataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+		    yesterday.setEvents();
+			resultIntent.putExtra(MoodQuestionActivity.YESTERDAY_EVENTS, yesterday.getEvents());
 			// Preserve the normal navigation of the app by adding the parent stack of the result activity
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 			stackBuilder.addParentStack(MoodQuestionActivity.class);

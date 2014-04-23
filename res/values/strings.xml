@@ -89,5 +89,9 @@
     <string name="when_to_go">Start time</string>
     <string name="previous">Previous</string>
     <string name="complete">Complete</string>
+    <string name="planned_events">Planned events</string>
+    <string name="todays_events">Today\'s events</string>
+    <string name="energy">Energy:</string>
+    <string name="mood">Mood:</string>
 
 </resources>

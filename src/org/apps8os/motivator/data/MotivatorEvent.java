@@ -24,11 +24,11 @@ import android.os.Parcelable;
 public class MotivatorEvent implements Parcelable {
 	
 	public static final String EVENT = "event";
+	public static final int EVENT_CHECKED_ID = 1901;
 	
 	private long mStartTime;
 	private long mEndTime;
 	private int mPlannedDrinks;
-	private int mActualDrinks = 0;
 	private int mId;
 	private String mEventDateAsText;
 	private String mStartTimeAsText = "NOT FOUND";
@@ -41,7 +41,6 @@ public class MotivatorEvent implements Parcelable {
 		mStartTime = source.readLong();
 		mEndTime = source.readLong();
 		mPlannedDrinks = source.readInt();
-		mActualDrinks = source.readInt();
 		mId = source.readInt();
 		mEventDateAsText = source.readString();
 		mStartTimeAsText = source.readString();
@@ -90,13 +89,6 @@ public class MotivatorEvent implements Parcelable {
 	}
 
 	/**
-	 * Adds a drink.
-	 */
-	public void addDrink() {
-		mActualDrinks += 1;
-	}
-
-	/**
 	 * @return the mStartTime
 	 */
 	public long getStartTime() {
@@ -117,12 +109,6 @@ public class MotivatorEvent implements Parcelable {
 		return mPlannedDrinks;
 	}
 
-	/**
-	 * @return the mActualDrinks
-	 */
-	public int getActualDrinks() {
-		return mActualDrinks;
-	}
 
 	/**
 	 * @return the mId
@@ -148,7 +134,6 @@ public class MotivatorEvent implements Parcelable {
 		dest.writeLong(mStartTime);
 		dest.writeLong(mEndTime);
 		dest.writeInt(mPlannedDrinks);
-		dest.writeInt(mActualDrinks);
 		dest.writeInt(mId);
 		dest.writeString(mEventDateAsText);
 		dest.writeString(mStartTimeAsText);

@@ -25,128 +25,137 @@
    		android:layout_width="fill_parent"
    		android:layout_height="fill_parent"
     	android:id="@+id/root_view">
-   <LinearLayout
-        android:id="@+id/main_activity_today_layout"
-        android:orientation="vertical"
-        style="@style/LinearBackground"
-        tools:context=".MainScreen$TodaySectionFragment" >
-        
-       <LinearLayout
-           android:layout_height="80dp"
-           android:layout_width="match_parent"
-           android:orientation="vertical" >
-           
-           <TextView
-               android:id="@+id/today_section_sprint_progress_text"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"
-               android:textColor="@color/blue"
-               android:gravity="center_vertical|center"
-               android:textAlignment="gravity"
-               android:layout_weight="1"
-               android:text=""
-               android:textAppearance="?android:attr/textAppearanceLarge"
-               android:fontFamily="sans-serif-condensed"
-               android:textStyle="bold" />
-
-           <ProgressBar
-               android:id="@+id/today_section_sprint_progress_bar"
-               style="?android:attr/progressBarStyleHorizontal"
-               android:layout_width="match_parent"
-               android:layout_gravity="center"
-               android:layout_marginLeft="10dp"
-               android:layout_marginRight="10dp"
-               android:layout_weight="2"
-               android:layout_height="match_parent" />
-           
-       </LinearLayout>
-       
-       <View 
-		    android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="@color/gray" >
-		</View>
-        
-       <Button 
-            android:id="@+id/main_activity_today_mood_button"
-	      	android:layout_width="match_parent"
-   			android:layout_height="80dp"
-		    android:text="@string/today_screen_mood"
-		    android:drawableLeft="@drawable/app_icon_1"
-		    android:textColor="@color/green"
-		    android:visibility="visible"
-		    style="?android:attr/borderlessButtonStyle" >
-		</Button>
-		
-        <LinearLayout
-            android:id="@+id/main_activity_today_dynamic_buttons2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/main_activity_today_dynamic_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/main_activity_today_bottom_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                 >
-
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:textColor="@color/medium_gray"
-                    android:text="@string/swipe_right_for_plans"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:src="@drawable/ic_action_next_item" />
-                
-                
-            </LinearLayout>
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:orientation="horizontal"
-                 >
-             <ImageView
-                 android:id="@+id/imageView1"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_weight="3"
-                 android:src="@drawable/ic_action_previous_item" />
-             <TextView
-                    android:id="@+id/textView1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_weight="1"
-                    android:textColor="@color/medium_gray"
-                    android:text="@string/swipe_left_for_history"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+	   <LinearLayout
+	        android:id="@+id/main_activity_today_layout"
+	        android:orientation="vertical"
+	        style="@style/LinearBackground"
+	        tools:context=".MainScreen$TodaySectionFragment" >
+	        
+	       <LinearLayout
+	           android:layout_height="80dp"
+	           android:layout_width="match_parent"
+	           android:layout_marginTop="6dp"
+	           android:background="@drawable/card_background"
+	           android:orientation="vertical" >
+	           
+	           <TextView
+	               android:id="@+id/today_section_sprint_progress_text"
+	               android:layout_width="match_parent"
+	               android:layout_height="match_parent"
+	               android:textColor="@color/dark_green"
+	               android:gravity="center_vertical|center"
+	               android:textAlignment="gravity"
+	               android:layout_weight="1"
+	               android:text=""
+	               android:textAppearance="?android:attr/textAppearanceLarge"
+	               android:fontFamily="sans-serif-condensed"
+	               android:textStyle="bold" />
+	
+	           <ProgressBar
+	               android:id="@+id/today_section_sprint_progress_bar"
+	               style="?android:attr/progressBarStyleHorizontal"
+	               android:layout_width="match_parent"
+	               android:layout_gravity="center"
+	               android:layout_marginLeft="10dp"
+	               android:layout_marginRight="10dp"
+	               android:layout_weight="2"
+	               android:layout_height="match_parent" />
+	           
+	       </LinearLayout>
+	        
+	       <LinearLayout
+	            android:id="@+id/main_activity_today_mood_button"
+			    android:orientation="horizontal"
+			    style="@style/CardButtonLinearLayout" >
+			    <TextView 
+			        android:id="@+id/card_button_middle_text"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:layout_weight="1"
+			        android:gravity="center"
+			        android:text="@string/today_screen_mood"
+			        android:textColor="@color/dark_green"
+			        style="@android:style/TextAppearance.Medium"
+			        />
+			        <ImageView
+				        android:id="@+id/card_button_left_image"
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:layout_weight="3"
+				        android:src="@drawable/app_icon_1"
+				         />
 			</LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
+			
+	        <LinearLayout
+	            android:id="@+id/main_activity_today_dynamic_buttons2"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical" >
+	        </LinearLayout>
+	
+	        <TextView 
+	            style="@style/CardSeparatorTitle"
+	            android:text="@string/todays_events"/>
+	        
+	        <include layout="@layout/element_main_activity_button_separator"/>
+	        
+	        <LinearLayout
+	            android:id="@+id/main_activity_today_dynamic_buttons"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical" >
+	        </LinearLayout>
+	        <LinearLayout
+	            android:id="@+id/main_activity_today_bottom_items"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:orientation="vertical"
+	            android:layout_marginTop="8dp" >
+	
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="40dp"
+	                android:orientation="horizontal"
+	                 >
+	
+	                <TextView
+	                    android:id="@+id/textView1"
+	                    style="@style/CardSeparatorTitle"
+	                    android:layout_weight="1"
+	                    android:text="@string/swipe_right_for_plans"
+	                     />
+	
+	                <ImageView
+	                    android:id="@+id/imageView1"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="match_parent"
+	                    android:layout_weight="3"
+	                    android:src="@drawable/ic_action_next_item" />
+	                
+	                
+	            </LinearLayout>
+	            
+	            <LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="40dp"
+	                android:orientation="horizontal"
+	                 >
+	             <ImageView
+	                 android:id="@+id/imageView1"
+	                 android:layout_width="match_parent"
+	                 android:layout_height="match_parent"
+	                 android:layout_weight="3"
+	                 android:src="@drawable/ic_action_previous_item" />
+	             <TextView
+	                    android:id="@+id/textView1"
+	                    android:layout_weight="1"
+	                    style="@style/CardSeparatorTitle"
+	                    android:text="@string/swipe_left_for_history"
+	                     />
+				</LinearLayout>
+	        </LinearLayout>
+	
+	    </LinearLayout>
     
     </FrameLayout>
 

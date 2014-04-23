@@ -15,40 +15,60 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
     >
-    
-	    
-	<LinearLayout 
-	    android:id="@+id/mood_question_layout"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:orientation="vertical"
-	    >
-	
+    <LinearLayout
+        android:id="@+id/mood_question_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:layout_margin="12dp"
+        android:background="@drawable/card_background"
+        android:orientation="vertical"
+        >
 	    <TextView
 	        android:id="@+id/mood_question_title"
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
-	        android:layout_weight="20"
+	        android:layout_weight="25"
+	        android:layout_marginBottom="8dp"
 	        android:text="@string/today_screen_mood"
-	        android:gravity="center"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:gravity="center|bottom"
+	        android:textSize="25sp"
+	        android:textColor="@color/dark_green"
 	        android:fontFamily="sans-serif-light" >
 	    </TextView>
-	    
-	    <TextView
-	        android:id="@+id/mood_question_energylevel_textview"
+	     <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
-	        android:layout_weight="20"
-	        android:text=""
-	        android:gravity="center"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
+	        android:layout_weight="25"
+	        android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:text="@string/energy"
+		        android:textColor="@color/medium_gray"
+		        android:gravity="right|center"
+		        android:layout_marginRight="6dp"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    <TextView
+		        android:id="@+id/mood_question_energylevel_textview"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:text=""
+		        android:textColor="@color/dark_gray"
+		        android:gravity="left|center"
+		        android:layout_marginLeft="6dp"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    </LinearLayout>
 	    <android.support.v4.view.ViewPager
 	        xmlns:tools="http://schemas.android.com/tools"
 	        android:id="@+id/mood_question_viewpager_cards"
@@ -69,79 +89,58 @@
 	        app:context="org.apps8os.motivator.ui.MoodQuestionActivity" >
 	    </android.support.v4.view.ViewPager>
 	
-	    <TextView
-	        android:id="@+id/mood_question_moodlevel_textview"
+	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
-	        android:layout_weight="20"
-	        android:text=""
-	        android:gravity="center"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
-	     <EditText
+	        android:layout_weight="25"
+	        android:orientation="horizontal" >
+		    <TextView
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:text="@string/mood"
+		        android:textColor="@color/medium_gray"
+		        android:gravity="right|center"
+		        android:layout_marginRight="6dp"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    <TextView
+		        android:id="@+id/mood_question_moodlevel_textview"
+		        android:layout_width="0dp"
+		        android:layout_height="match_parent"
+		        android:layout_weight="1"
+		        android:text=""
+		        android:textColor="@color/dark_gray"
+		        android:layout_marginLeft="6dp"
+		        android:gravity="left|center"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    </LinearLayout>    
+	    <EditText
 	        android:id="@+id/mood_comment_edit_text"
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
-	        android:layout_weight="20"
+	        android:layout_weight="25"
 	        android:inputType="textAutoCorrect"
 	        android:hint="@string/mood_comment"
 	        android:ems="10"
 	        android:layout_margin="8dp" >
 	    </EditText>
-	    
-	    <LinearLayout 
-		    android:orientation="vertical"
-		    android:layout_width="match_parent"
-		    android:layout_height="48dp"
-		    android:divider="?android:attr/dividerHorizontal"
-	        android:showDividers="beginning"
-	         >
-		    <LinearLayout
-		        android:id="@+id/mood_question_buttons"
-		        android:layout_width="match_parent"
-		        android:layout_height="48dp"
-		        android:gravity="bottom"
-		        android:orientation="horizontal"
-		        style="?android:attr/buttonBarStyle"
-		        >
-		    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+        android:layout_weight="1"
+	    android:divider="?android:attr/dividerHorizontal"
+        android:showDividers="beginning"
+         >
+	    <LinearLayout
+	        android:id="@+id/mood_question_buttons"
+	        android:layout_width="match_parent"
+	        android:layout_height="48dp"
+	        android:gravity="bottom"
+	        android:orientation="horizontal"
+	        style="?android:attr/buttonBarStyle"
+	        >
 	    </LinearLayout>
-	</LinearLayout>
-	
-	<ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_centerVertical="true"
-	    android:translationY="36dp"
-	    android:src="@drawable/ic_action_next_item" />
-	
-	<ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentRight="true"
-	    android:layout_centerVertical="true"
-	    android:translationY="-72dp"
-	    android:src="@drawable/ic_action_next_item" />
-	
-	<ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_centerVertical="true"
-	    android:translationY="36dp"
-	    android:src="@drawable/ic_action_previous_item" />
-	
-	<ImageView
-	    android:id="@+id/imageView1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_centerVertical="true"
-	    android:translationY="-72dp"
-	    android:src="@drawable/ic_action_previous_item" />
-
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

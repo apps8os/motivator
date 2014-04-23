@@ -133,15 +133,16 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 		@Override
 		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
-			View separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
-			mEventLayout.addView(separator);
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
-				((TextView) eventButton.getChildAt(0)).setText(result.get(i).getEventDateAsText());
-				((TextView) eventButton.getChildAt(0)).setTextColor(getActivity().getResources().getColor(R.color.green));
-				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.ic_action_event);
+				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
+				((TextView) buttonTextLayout.getChildAt(0)).setText(result.get(i).getEventDateAsText());
+				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
+				((TextView) buttonTextLayout.getChildAt(1)).setText(result.get(i).getStartTimeAsText());
+				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
+				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				final int eventId = result.get(i).getId();
 				mEventLayout.addView(eventButton);
@@ -168,9 +169,6 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 						return true;
 					}
 				});
-				
-				separator = mInflater.inflate(R.layout.element_main_activity_button_separator, mEventLayout, false);
-				mEventLayout.addView(separator);
 				}
 			}
 	}

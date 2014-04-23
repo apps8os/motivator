@@ -21,5 +21,6 @@
        android:layout_height="wrap_content"
        android:layout_weight="3"
        android:text="@string/ok"
+       android:textColor="@color/dark_gray"
        style="?android:attr/borderlessButtonStyle">
 </Button>

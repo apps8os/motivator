@@ -80,9 +80,10 @@ public class MoodQuestionActivity extends Activity {
 	    		R.string.mood_level5
 	    		};
 	
-	private static final int MARGIN_DP = 50;
+	private static final int MARGIN_DP = 80;
 	private static final int DEFAULT_MOOD_SELECTION = 2;
 	public static final String GOODMOOD = "good_mood";
+	public static final String YESTERDAY_EVENTS = "yesterday_events";
 	
 
 	/** Called when the activity is first created. */
@@ -91,6 +92,8 @@ public class MoodQuestionActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mood_question);
 		mDataHandler = new MoodDataHandler(this);
+		
+		Bundle extras = this.getIntent().getExtras();
 
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
@@ -132,40 +135,36 @@ public class MoodQuestionActivity extends Activity {
         
         */
         
-        DayInHistory yesterday = mDataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-        yesterday.setEvents();
-        
-        if (yesterday.getEvents().isEmpty()) {
-	        Button okButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
-	        okButton.setOnClickListener(new OnClickListener() {
-	
-				@Override
-				public void onClick(View v) {
-					saveMood(v);
-					
-					String toastMsg;
-					if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
-						toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
-					} else {
-						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
-					}
-					LayoutInflater inflater = getLayoutInflater();
-					View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
-					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
-					toastText.setText(toastMsg);
-					toastText.setTextColor(Color.WHITE);
-					
-					Toast questionnaireDone = new Toast(getApplicationContext());
-					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
-					questionnaireDone.setView(toastLayout);
-					questionnaireDone.show();
-					
-					finish();
+        Button okButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
+        okButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				saveMood(v);
+				
+				String toastMsg;
+				if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
+					toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
+				} else {
+					toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
 				}
-	        	
-	        });
-	        buttons.addView(okButton);
-        }
+				LayoutInflater inflater = getLayoutInflater();
+				View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+				toastText.setText(toastMsg);
+				toastText.setTextColor(Color.WHITE);
+				
+				Toast questionnaireDone = new Toast(getApplicationContext());
+				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+				questionnaireDone.setView(toastLayout);
+				questionnaireDone.show();
+				
+				finish();
+			}
+        	
+        });
+        buttons.addView(okButton);
+        
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
 	}

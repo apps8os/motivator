@@ -86,5 +86,9 @@
     <string name="when_to_go">Aloitus</string>
     <string name="previous">Edellinen</string>
     <string name="complete">Valmis</string>
+    <string name="planned_events">Suunnitellut tapahtumat</string>
+    <string name="todays_events">Päivän tapahtumat</string>
+    <string name="energy">Energia:</string>
+    <string name="mood">Fiilis:</string>
     
 </resources>

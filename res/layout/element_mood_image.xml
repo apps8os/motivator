@@ -20,11 +20,11 @@
        android:layout_marginTop="18dp"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:gravity="center_horizontal"
        android:orientation="vertical" >     
     <ImageView
         android:id="@+id/mood_image_energy"
         android:layout_width="wrap_content"
+        android:gravity="center|bottom"
         android:layout_height="0dp"
         android:layout_weight="61"
         android:src="@drawable/energy2" />
@@ -32,6 +32,7 @@
     <ImageView
         android:id="@+id/mood_image_mood"
         android:layout_width="wrap_content"
+        android:gravity="center|top"
         android:layout_height="0dp"
         android:layout_weight="39"
         android:src="@drawable/mood2" />
