@@ -32,6 +32,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * An activity for starting a sprint.
+ * @author Toni Järvinen
+ *
+ */
 public class StartingSprintActivity extends Activity {
 
 	/** Called when the activity is first created. */

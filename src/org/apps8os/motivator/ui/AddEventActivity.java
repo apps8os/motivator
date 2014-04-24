@@ -20,6 +20,7 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MoodDataHandler;
 import org.apps8os.motivator.data.MotivatorDatabaseHelper;
+import org.apps8os.motivator.data.Question;
 
 import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
@@ -40,10 +41,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+/**
+ * An activity for adding an event. The questions are implemented as QuestionFragments.
+ * @author Toni Järvinen
+ *
+ */
 public class AddEventActivity extends Activity {
 	
-	public static final String QUESTION = "question";
-
 	private ViewPager mViewPager;
 	private EventDataHandler mDataHandler;
 	private int mNumberOfQuestions;
@@ -51,7 +55,6 @@ public class AddEventActivity extends Activity {
 	private int mAnswersId;
 
 	private QuestionsPagerAdapter mQuestionsPagerAdapter;
-
 	private LinePageIndicator titleIndicator;
 	
 	/** Called when the activity is first created. */
@@ -82,6 +85,9 @@ public class AddEventActivity extends Activity {
 	    
 	}
 	
+	/**
+	 * Sets up the listeners for the buttons.
+	 */
 	private void setButtons() {
 		final Button nextButton = (Button) findViewById(R.id.questions_next_button);
 		nextButton.setOnClickListener(new OnClickListener() {
@@ -98,7 +104,6 @@ public class AddEventActivity extends Activity {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			}
 		});
-		
 		final Button completeButton = (Button) findViewById(R.id.questions_complete_button);
 		completeButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,20 +118,18 @@ public class AddEventActivity extends Activity {
 				finish();
 			}
 		});
+		// Disable these buttons at start.
 		completeButton.setEnabled(false);
-		
 		previousButton.setEnabled(false);
 		
+		// Set up a page change listener to enable and disable buttons.
 		titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
-
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 			}
-
 			@Override
 			public void onPageSelected(int arg0) {
 				if (arg0 == mNumberOfQuestions - 1) {
@@ -139,7 +142,6 @@ public class AddEventActivity extends Activity {
 				} else {
 					previousButton.setEnabled(true);
 				}
-				
 				if (arg0 == 2 && mQuestionsPagerAdapter.getFragment(0).getAnswer() != -1 && mQuestionsPagerAdapter.getFragment(1).getAnswer() != -1) {
 					completeButton.setEnabled(true);
 				}
@@ -161,8 +163,12 @@ public class AddEventActivity extends Activity {
 		return answerId;
 	}
 	
-	
-	
+	/**
+	 * Represents a pager adapter for the questions. The fragments are saved in a SparseArray so that we can
+	 * reference the specific fragments.
+	 * @author Toni Järvinen
+	 *
+	 */
 	private class QuestionsPagerAdapter extends FragmentPagerAdapter {
 		
 		private SparseArray<QuestionFragment> fragments = new SparseArray<QuestionFragment>();
@@ -177,7 +183,7 @@ public class AddEventActivity extends Activity {
 		public Fragment getItem(int arg0) {
 			Fragment questionFragment = new QuestionFragment();
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(QUESTION, mDataHandler.getQuestion(1000 + arg0));
+			bundle.putParcelable(Question.QUESTION, mDataHandler.getQuestion(1000 + arg0));
 			questionFragment.setArguments(bundle);
 			return questionFragment;
 		}
@@ -200,6 +206,11 @@ public class AddEventActivity extends Activity {
 			return mQuestions;
 		}
 		
+		/**
+		 * Get the fragment in given position.
+		 * @param position
+		 * @return
+		 */
 		public QuestionFragment getFragment(int position) {
 			return fragments.get(position);
 		}

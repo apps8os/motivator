@@ -33,6 +33,11 @@ public class OpenEventDetailViewOnClickListener implements OnClickListener {
 	private MotivatorEvent mEvent;
 	private Context mContext;
 	
+	/**
+	 * Create a listener for the event provided.
+	 * @param event
+	 * @param context
+	 */
 	public OpenEventDetailViewOnClickListener(MotivatorEvent event, Context context) {
 		super();
 		mEvent =event;

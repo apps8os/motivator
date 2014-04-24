@@ -92,6 +92,10 @@ public class MoodHistoryDayFragment extends Fragment {
 		return rootView;
 	}
 	
+	/**
+	 * Load all the moods for the day.
+	 * @param rootLayout
+	 */
 	private void loadMoods(LinearLayout rootLayout) {
 		ArrayList<Mood> moods = mDay.getMoods();
 		if (moods.size() > 1) {
@@ -118,8 +122,5 @@ public class MoodHistoryDayFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putParcelable(DayInHistory.DAY_IN_HISTORY, mDay);
 	}
-	
-	
-	
 
 }

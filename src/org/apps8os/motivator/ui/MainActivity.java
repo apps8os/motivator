@@ -59,14 +59,6 @@ public class MainActivity extends Activity {
 	public static final String MOTIVATOR_PREFS = "motivator_prefs";
 	public static final String APP_VERSION = "application_version";
 	
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	private String mTimeToNotify;					// Hours after midnight when to notify the user
 	private Sprint mCurrentSprint;
@@ -82,8 +74,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main_activity);
 
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getFragmentManager());
 
@@ -91,17 +81,16 @@ public class MainActivity extends Activity {
 		mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOffscreenPageLimit(3);
+		mViewPager.setCurrentItem(1, false);
+		
 		mActionBar = getActionBar();
 		
 		//Bind the title indicator to the adapter
 		final TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
 		
-		// Set the second tab as the default on launch
-		mViewPager.setCurrentItem(1, false);
-		
+		// Listener for changing the actionbar color based on the fragment
 		OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
@@ -132,7 +121,6 @@ public class MainActivity extends Activity {
 			}
 		};
 		
-		//mViewPager.setOnPageChangeListener(pageChangeListener);
 		titleIndicator.setOnPageChangeListener(pageChangeListener);
 		
 		// Check the version number and set notifications again if version has changed.
@@ -176,7 +164,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_screen, menu);
 		return true;
 	}
@@ -257,7 +244,6 @@ public class MainActivity extends Activity {
 			// getItem is called to instantiate the fragment for the given page.
 
 			Fragment fragment;
-			// Set the second tab as today fragment
 			if (position == 1) {
 				Bundle b = new Bundle();
 				b.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);

@@ -27,6 +27,8 @@ import android.os.Parcelable;
  */
 public class Question implements Parcelable{
 	
+	public static final String QUESTION = "question";
+	
 	private int mId;
 	private String mQuestion;
 	private String[] mAnswers;

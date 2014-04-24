@@ -74,16 +74,13 @@ public class ImagesPagerAdapter extends PagerAdapter  {
 
     @Override
     public Object instantiateItem(ViewGroup viewGroup, int position) {
-    	// Get the ImageView by inflating it from layout xml
         ImageView carouselImage = (ImageView) mInflater.inflate(R.layout.element_mood_selection_image, viewGroup, false);
         
         // Set the correct image and a tag for the position
         carouselImage.setImageDrawable(mResources.getDrawable(mImages[position]));
         carouselImage.setTag(position);
-        
         viewGroup.addView(carouselImage);
         
-        // Return the view
         return carouselImage;
     }
 

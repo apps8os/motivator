@@ -29,6 +29,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+/**
+ * Represents a question fragment.
+ * @author Toni Järvinen
+ *
+ */
 public class QuestionFragment extends Fragment {
 	
 	private Question mQuestion;
@@ -39,7 +44,7 @@ public class QuestionFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mQuestion = getArguments().getParcelable(AddEventActivity.QUESTION);
+		mQuestion = getArguments().getParcelable(Question.QUESTION);
 	}
 	
 	@Override
@@ -66,10 +71,18 @@ public class QuestionFragment extends Fragment {
 		return rootView;
 	}
 	
+	/**
+	 * Get the selected answer in this fragment.
+	 * @return
+	 */
 	public int getAnswer() {
 		return mAnswerGroupView.getCheckedRadioButtonId();
 	}
 	
+	/**
+	 * Get the question id of the question represented by this fragment.
+	 * @return
+	 */
 	public int getQuestionId() {
 		return mQuestion.getId();
 	}

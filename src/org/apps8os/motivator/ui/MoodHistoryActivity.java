@@ -127,6 +127,7 @@ public class MoodHistoryActivity extends Activity {
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
 		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
 		
+		// Calculate the number of weeks in the sprint
 		mNumberOfWeeksInSprint = mToday.get(Calendar.WEEK_OF_YEAR) - mStartDate.get(Calendar.WEEK_OF_YEAR) + 1;
 		if ( mNumberOfWeeksInSprint < 0 ) {
 			mNumberOfWeeksInSprint = 52 + 1 - mStartDate.get(Calendar.WEEK_OF_YEAR) + mToday.get(Calendar.WEEK_OF_YEAR);
@@ -140,8 +141,8 @@ public class MoodHistoryActivity extends Activity {
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
 	    titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
 	    
+	    // Page change listener to keep the selected week and day in a member.
 	    titleIndicator.setOnPageChangeListener(new OnPageChangeListener() {
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 			}
@@ -158,7 +159,6 @@ public class MoodHistoryActivity extends Activity {
 			    	mSelectedWeek = arg0;
 			    }
 			}
-	    	
 	    });
 	    
 	    setPageTitles();
@@ -178,6 +178,7 @@ public class MoodHistoryActivity extends Activity {
 	@Override 
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		// Selecting the different attributes in the week view, not visible in portrait day view.
 		MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
 		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
 			loadPortraitView();
@@ -334,6 +335,10 @@ public class MoodHistoryActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * Load the page titles to an array. This done so the Title Pager Indicator does not have to construct
+	 * them multiple times when changing pages.
+	 */
 	public void setPageTitles() {
 		mDayPageTitles = new String[mNumberOfTodayInSprint];
 		mLocale = getResources().getConfiguration().locale;
@@ -362,9 +367,6 @@ public class MoodHistoryActivity extends Activity {
 		titleIndicator.setViewPager(mViewPager);
 		mViewPager.setCurrentItem(mSelectedWeek);
 		mViewPager.setOffscreenPageLimit(1);
-		
-
-		
 	}
 	
 	/**

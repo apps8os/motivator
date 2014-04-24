@@ -34,6 +34,11 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+/**
+ * A settings activity for application settings.
+ * @author Toni Järvinen
+ *
+ */
 public class SettingsActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
 	public static final String KEY_SEND_NOTIFICATIONS = "send_notifications";

@@ -254,6 +254,10 @@ public class MoodHistoryWeekFragment extends Fragment {
 		
 	}
 
+	/**
+	 * Changing what is pictured in the LineGraph
+	 * @param selector
+	 */
 	public void updateSelectedAttribute(int selector) {
 		Line l = new Line();
 		LinePoint p = new LinePoint();

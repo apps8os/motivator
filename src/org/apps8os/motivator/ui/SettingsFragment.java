@@ -21,6 +21,11 @@ import org.apps8os.motivator.R;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+/**
+ * Settings fragment for the SettingsActivity.
+ * @author Toni Järvinen
+ *
+ */
 public class SettingsFragment extends PreferenceFragment {
 	
 	@Override

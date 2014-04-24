@@ -85,6 +85,10 @@ public class MoodRelationHistoryActivity extends Activity {
 	    bar.setListNavigationCallbacks(adapter, listener);
 	}
 	
+	/**
+	 * Sets the mood images in the average mood view.
+	 * @param mood
+	 */
 	private void setMoodImages(Mood mood) {
 		if (mood.getEnergy() > 0) {
 			Drawable energyImage = mContext.getResources().getDrawable(getResources().getIdentifier("energy" + mood.getEnergy(), "drawable", getPackageName()));
@@ -103,6 +107,7 @@ public class MoodRelationHistoryActivity extends Activity {
 		@Override
 		public boolean onNavigationItemSelected(int itemPosition, long itemId) {
 			GregorianCalendar calendar = new GregorianCalendar();
+			
 			if (itemPosition == 0) {
 				calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 				calendar.add(Calendar.DATE, -7);
@@ -112,7 +117,9 @@ public class MoodRelationHistoryActivity extends Activity {
 				Mood avgMood = getAvgMood(days);
 				setMoodImages(avgMood);
 				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
-			} else if (itemPosition == 1) {
+			} 
+			
+			else if (itemPosition == 1) {
 				calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 				calendar.add(Calendar.DATE, -14);
 				mFromTimeInMillis = calendar.getTimeInMillis();
@@ -121,7 +128,9 @@ public class MoodRelationHistoryActivity extends Activity {
 				Mood avgMood = getAvgMood(days);
 				setMoodImages(avgMood);
 				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
-			} else if (itemPosition == 2) {
+			} 
+			
+			else if (itemPosition == 2) {
 				calendar.add(Calendar.DATE, -29);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 30;
@@ -129,7 +138,9 @@ public class MoodRelationHistoryActivity extends Activity {
 				Mood avgMood = getAvgMood(days);
 				setMoodImages(avgMood);
 				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
-			} else if (itemPosition == 3) {
+			} 
+			
+			else if (itemPosition == 3) {
 				showTimeFramePicker();
 			}
 			
@@ -157,7 +168,6 @@ public class MoodRelationHistoryActivity extends Activity {
 				avgMood = avgMood / allMoods.size();
 				avgEnergy = avgEnergy / allMoods.size();
 			}
-			
 			return new Mood(avgMood, avgEnergy, 0, "");
 		}
 		
@@ -177,6 +187,8 @@ public class MoodRelationHistoryActivity extends Activity {
 		    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
 		    dialogBuilder.setView(timeframePicker);
 		    dialogBuilder.setTitle(getString(R.string.select_a_timeframe));
+		    
+		    
 		    dialogBuilder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 				
 				@Override
@@ -204,6 +216,7 @@ public class MoodRelationHistoryActivity extends Activity {
 					dialog.dismiss();
 				}
 			});
+		    
 		    dialogBuilder.create().show();
 		}
 		

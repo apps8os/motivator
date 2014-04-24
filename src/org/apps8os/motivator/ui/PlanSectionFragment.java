@@ -108,7 +108,7 @@ public class PlanSectionFragment extends Fragment {
 	 * @author Toni Järvinen
 	 *
 	 */
-private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEvent>> {
+	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEvent>> {
 		
 		private Context mContext;
 
@@ -136,6 +136,7 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 			
 			// Create buttons for the result set.
 			for (int i = 0; i < result.size(); i ++) {
+				
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				((TextView) buttonTextLayout.getChildAt(0)).setText(result.get(i).getEventDateAsText());
@@ -143,6 +144,7 @@ private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEve
 				((TextView) buttonTextLayout.getChildAt(1)).setText(result.get(i).getStartTimeAsText());
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
 				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
+				
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
 				final int eventId = result.get(i).getId();
 				mEventLayout.addView(eventButton);
