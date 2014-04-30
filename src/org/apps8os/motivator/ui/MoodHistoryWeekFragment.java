@@ -22,7 +22,7 @@ import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.Sprint;
 
 import android.animation.Animator;
@@ -53,7 +53,7 @@ import com.echo.holographlibrary.LinePoint;
 public class MoodHistoryWeekFragment extends Fragment {
 	
 	private Resources mRes;
-	private MoodDataHandler mDataHandler;
+	private DayDataHandler mDataHandler;
 	private View mRootView;
 	private LayoutInflater mInflater;
 	private long mSprintStartDate;
@@ -67,7 +67,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mRes = getActivity().getResources();
 		mSprintStartDate = b.getLong(Sprint.CURRENT_SPRINT_STARTDATE);
 		mPosition = b.getInt(MoodHistoryActivity.FRAGMENT_POSITION);
-		mDataHandler = new MoodDataHandler(getActivity());
+		mDataHandler = new DayDataHandler(getActivity());
 		
 		// Loading the days on a different thread.
 		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition);
@@ -169,12 +169,14 @@ public class MoodHistoryWeekFragment extends Fragment {
 				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
 				TextView dayText = (TextView) ((LinearLayout) dayView.getChildAt(0)).getChildAt(0);
 				dayText.setText(Html.fromHtml(getDay(result.get(i)) + "<br><small>" + result.get(i).getDateInString(getActivity())));
+				LinearLayout moodImageRoot = (LinearLayout) dayView.findViewById(R.id.mood_image_root);
+				ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
+				ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
 				if (result.get(i).getAvgMoodLevel() == 0) {
+					energyImage.setImageDrawable(mRes.getDrawable(R.drawable.energy_no_data));
+					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.mood_no_data));
 				} else {
-					LinearLayout moodImageRoot = (LinearLayout) dayView.findViewById(R.id.mood_image_root);
-					ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
 					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + result.get(i).getFirstMoodOfTheDay().getEnergy(), "drawable", getActivity().getPackageName())));
-					ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
 					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + result.get(i).getFirstMoodOfTheDay().getMood(), "drawable", getActivity().getPackageName())));
 
 				}

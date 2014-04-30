@@ -18,7 +18,7 @@ package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
 
@@ -28,18 +28,27 @@ import com.viewpagerindicator.LinePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 /**
  * An activity for adding an event. The questions are implemented as QuestionFragments.
@@ -51,6 +60,7 @@ public class AddEventActivity extends Activity {
 	private ViewPager mViewPager;
 	private EventDataHandler mDataHandler;
 	private int mNumberOfQuestions;
+	private String mName = "";
 	private int mQuestionId;
 	private int mAnswersId;
 
@@ -86,6 +96,48 @@ public class AddEventActivity extends Activity {
 	}
 	
 	/**
+	 * Loading the action bar menu
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    getMenuInflater().inflate(R.menu.questions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	/**
+	 * Actions for the menu items.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.questions_add_comment) {
+			AlertDialog.Builder alert = new AlertDialog.Builder(this);
+			alert.setTitle(getString(R.string.name_the_event));
+			// Create TextView
+			LinearLayout rootElement = (LinearLayout)  getLayoutInflater().inflate(R.layout.element_comment_edit_text, null);
+			final EditText input = (EditText) rootElement.getChildAt(0);
+			input.setText(mName);
+			alert.setView(rootElement);
+
+			alert.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+				    mName = input.getText().toString();
+				    getActionBar().setTitle(mName);
+				  }
+				});
+	
+				  alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				  public void onClick(DialogInterface dialog, int whichButton) {
+				      // Canceled.
+				  }
+			});
+			alert.show();
+			return true;
+		} else {
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	/**
 	 * Sets up the listeners for the buttons.
 	 */
 	private void setButtons() {
@@ -108,13 +160,11 @@ public class AddEventActivity extends Activity {
 		completeButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				int answers[]  = new int[mNumberOfQuestions];
 				for (int i = 0; i < mNumberOfQuestions; i++) {
-					int answer = mQuestionsPagerAdapter.getFragment(i).getAnswer();
-					if (answer > -1) {
-						int questionId = mQuestionsPagerAdapter.getFragment(i).getQuestionId();
-						mDataHandler.insertAnswer(answer, questionId, mAnswersId);
-					}
+					answers[i] = mQuestionsPagerAdapter.getFragment(i).getAnswer();
 				}
+				mDataHandler.insertEvent(answers[0], answers[1], answers[2], answers[3], answers[4], mName);
 				finish();
 			}
 		});

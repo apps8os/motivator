@@ -24,15 +24,19 @@ import android.os.Parcelable;
 public class MotivatorEvent implements Parcelable {
 	
 	public static final String EVENT = "event";
-	public static final int EVENT_CHECKED_ID = 1901;
+	public static final String YESTERDAYS_EVENTS = "yesterdays_events";
 	
-	private long mStartTime;
-	private long mEndTime;
+	private long mStartTime = 0;
+	private long mEndTime = 0;
 	private int mPlannedDrinks;
 	private int mId;
-	private String mEventDateAsText;
-	private String mStartTimeAsText = "NOT FOUND";
-	
+	private String mEventDateAsText = "";
+	private String mStartTimeAsText = "";
+	private String mEndTimeAsText = "";
+	private String mWithWho = "";
+	private String mName = "";
+	private int mChecked = 0;
+
 	public MotivatorEvent(int eventId) {
 		mId = eventId;
 	}
@@ -44,6 +48,10 @@ public class MotivatorEvent implements Parcelable {
 		mId = source.readInt();
 		mEventDateAsText = source.readString();
 		mStartTimeAsText = source.readString();
+		mEndTimeAsText = source.readString();
+		mWithWho = source.readString();
+		mName = source.readString();
+		mChecked = source.readInt();
 	}
 
 	public static final Parcelable.Creator<MotivatorEvent> CREATOR = new Parcelable.Creator<MotivatorEvent>() {
@@ -59,6 +67,20 @@ public class MotivatorEvent implements Parcelable {
 		}
 		
 	};
+	
+	/**
+	 * @return the mWithWho
+	 */
+	public String getWithWho() {
+		return mWithWho;
+	}
+
+	/**
+	 * @param mWithWho the mWithWho to set
+	 */
+	public void setWithWho(String withWho) {
+		this.mWithWho = withWho;
+	}
 	
 	/**
 	 * @param mStartTime the mStartTime to set
@@ -137,6 +159,10 @@ public class MotivatorEvent implements Parcelable {
 		dest.writeInt(mId);
 		dest.writeString(mEventDateAsText);
 		dest.writeString(mStartTimeAsText);
+		dest.writeString(mEndTimeAsText);
+		dest.writeString(mWithWho);
+		dest.writeString(mName);
+		dest.writeInt(mChecked);
 	}
 
 	public String getStartTimeAsText() {
@@ -145,6 +171,30 @@ public class MotivatorEvent implements Parcelable {
 
 	public void setStartTimeAsText(String mStartTimeAsText) {
 		this.mStartTimeAsText = mStartTimeAsText;
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String mName) {
+		this.mName = mName;
+	}
+
+	public boolean hasBeenChecked() {
+		return (mChecked == 1);
+	}
+
+	public void setChecked() {
+		mChecked = 1;
+	}
+
+	public void setEndTimeAsText(String endTimeAsText) {
+		mEndTimeAsText = endTimeAsText;
+	}
+	
+	public String getEndTimeAsText() {
+		return mEndTimeAsText;
 	}
 
 }

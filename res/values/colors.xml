@@ -37,5 +37,8 @@
     <color name="black_transparent">#80000000</color>
     <color name="gray_transparent">#BF808080</color>
     <color name="actionbar_text">#000000</color>
+    <color name="actionbar_blue">#2aa0cb</color>
+    <color name="actionbar_green">#8aad23</color>
+    <color name="actionbar_orange">#e0a42b</color>
     
 </resources>

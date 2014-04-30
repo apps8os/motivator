@@ -17,8 +17,10 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
 
@@ -54,8 +56,15 @@ public class MoodHistoryDayFragment extends Fragment {
 				R.layout.fragment_mood_history_day, viewGroup, false);
 		mRes = getActivity().getResources();
 		
+		DayDataHandler dayDataHandler = new DayDataHandler(getActivity());
+		int yesterdaysDrinks = dayDataHandler.getDrinksForDay(mDay.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
 		TextView commentView = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
+		if (yesterdaysDrinks > 0) {
+			((TextView) rootView.findViewById(R.id.mood_history_fragment_drink_text)).setText(getString(R.string.you_drank) + " " +
+					yesterdaysDrinks + " " + getString(R.string.drinks_yesterday_in_total));
+			((ImageView) rootView.findViewById(R.id.mood_history_fragment_drink_image)).setImageResource(R.drawable.drink_icon);
+		}
 		final LinearLayout mainMoodImage = (LinearLayout) rootView.findViewById(R.id.mood_history_fragment_mood_image);
 		mainMoodImage.setOnClickListener(new OnClickListener() {
 			@Override
@@ -66,22 +75,22 @@ public class MoodHistoryDayFragment extends Fragment {
 		// Set default page if the day is null or set the content from day object if it exists.
 		if (mDay != null) {
 			title.setText(R.string.your_mood);
-			// DUMMY
 			
 		} else {
 			// DUMMY
 			commentView.setText(R.string.last_mood);
 			commentView.setGravity(Gravity.CENTER);
 		}
-		
+		ImageView energyImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_energy);
+		ImageView moodImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_mood);
 		if (mDay.getAvgMoodLevel() == 0) {
-			//mainMoodImage.setImageDrawable(res.getDrawable(R.drawable.temp_emoticon_bw));
+			energyImage.setImageDrawable(mRes.getDrawable(R.drawable.energy_no_data));
+			moodImage.setImageDrawable(mRes.getDrawable(R.drawable.mood_no_data));
 			commentView.setText(mRes.getString(R.string.no_added_moods));
 		} else {
 			Mood firstMoodOfTheDay = mDay.getFirstMoodOfTheDay();
-			ImageView energyImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_energy);
+			title.setText(getString(R.string.your_mood) + ", " + firstMoodOfTheDay.getTimeAsString(getActivity()));
 			energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + firstMoodOfTheDay.getEnergy(), "drawable", getActivity().getPackageName())));
-			ImageView moodImage = (ImageView) mainMoodImage.findViewById(R.id.mood_history_fragment_mood_image_mood);
 			moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + firstMoodOfTheDay.getMood(), "drawable", getActivity().getPackageName())));
 			String comment = firstMoodOfTheDay.getComment();
 			commentView.setText(comment);

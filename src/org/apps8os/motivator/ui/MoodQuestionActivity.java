@@ -20,7 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.UtilityMethods;
 
@@ -50,7 +52,7 @@ import android.widget.Toast;
 
 public class MoodQuestionActivity extends Activity {
 	
-	private MoodDataHandler mDataHandler;					// Database access object
+	private DayDataHandler mDataHandler;					// Database access object
 	private ViewPager mCardsViewPagerEnergy;				// Upper half of the carousel
 	private ViewPager mCardsViewPagerMood;				// Lower half of the carousel
 	private TextView mEnergyLevelText;
@@ -83,7 +85,6 @@ public class MoodQuestionActivity extends Activity {
 	private static final int MARGIN_DP = 80;
 	private static final int DEFAULT_MOOD_SELECTION = 2;
 	public static final String GOODMOOD = "good_mood";
-	public static final String YESTERDAY_EVENTS = "yesterday_events";
 	
 
 	/** Called when the activity is first created. */
@@ -91,9 +92,7 @@ public class MoodQuestionActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mood_question);
-		mDataHandler = new MoodDataHandler(this);
-		
-		Bundle extras = this.getIntent().getExtras();
+		mDataHandler = new DayDataHandler(this);
 
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
@@ -119,52 +118,54 @@ public class MoodQuestionActivity extends Activity {
         mCardsViewPagerMood.setOnPageChangeListener(new ViewPageChangeListener(mCardsViewPagerMood, mMoodLevelText));
         LayoutInflater inflater = getLayoutInflater();
         LinearLayout buttons = (LinearLayout) findViewById(R.id.mood_question_buttons);
-        
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_green));
-        
-        /*
-        // Set up the next button and save the mood
-        Button nextButton = 
-        nextButton.setOnClickListener(new OnClickListener() {
-        	@Override
-			public void onClick(View v) {
-        		saveMood(v);
-        		goToQuestionnaire();
-        	}
-        });
-        
-        */
-        
-        Button okButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
-        okButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				saveMood(v);
-				
-				String toastMsg;
-				if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
-					toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
-				} else {
-					toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getBoolean(EventDataHandler.EVENTS_TO_CHECK, false)) {
+            Button nextButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
+            nextButton.setText(getString(R.string.next));
+            nextButton.setOnClickListener(new OnClickListener() {
+    			@Override
+    			public void onClick(View v) {
+    				saveMood(v);
+    				Intent intent = new Intent(MoodQuestionActivity.this, CheckEventsActivity.class);
+    				intent.putExtra(MotivatorEvent.YESTERDAYS_EVENTS, extras.getParcelableArrayList(MotivatorEvent.YESTERDAYS_EVENTS));
+    				startActivity(intent);
+    				finish();
+    			}
+            	
+            });
+            buttons.addView(nextButton);
+        } else {
+	        
+	        Button okButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
+	        okButton.setOnClickListener(new OnClickListener() {
+	
+				@Override
+				public void onClick(View v) {
+					saveMood(v);
+					
+					String toastMsg;
+					if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
+						toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
+					} else {
+						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
+					}
+					LayoutInflater inflater = getLayoutInflater();
+					View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(toastMsg);
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast questionnaireDone = new Toast(getApplicationContext());
+					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+					questionnaireDone.setView(toastLayout);
+					questionnaireDone.show();
+					
+					finish();
 				}
-				LayoutInflater inflater = getLayoutInflater();
-				View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
-				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
-				toastText.setText(toastMsg);
-				toastText.setTextColor(Color.WHITE);
-				
-				Toast questionnaireDone = new Toast(getApplicationContext());
-				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
-				questionnaireDone.setView(toastLayout);
-				questionnaireDone.show();
-				
-				finish();
-			}
-        	
-        });
-        buttons.addView(okButton);
-        
+	        	
+	        });
+	        buttons.addView(okButton);
+        }
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
 	}
@@ -192,7 +193,7 @@ public class MoodQuestionActivity extends Activity {
 		if (commentText.getText().length() != 0) {
 			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, commentText.getText().toString());
 		} else {
-			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, MoodDataHandler.NO_COMMENT);
+			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, DayDataHandler.NO_COMMENT);
 		}
 	}
 	

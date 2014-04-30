@@ -109,7 +109,7 @@ public class Sprint implements Parcelable {
 	 * @return the mDaysInSprint
 	 */
 	public int getDaysInSprint() {
-		return (int) TimeUnit.DAYS.convert(mEndTime - mStartTime, TimeUnit.MILLISECONDS) + 1;
+		return (int) TimeUnit.DAYS.convert(mEndTime - mStartTime, TimeUnit.MILLISECONDS);
 	}
 
 	/**

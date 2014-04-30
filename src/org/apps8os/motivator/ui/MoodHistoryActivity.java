@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.utils.UtilityMethods;
@@ -67,14 +67,13 @@ public class MoodHistoryActivity extends Activity {
 	
 	public static final String FRAGMENT_POSITION = "fragment_position";
 	
-	private MoodDataHandler mMoodDataHandler;
+	private DayDataHandler mMoodDataHandler;
 	private ViewPager mViewPager;
 	private FragmentDatePagerAdapter mPagerAdapterDay;
 	private FragmentWeekPagerAdapter mPagerAdapterWeek;
 	private Sprint mCurrentSprint;
 	private Locale mLocale;
 	private SimpleDateFormat mDateFormat;
-	
 	
 	private static long mSprintStartDateInMillis = 1393632000000L;
 	private static long mSprintEndDateInMillis;
@@ -84,7 +83,6 @@ public class MoodHistoryActivity extends Activity {
 	private int mNumberOfWeeksInSprint;
 	private int mSelectedDay;
 	private int mSelectedWeek;
-	private Calendar mToday;
 	private String[] mDayPageTitles;
 	private String[] mWeekPageTitles;
 	private Menu mMenu;
@@ -98,7 +96,7 @@ public class MoodHistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_mood_history);
-	    mMoodDataHandler = new MoodDataHandler(this);
+	    mMoodDataHandler = new DayDataHandler(this);
 	    
 	    mCurrentSprint = getIntent().getExtras().getParcelable(Sprint.CURRENT_SPRINT);
 	    
@@ -109,7 +107,7 @@ public class MoodHistoryActivity extends Activity {
 	    mDaysInSprint = mCurrentSprint.getDaysInSprint();
 	    ActionBar actionBar = getActionBar();
 
-		mToday = new GregorianCalendar();
+		Calendar mToday = new GregorianCalendar();
 		UtilityMethods.setToDayStart(mToday);
 		mToday.setFirstDayOfWeek(Calendar.MONDAY);
 		
@@ -121,7 +119,7 @@ public class MoodHistoryActivity extends Activity {
 		}
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days));
-	    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange_no_separator));
+	    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
 	    
 		mStartDate = new GregorianCalendar();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);

@@ -34,9 +34,9 @@
     <string name="event_question_3_answer_3">After 9pm</string>
     
     <string name="event_question_4">When will you stop drinking?</string>
-    <string name="event_question_4_answer_1">Before 6pm</string>
-    <string name="event_question_4_answer_2">Between 6pm and 9pm</string>
-    <string name="event_question_4_answer_3">After 9pm</string>
+    <string name="event_question_4_answer_1">Before 9pm</string>
+    <string name="event_question_4_answer_2">Between 9pm and 12pm</string>
+    <string name="event_question_4_answer_3">After 12pm</string>
     
     <string name="event_question_5">Who are you going with?</string>
     <string name="event_question_5_answer_1">Alone</string>
@@ -49,6 +49,7 @@
         <item >@string/event_question_1_answer_2</item>
         <item >@string/event_question_1_answer_3</item>
     </string-array>
+    
     <string-array name="id1001">
         <item >@string/event_question_2</item>
         <item >@string/event_question_2_answer_1</item>
@@ -71,6 +72,40 @@
     </string-array>
      <string-array name="id1004">
         <item >@string/event_question_5</item>
+        <item >@string/event_question_5_answer_1</item>
+        <item >@string/event_question_5_answer_2</item>
+        <item >@string/event_question_5_answer_3</item>
+    </string-array>
+    
+    <string-array name="when_answers">
+        <item ></item>
+        <item >@string/event_question_1_answer_1</item>
+        <item >@string/event_question_1_answer_2</item>
+        <item >@string/event_question_1_answer_3</item>
+    </string-array>
+    
+    <string-array name="how_much_answers">
+        <item ></item>
+        <item >@string/event_question_2_answer_1</item>
+        <item >@string/event_question_2_answer_2</item>
+        <item >@string/event_question_2_answer_3</item>
+        <item >@string/event_question_2_answer_4</item>
+        <item >@string/event_question_2_answer_5</item>
+    </string-array>
+    <string-array name="start_answers">
+        <item ></item>
+        <item >@string/event_question_3_answer_1</item>
+        <item >@string/event_question_3_answer_2</item>
+        <item >@string/event_question_3_answer_3</item>
+    </string-array>
+    <string-array name="end_answers">
+        <item ></item>
+        <item >@string/event_question_4_answer_1</item>
+        <item >@string/event_question_4_answer_2</item>
+        <item >@string/event_question_4_answer_3</item>
+    </string-array>
+     <string-array name="with_who_answers">
+        <item ></item>
         <item >@string/event_question_5_answer_1</item>
         <item >@string/event_question_5_answer_2</item>
         <item >@string/event_question_5_answer_3</item>

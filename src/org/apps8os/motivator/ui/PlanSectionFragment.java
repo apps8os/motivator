@@ -28,6 +28,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -111,9 +112,11 @@ public class PlanSectionFragment extends Fragment {
 	private class LoadPlansTask extends AsyncTask<Void, Void, ArrayList<MotivatorEvent>> {
 		
 		private Context mContext;
+		private Resources mRes;
 
 		public LoadPlansTask(Context context) {
 			mContext = context;
+			mRes = getResources();
 			
 			// Open the database connection
 			mDataHandler = new EventDataHandler(getActivity());
@@ -134,19 +137,34 @@ public class PlanSectionFragment extends Fragment {
 		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
 			
+			int resultSize = result.size();
+			MotivatorEvent event;
 			// Create buttons for the result set.
-			for (int i = 0; i < result.size(); i ++) {
-				
+			for (int i = 0; i < resultSize; i ++) {
+				event = result.get(i);
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
-				((TextView) buttonTextLayout.getChildAt(0)).setText(result.get(i).getEventDateAsText());
-				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
-				((TextView) buttonTextLayout.getChildAt(1)).setText(result.get(i).getStartTimeAsText());
-				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(getActivity().getResources().getColor(R.color.medium_gray));
+				String eventName = event.getName();
+				String startTimeAsText = event.getStartTimeAsText();
+				if (eventName.length() > 0) {
+					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
+					if (startTimeAsText.length() > 0) {
+						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText() + ", " + startTimeAsText);
+					} else {
+						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText());
+					}
+				} else {
+					((TextView) buttonTextLayout.getChildAt(0)).setText(event.getEventDateAsText());
+					if (startTimeAsText.length() > 0) {
+						((TextView) buttonTextLayout.getChildAt(1)).setText(startTimeAsText);
+					}
+				}
+				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.medium_gray));
+				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
 				
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(result.get(i), mContext));
-				final int eventId = result.get(i).getId();
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext));
+				final int eventId = event.getId();
 				mEventLayout.addView(eventButton);
 				
 				// Make it possible to cancel the event with long click.

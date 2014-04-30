@@ -32,24 +32,24 @@
 	        tools:context=".MainScreen$TodaySectionFragment" >
 	        
 	       <LinearLayout
-	           android:layout_height="80dp"
+	           android:layout_height="60dp"
 	           android:layout_width="match_parent"
 	           android:layout_marginTop="6dp"
-	           android:background="@drawable/card_background"
+	           android:background="@drawable/card_background_inactive"
 	           android:orientation="vertical" >
 	           
 	           <TextView
 	               android:id="@+id/today_section_sprint_progress_text"
 	               android:layout_width="match_parent"
 	               android:layout_height="match_parent"
-	               android:textColor="@color/dark_green"
+	               android:layout_marginTop="6dp"
+	               android:textColor="@color/medium_gray"
 	               android:gravity="center_vertical|center"
 	               android:textAlignment="gravity"
 	               android:layout_weight="1"
 	               android:text=""
 	               android:textAppearance="?android:attr/textAppearanceLarge"
-	               android:fontFamily="sans-serif-condensed"
-	               android:textStyle="bold" />
+	               android:fontFamily="sans-serif-light" />
 	
 	           <ProgressBar
 	               android:id="@+id/today_section_sprint_progress_bar"
@@ -66,16 +66,19 @@
 	       <LinearLayout
 	            android:id="@+id/main_activity_today_mood_button"
 			    android:orientation="horizontal"
-			    style="@style/CardButtonLinearLayout" >
+			    style="@style/CardButtonLinearLayout"
+			     >
 			    <TextView 
 			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="1"
 			        android:gravity="center"
+			        android:fontFamily="sans-serif-light"
+			        android:textStyle="bold"
 			        android:text="@string/today_screen_mood"
 			        android:textColor="@color/dark_green"
-			        style="@android:style/TextAppearance.Medium"
+			        style="@android:style/TextAppearance.Large"
 			        />
 			        <ImageView
 				        android:id="@+id/card_button_left_image"
@@ -86,16 +89,14 @@
 				         />
 			</LinearLayout>
 			
-	        <LinearLayout
-	            android:id="@+id/main_activity_today_dynamic_buttons2"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical" >
-	        </LinearLayout>
+			
+	       
+	       <include layout="@layout/element_main_activity_add_drink_button"/>
 	
 	        <TextView 
 	            style="@style/CardSeparatorTitle"
-	            android:text="@string/todays_events"/>
+	            android:text="@string/todays_events"
+	            android:id="@+id/todays_events_text"/>
 	        
 	        <include layout="@layout/element_main_activity_button_separator"/>
 	        

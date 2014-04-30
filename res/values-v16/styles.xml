@@ -28,7 +28,7 @@
     
     <style name="AppBaseTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">bold</item> 
     </style>
     
     <style name="AppBaseTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
@@ -40,7 +40,7 @@
     <style name="AppBaseTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
 	    <item name="android:titleTextStyle">@style/AppBaseTheme.ActionBar.TitleTextStyle</item>
 	    <item name="android:subtitleTextStyle">@style/AppBaseTheme.ActionBar.SubTitleTextStyle</item>
-	    <item name="android:background">@drawable/action_bar_green_no_separator</item>
+	    <item name="android:background">@drawable/action_bar_green</item>
 	</style>
     
 </resources>

@@ -17,7 +17,7 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
 
@@ -47,7 +47,7 @@ import android.widget.Toast;
 
 public class QuestionnaireActivity extends Activity {
 	
-	private MoodDataHandler mDataHandler;
+	private DayDataHandler mDataHandler;
 	private int mQuestionId;
 	private TextView mQuestionTextView;
 	private RadioGroup mAnswerGroupView;
@@ -68,7 +68,7 @@ public class QuestionnaireActivity extends Activity {
 		setContentView(R.layout.activity_questionnaire);
 		
 		mInflater = getLayoutInflater();
-		mDataHandler = new MoodDataHandler(this);
+		mDataHandler = new DayDataHandler(this);
 		
 		mProgressBar = (ProgressBar) findViewById(R.id.questionnaire_progress);
 		mAnswerGroupView = (RadioGroup) findViewById(R.id.questionnaire_answers_group);
@@ -147,7 +147,7 @@ public class QuestionnaireActivity extends Activity {
 			incrementQuestion(false);
 			mProgressBar.incrementProgressBy(-1);
 			mTransition.reverseTransition(1000);
-			mDataHandler.deleteLastRow();
+			//mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
 		}
@@ -158,7 +158,7 @@ public class QuestionnaireActivity extends Activity {
 	    switch (item.getItemId()) {
 	    // Respond to the action bar's Up/Home button
 	    case android.R.id.home:
-	        mDataHandler.deleteRowsWithAnsweringId(mAnswerId);
+	        //mDataHandler.deleteRowsWithAnsweringId(mAnswerId);
 	        return super.onOptionsItemSelected(item);
 	    }
 	    return super.onOptionsItemSelected(item);
@@ -183,7 +183,7 @@ public class QuestionnaireActivity extends Activity {
 			// Check if the user has selected an answer
 			if (mAnswerGroupView.getCheckedRadioButtonId() != -1) {
 				
-				mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId, 010);
+				//mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId, 010);
 				
 				// Determine if we have already asked enough questions
 				if (mNumberOfQuestions > 0) {

@@ -24,7 +24,7 @@
     <string name="title_section3">Suunnittele</string>
     <string name="today_screen_mood">Mikä fiilis?</string>
     <string name="action_info">Info</string>
-    <string name="action_start_sprint">Aloita kunnon jakso</string>
+    <string name="action_start_sprint">Aloita jakso</string>
     <string name="next">Seuraava</string>
     <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
     <string name="prompt_selection">Valitse vastaus</string>
@@ -39,7 +39,7 @@
     <string name="energy_level4">Energinen</string>
     <string name="energy_level5">Super</string>
     <string name="add_event">Lisää tapahtuma</string>
-    <string name="show_mood_history">Fiiliksesi</string>
+    <string name="show_mood_history">Fiilishistoria</string>
     <string name="questionnaire_done_toast_bad_mood">Tsemppiä!</string>
     <string name="questionnaire_done_toast_good_mood">Hyvin menee!</string>
     <string name="add_goal">Lisää tavoite</string>
@@ -90,5 +90,26 @@
     <string name="todays_events">Päivän tapahtumat</string>
     <string name="energy">Energia:</string>
     <string name="mood">Fiilis:</string>
+    <string name="comment">Kommentti</string>
+    <string name="cancel">Peruuta</string>
+    <string name="drinks_today">juotu tänään</string>
+    <string name="drinks_planned">Olet suunnitellut ottaa tänään</string>
+    <string name="no_drinks_planned">Et ole suunnitellut ottavasi tänään mitään</string>
+    <string name="name_the_event">Anna tapahtumalle nimi</string>
+    <string name="name">Nimi</string>
+    <string name="add_drinks_drunk">Tänään juodut alkoholijuomat</string>
+    <string name="event_history">Menneet tapahtumat</string>
+    <string name="end_time">Lopetus</string>
+    <string name="with_who">Kenen kanssa</string>
+    <string name="start_a_sprint">Aloita jakso</string>
+    <string name="number_of_days">Päivien määrä</string>
+    <string name="name_of_the_sprint">Jakson nimi</string>
+    <string name="start_the_sprint">Aloita</string>
+    <string name="you_drank">Joit</string>
+    <string name="drinks_yesterday_in_total">juomaa eilen.</string>
+    <string name="how_did_the_event_go">Miten meni?</string>
+    <string name="you_had_an_event_yesterday">Sinulla oli tapahtuma eilen. Miten meni?</string>
+    <string name="drinks">juomaa</string>
+    <string name="you_did_not_drink_yesterday">Et juonut eilen!</string>
     
 </resources>

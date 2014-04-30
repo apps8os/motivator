@@ -62,6 +62,8 @@ public class MainActivity extends Activity {
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	private String mTimeToNotify;					// Hours after midnight when to notify the user
 	private Sprint mCurrentSprint;
+	private SprintDataHandler mSprintDataHandler;
+	private Resources mRes;
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -76,6 +78,8 @@ public class MainActivity extends Activity {
 
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getFragmentManager());
+		
+		mSprintDataHandler = new SprintDataHandler(this);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.main_activity_pager);
@@ -83,10 +87,13 @@ public class MainActivity extends Activity {
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setCurrentItem(1, false);
 		
+		mRes = getResources();
+		
 		mActionBar = getActionBar();
 		
 		//Bind the title indicator to the adapter
 		final TitlePageIndicator titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
+		titleIndicator.setBackgroundResource(R.color.light_gray);
 		titleIndicator.setViewPager(mViewPager);
 		
 		// Listener for changing the actionbar color based on the fragment
@@ -101,22 +108,24 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onPageSelected(int arg0) {
-				Resources res = getResources();
 				if (arg0 == 2) {
-					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_blue_no_separator));
+					mActionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_blue));
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
-					titleIndicator.setBackgroundResource(R.drawable.action_bar_blue);
+					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_blue));
+					//titleIndicator.setBackgroundResource(R.drawable.action_bar_blue);
 				} else if (arg0 == 1) {
-					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_green_no_separator));
+					mActionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_green));
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
-					titleIndicator.setBackgroundResource(R.drawable.action_bar_green);
+					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_green));
+					//titleIndicator.setBackgroundResource(R.drawable.action_bar_green);
 				} else if (arg0 == 0) {
-					mActionBar.setBackgroundDrawable(res.getDrawable(R.drawable.action_bar_orange_no_separator));
+					mActionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_orange));
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
-					titleIndicator.setBackgroundResource(R.drawable.action_bar_orange);
+					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_orange));
+					//titleIndicator.setBackgroundResource(R.drawable.action_bar_orange);
 				}
 			}
 		};
@@ -151,11 +160,10 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		SprintDataHandler dataHandler = new SprintDataHandler(this);
-		mCurrentSprint = dataHandler.getCurrentSprint();
+		mCurrentSprint = mSprintDataHandler.getCurrentSprint();
 		
 		if (mCurrentSprint == null) {
-			mCurrentSprint = dataHandler.getLatestEndedSprint();
+			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 			mActionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
@@ -228,6 +236,8 @@ public class MainActivity extends Activity {
 	 * one of the sections/tabs/pages.
 	 */
 	private class SectionsPagerAdapter extends FragmentPagerAdapter {
+		
+		private Bundle mBundle = new Bundle();
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -245,17 +255,17 @@ public class MainActivity extends Activity {
 
 			Fragment fragment;
 			if (position == 1) {
-				Bundle b = new Bundle();
-				b.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
+				mBundle.clear();
+				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new TodaySectionFragment();
-				fragment.setArguments(b);
+				fragment.setArguments(mBundle);
 			} else if(position == 2) {
 				fragment = new PlanSectionFragment();
 			} else if (position == 0) {
-				Bundle b = new Bundle();
-				b.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
+				mBundle.clear();
+				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new HistorySectionFragment();
-				fragment.setArguments(b);
+				fragment.setArguments(mBundle);
 			} else {
 				return null;
 			}

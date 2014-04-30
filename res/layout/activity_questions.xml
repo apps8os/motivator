@@ -27,7 +27,7 @@
     android:padding="10dip"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
-    app:selectedColor="@color/blue"
+    app:selectedColor="@color/actionbar_blue"
     app:lineWidth="24dp"
     app:strokeWidth="8dp" />
 
@@ -39,52 +39,45 @@
 	    android:layout_weight="8"
 	    android:layout_marginLeft="@dimen/activity_horizontal_margin"
 	    android:layout_marginRight="@dimen/activity_horizontal_margin"
-	    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+	    android:layout_marginBottom="@dimen/activity_vertical_margin"
 	    tools:context=".MainActivity" >
 	</android.support.v4.view.ViewPager>
-
+	
+	<include layout="@layout/element_main_activity_button_separator"></include>
 	<LinearLayout 
-	    android:orientation="vertical"
+       	android:orientation="horizontal"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
 	    android:layout_weight="1"
-	    android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="beginning"
-         >
-	    <LinearLayout 
-	       	android:orientation="horizontal"
-		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
-		    style="?android:attr/buttonBarStyle" >
-		    	<Button
-				    android:id="@+id/questions_previous_button"
-				    android:layout_width="0dp"
-				    android:layout_weight="1"
-				    android:layout_height="match_parent"
-				    android:text="@string/previous"
-				    android:textColor="@color/gray_button_text_colors"
-				    android:fontFamily="sans-serif-condensed"
-				    style="?android:attr/borderlessButtonStyle" />
-        	    <Button
-				    android:id="@+id/questions_complete_button"
-				    android:layout_width="0dp"
-				    android:layout_weight="1"
-				    android:layout_height="match_parent"
-				    android:text="@string/complete"
-				    android:fontFamily="sans-serif-condensed"
-				    style="?android:attr/borderlessButtonStyle"
-				    android:textColor="@color/green_button_text_colors" />
-        	     <Button
-				    android:id="@+id/questions_next_button"
-				    android:layout_width="0dp"
-				    android:layout_weight="1"
-				    android:layout_height="match_parent"
-				    android:text="@string/next"
-				    android:textColor="@color/gray_button_text_colors"
-				    android:fontFamily="sans-serif-condensed"
-				    style="?android:attr/borderlessButtonStyle" />
-	    </LinearLayout>
-	</LinearLayout>
+	    style="?android:attr/buttonBarStyle" >
+	    	<Button
+			    android:id="@+id/questions_previous_button"
+			    android:layout_width="0dp"
+			    android:layout_weight="1"
+			    android:layout_height="match_parent"
+			    android:text="@string/previous"
+			    android:textColor="@color/gray_button_text_colors"
+			    android:fontFamily="sans-serif-condensed"
+			    style="?android:attr/borderlessButtonStyle" />
+       	    <Button
+			    android:id="@+id/questions_complete_button"
+			    android:layout_width="0dp"
+			    android:layout_weight="1"
+			    android:layout_height="match_parent"
+			    android:text="@string/complete"
+			    android:fontFamily="sans-serif-condensed"
+			    style="?android:attr/borderlessButtonStyle"
+			    android:textColor="@color/green_button_text_colors" />
+       	     <Button
+			    android:id="@+id/questions_next_button"
+			    android:layout_width="0dp"
+			    android:layout_weight="1"
+			    android:layout_height="match_parent"
+			    android:text="@string/next"
+			    android:textColor="@color/gray_button_text_colors"
+			    android:fontFamily="sans-serif-condensed"
+			    style="?android:attr/borderlessButtonStyle" />
+	 </LinearLayout>
 	
 </LinearLayout>
 

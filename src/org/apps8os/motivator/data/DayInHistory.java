@@ -25,6 +25,7 @@ import org.apps8os.motivator.utils.UtilityMethods;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.SparseArray;
 
 /**
  * Represents a day in the users history. Implements parcelable for transfering the instance
@@ -125,7 +126,7 @@ public class DayInHistory implements Parcelable{
 		if (mMoods.size() > 0) {
 			return mMoods.get(0);
 		} else {
-			return new Mood(0,0, System.currentTimeMillis(), MoodDataHandler.NO_COMMENT);
+			return new Mood(0,0, System.currentTimeMillis(), DayDataHandler.NO_COMMENT);
 		}
 	}
 
@@ -172,6 +173,26 @@ public class DayInHistory implements Parcelable{
 
 	public ArrayList<MotivatorEvent> getEvents() {
 		return mEvents;
+	}
+	
+	public ArrayList<MotivatorEvent> getUncheckedEvents() {
+		SparseArray<MotivatorEvent> uncheckedEvents = new SparseArray<MotivatorEvent>();
+		int arraySize = mEvents.size();
+		for (int i = 0; i < arraySize; i++) {
+			MotivatorEvent event = mEvents.get(i);
+			if  (event.hasBeenChecked() && uncheckedEvents.get(event.getId()) != null) {
+				uncheckedEvents.remove(event.getId());
+			} else if (!event.hasBeenChecked()){
+				uncheckedEvents.put(event.getId(), event);
+			}
+		}
+		arraySize = uncheckedEvents.size();
+		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
+		for (int i = 0; i < arraySize; i++) {
+			result.add(uncheckedEvents.valueAt(i));
+		}
+		
+		return result;
 	}
 	
 	public ArrayList<Mood> getMoods() {

@@ -27,11 +27,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.R.array;
+import org.apps8os.motivator.ui.MainActivity;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 /**
@@ -46,14 +50,46 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public static final int QUESTION_ID_WHEN = 1000;
 	public static final int QUESTION_ID_WHERE = 1001;
 	public static final int QUESTION_ID_TIME_TO_GO = 1002;
+	public static final int QUESTION_ID_TIME_TO_COME_BACK = 1003;
+	public static final int QUESTION_ID_WITH_WHO = 1004;
+	
+	public static final String EVENT_ID = "event_id";
+	public static final String EVENTS_TO_CHECK = "events_to_check";
+	
+	public static final String KEY_START_TIME = "start_time";
+	public static final String KEY_END_TIME = "end_time";
+	public static final String KEY_PLANNED_AMOUNT_OF_DRINKS = "planned_amount_of_drinks";
+	public static final String KEY_WITH_WHO = "with_who";
+	public static final String KEY_START_TIME_ANSWER = "start_time_answer";
+	public static final String KEY_END_TIME_ANSWER = "end_time_answer";
+	public static final String KEY_DAY_ANSWER = "day_time_answer";
+	public static final String TABLE_NAME_EVENTS = "events";
+	public static final String KEY_EVENT_CHECKED = "event_checked";
+	public static final String KEY_EVENT_ID = "event_id";
+	
+	public static final String CREATE_EVENT_TABLE =
+			"CREATE TABLE " + TABLE_NAME_EVENTS + " (" +
+			KEY_ID + " INTEGER PRIMARY KEY, " +
+			KEY_EVENT_ID + " INTEGER, " +
+			KEY_START_TIME + " INTEGER, " +
+			KEY_END_TIME + " INTEGER, " +
+			KEY_PLANNED_AMOUNT_OF_DRINKS + " INTEGER, " +
+			KEY_WITH_WHO + " INTEGER, " +
+			KEY_START_TIME_ANSWER + " INTEGER, " +
+			KEY_END_TIME_ANSWER + " INTEGER, " +
+			KEY_DAY_ANSWER + " INTEGER, " +
+			KEY_COMMENT + " TEXT, " +
+			KEY_EVENT_CHECKED + " INTEGER, " +
+			KEY_TIMESTAMP + " INTEGER);";
 	
 	private static final String TABLE_NAME = TABLE_NAME_EVENTS;
 	private GregorianCalendar mCalendarCache;					// Caching the calendar for all answers belonging to the same instance.
 	private SparseArray<Question> mQuestions;
+	private Context mContext;
 	
 	public EventDataHandler(Context context) {
 		super(context);
-		
+		mContext = context;
 		mQuestions = new SparseArray<Question>();
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
@@ -69,6 +105,84 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
 			mQuestions.put(id, question);
 		}
+	}
+	
+	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
+		// Use SharedPreferences to store the event id so that it can be incremented even if the app is killed
+		SharedPreferences eventIdIncrement = mContext.getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
+		int eventId = eventIdIncrement.getInt(EVENT_ID, 1);
+		SharedPreferences.Editor editor = eventIdIncrement.edit();
+		editor.putInt(EVENT_ID, eventId + 1);
+		editor.commit();
+		
+		SQLiteDatabase db = super.open();
+		ContentValues values = new ContentValues();
+		// Initialize the cache calendar for today/now
+		GregorianCalendar calendarCache = new GregorianCalendar();
+		UtilityMethods.setToDayStart(calendarCache);
+		switch (dayAnswer) {
+			// Answer today, no need to do anything
+			case 0: {
+				break;
+			}
+			// Tomorrow, set the calendar to tomorrow midnight.
+			case 1: {
+				calendarCache.add(Calendar.DATE, 1);
+				break;
+			}
+			// Next weekend, set the calendar to next friday at midnight.
+			case 2: {
+				int daysUntilNextFriday = (Calendar.FRIDAY - calendarCache.get(Calendar.DAY_OF_WEEK));
+				calendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
+				break;
+			}
+		}
+		switch (startTimeAnswer) {
+			case 0: 
+				calendarCache.set(Calendar.HOUR_OF_DAY, 16);
+				break;
+			case 1:
+				calendarCache.set(Calendar.HOUR_OF_DAY, 18);
+				break;
+			case 2:
+				calendarCache.set(Calendar.HOUR_OF_DAY, 21);
+				break;
+		}
+		values.put(KEY_EVENT_ID, eventId);
+		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
+		UtilityMethods.setToDayStart(calendarCache);
+		values.put(KEY_DAY_ANSWER, dayAnswer);
+		values.put(KEY_PLANNED_AMOUNT_OF_DRINKS, plannedDrinks);
+		values.put(KEY_EVENT_CHECKED, 0);
+		values.put(KEY_TIMESTAMP, System.currentTimeMillis());
+		if (startTimeAnswer != -1) {
+			values.put(KEY_START_TIME_ANSWER, startTimeAnswer);
+		}
+		if (endTimeAnswer != -1) {
+			switch (endTimeAnswer) {
+				case 0: 
+					calendarCache.set(Calendar.HOUR_OF_DAY, 21);
+					break;
+				case 1:
+					calendarCache.set(Calendar.HOUR_OF_DAY, 23);
+					calendarCache.set(Calendar.MINUTE, 59);
+					break;
+				case 2:
+					calendarCache.add(Calendar.DATE, 1);
+					calendarCache.set(Calendar.HOUR_OF_DAY, 2);
+					break;
+			}
+			values.put(KEY_END_TIME, calendarCache.getTimeInMillis());
+			values.put(KEY_END_TIME_ANSWER, endTimeAnswer);
+		}
+		if (withWho != -1) {
+			values.put(KEY_WITH_WHO, withWho);
+		}
+		if (comment != null) {
+			values.put(KEY_COMMENT, comment);
+		}
+		db.insert(TABLE_NAME_EVENTS, null, values);
+		db.close();
 	}
 	
 	/**
@@ -121,57 +235,48 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
-		String selection = KEY_CONTENT + " >= " + tomorrowMidnight.getTimeInMillis();
-		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
-		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		String selection = KEY_START_TIME + " >= " + tomorrowMidnight.getTimeInMillis();
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
 		
+		addEvents(events, query);
+		
+		query.close();
+		close();
+		return events;
+	}
+	
+	public void addEvents(ArrayList<MotivatorEvent> events, Cursor query) {
 		query.moveToFirst();
-			int lastAnswerId = -1;
-			// Looping through the cursor.
-			if (query.getCount() > 0) {
-				// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
-				MotivatorEvent event = new MotivatorEvent(query.getInt(0));
-			while (!query.isClosed()) {
-				// Check if we have looped through the answers relating to this event with the answerId.
-				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
-					// Add the event to the list and initialize a new instance.
-					events.add(event);
-					event = new MotivatorEvent(query.getInt(0));
-				}
-				Question question = getQuestion(query.getInt(1));
-				
-				if (question != null) {
-					// Handle the different questions/answers.
-					switch (question.getId()) {
-					case QUESTION_ID_WHEN:
-						event.setStartTime(query.getLong(3));
-						event.setEventDateAsText(question.getAnswer(query.getInt(2)));
-						break;
-					case QUESTION_ID_TIME_TO_GO:
-						switch (query.getInt(2)) {
-						case 0:
-							event.setStartTimeAsText(question.getAnswer(0));
-							break;
-						case 1:
-							event.setStartTimeAsText(question.getAnswer(1));
-							break;
-						case 2:
-							event.setStartTimeAsText(question.getAnswer(2));
-							break;
-						default:
-						}
-						break;
-					}
-				}
-				lastAnswerId = query.getInt(0);
-				if (query.isLast()) {
-					query.close();
-				} else {
-					query.moveToNext();
-				}
+		for (int i = 0; i < query.getCount(); i ++) {
+			MotivatorEvent event = new MotivatorEvent(query.getInt(1));
+			event.setStartTime(query.getLong(2));
+			event.setPlannedDrinks(query.getInt(4));
+			
+			if (!query.isNull(3)) {
+				event.setEndTime(query.getLong(3));
+			}
+			if (!query.isNull(5)) {
+				event.setWithWho(mQuestions.get(QUESTION_ID_WITH_WHO).getAnswer(query.getInt(5)));
+			}
+			if (!query.isNull(6)) {
+				event.setStartTimeAsText(mQuestions.get(QUESTION_ID_TIME_TO_GO).getAnswer(query.getInt(6)));
+			}
+			if (!query.isNull(7)) {
+				event.setEndTimeAsText(mQuestions.get(QUESTION_ID_TIME_TO_COME_BACK).getAnswer(query.getInt(7)));
+			}
+			if (!query.isNull(8)) {
+				event.setEventDateAsText(mQuestions.get(QUESTION_ID_WHEN).getAnswer(query.getInt(8)));
+			}
+			if (!query.isNull(9)) {
+				event.setName(query.getString(9));
+			}
+			if (query.getInt(10) == 1) {
+				event.setChecked();
 			}
 			events.add(event);
-			}
+			query.moveToNext();
+		}
+
 		// Sort the list
 		Collections.sort(events, new Comparator<MotivatorEvent>() {
 			@Override
@@ -187,8 +292,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				}
 			}
 		});
-		close();
-		return events;
 	}
 	
 	/**
@@ -205,158 +308,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
-		String selection = KEY_CONTENT + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_CONTENT + " < " + tomorrowMidnight.getTimeInMillis();
-		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
-		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		String selection = KEY_START_TIME + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_START_TIME + " < " + tomorrowMidnight.getTimeInMillis();
+		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
 		
-		query.moveToFirst();
-		int lastAnswerId = -1;
-		// Looping through the cursor.
-		if (query.getCount() > 0) {
-			// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
-			MotivatorEvent event = new MotivatorEvent(query.getInt(0));
-			while (!query.isClosed()) {
-				// Check if we have looped through the answers relating to this event with the answerId.
-				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
-					// Add the event to the list and initialize a new instance.
-					events.add(event);
-					event = new MotivatorEvent(query.getInt(0));
-				}
-				// Get the question with the questionId.
-				Question question = getQuestion(query.getInt(1));
-				
-				if (question != null) {
-					// Handle the different questions/answers.
-					switch (question.getId()) {
-					case QUESTION_ID_WHEN:
-						event.setStartTime(query.getLong(3));
-						// All events in this section should have today as the text so get the answer representing today.
-						event.setEventDateAsText(question.getAnswer(0));
-						break;
-						
-					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
-					case QUESTION_ID_TIME_TO_GO:
-						long time;
-						switch (query.getInt(2)) {
-						case 0:
-							time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
-							event.setStartTimeAsText(question.getAnswer(0));
-							break;
-						case 1:
-							time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
-							event.setStartTimeAsText(question.getAnswer(1));
-							break;
-						case 2:
-							time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
-							event.setStartTimeAsText(question.getAnswer(2));
-							break;
-						default:
-							time = 0;
-						}
-						event.setStartTime(event.getStartTime() + time);
-						break;
-					}
-				}
-				lastAnswerId = query.getInt(0);
-				if (query.isLast()) {
-					query.close();
-				} else {
-					query.moveToNext();
-				}
-			}
-			events.add(event);
-			}
-		// Sort the list
-		Collections.sort(events, new Comparator<MotivatorEvent>() {
-			@Override
-			public int compare(MotivatorEvent case1, MotivatorEvent case2) {
-				long case1Sorter = case1.getStartTime();
-				long case2Sorter = case2.getStartTime();
-				if (case1Sorter > case2Sorter) {
-					return 1;
-				} else if (case1Sorter == case2Sorter) {
-					return 0;
-				} else {
-					return -1;
-				}
-			}
-		});
-		close();
-		return events;
-	}
-	
-	private ArrayList<MotivatorEvent> getEvents(Cursor query) {
-		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
-		open();
-		query.moveToFirst();
-		int lastAnswerId = -1;
-		// Looping through the cursor.
-		if (query.getCount() > 0) {
-			// Initialize a MotivatorEvent object with the answerId from the database as the eventId.
-			MotivatorEvent event = new MotivatorEvent(query.getInt(0));
-			while (!query.isClosed()) {
-				// Check if we have looped through the answers relating to this event with the answerId.
-				if (lastAnswerId != query.getInt(0) && lastAnswerId != -1) {
-					// Add the event to the list and initialize a new instance.
-					events.add(event);
-					event = new MotivatorEvent(query.getInt(0));
-				}
-				// Get the question with the questionId.
-				Question question = getQuestion(query.getInt(1));
-				
-				if (question != null) {
-					// Handle the different questions/answers.
-					switch (question.getId()) {
-					case QUESTION_ID_WHEN:
-						event.setStartTime(query.getLong(3));
-						// All events in this section should have today as the text so get the answer representing today.
-						event.setEventDateAsText(question.getAnswer(0));
-						break;
-						
-					// The start time is initialized to the change of day, add the amount of hours to get the time of the day.
-					case QUESTION_ID_TIME_TO_GO:
-						long time;
-						switch (query.getInt(2)) {
-						case 0:
-							time = TimeUnit.MILLISECONDS.convert(15, TimeUnit.HOURS);
-							break;
-						case 1:
-							time = TimeUnit.MILLISECONDS.convert(18, TimeUnit.HOURS);
-							break;
-						case 2:
-							time = TimeUnit.MILLISECONDS.convert(21, TimeUnit.HOURS);
-							break;
-						default:
-							time = 0;
-						}
-						event.setStartTime(event.getStartTime() + time);
-						break;
-					}
-				}
-				lastAnswerId = query.getInt(0);
-				if (query.isLast()) {
-					query.close();
-				} else {
-					query.moveToNext();
-				}
-			}
-			events.add(event);
-			}
-		// Sort the list
-		Collections.sort(events, new Comparator<MotivatorEvent>() {
-			@Override
-			public int compare(MotivatorEvent case1, MotivatorEvent case2) {
-				long case1Sorter = case1.getStartTime();
-				long case2Sorter = case2.getStartTime();
-				if (case1Sorter > case2Sorter) {
-					return 1;
-				} else if (case1Sorter == case2Sorter) {
-					return 0;
-				} else {
-					return -1;
-				}
-			}
-		});
+		addEvents(events, query);
+		
+		query.close();
 		close();
 		return events;
 	}
@@ -367,6 +324,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 * @return The events as an ArrayList
 	 */
 	public ArrayList<MotivatorEvent> getEventsForDay(long dayInMillis) {
+		open();
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(dayInMillis);
 		UtilityMethods.setToDayStart(calendar);
@@ -374,12 +332,35 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		calendar.add(Calendar.DATE, 1);
 		long dayEndInMillis = calendar.getTimeInMillis();
 		
-		open();
-		String selection = KEY_CONTENT + " >= " + dayStartInMillis + " AND " + KEY_CONTENT + " < " + dayEndInMillis;
-		String[] columns = {KEY_ID_ANSWERS, KEY_ID_QUESTION, KEY_ANSWER, KEY_CONTENT};
-		Cursor query = mDb.query(TABLE_NAME, columns, selection, null, null, null, KEY_ID_ANSWERS);
+		String selection = KEY_START_TIME + " >= " + dayStartInMillis + " AND " + KEY_START_TIME + " < " + dayEndInMillis;
+		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		
-		return getEvents(query);
+		addEvents(events, query);
+		query.close();
+		close();
+		return events;
+	}
+	
+	public ArrayList<MotivatorEvent> getEventsBetween(long startDayInMillis, long endDayInMillis) {
+		open();
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(startDayInMillis);
+		UtilityMethods.setToDayStart(calendar);
+		long startTimestamp = calendar.getTimeInMillis();
+		calendar.setTimeInMillis(endDayInMillis);
+		UtilityMethods.setToDayStart(calendar);
+		long endTimestamp = calendar.getTimeInMillis();
+		
+
+		String selection = KEY_START_TIME + " >= " + startTimestamp + " AND " + KEY_START_TIME + " < " + endTimestamp;
+		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
+		
+		addEvents(events, query);
+		query.close();
+		close();
+		return events;
 	}
 	
 	public int getAmountOfQuestions() {
@@ -411,7 +392,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 
 	public void deleteEvent(int mEventId) {
 		open();
-		String selection = KEY_ID_ANSWERS + " = " + mEventId;
+		String selection = KEY_EVENT_ID + " = " + mEventId;
 		mDb.delete(TABLE_NAME, selection, null);
 		close();
 	}

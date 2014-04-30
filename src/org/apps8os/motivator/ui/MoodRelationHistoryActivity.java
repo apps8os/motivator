@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
-import org.apps8os.motivator.data.MoodDataHandler;
+import org.apps8os.motivator.data.DayDataHandler;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -54,7 +54,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	private long mEndTimeInMillis;
 	private int mAmountOfDays;
 	private String mCaseSelector;
-	private MoodDataHandler mDataHandler;
+	private DayDataHandler mDataHandler;
 	private int mAvgMood = 0;
 	private TextView mAvgMoodTextView;
 	private Context mContext;
@@ -71,7 +71,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	    SpinnerAdapter adapter = ArrayAdapter.createFromResource(bar.getThemedContext(), R.array.time_frames, android.R.layout.simple_spinner_dropdown_item);
 	    
 	    mCaseSelector = AMOUNT_OF_DRINKS;
-	    mDataHandler = new MoodDataHandler(this);
+	    mDataHandler = new DayDataHandler(this);
 	    mContext = this;
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 	    bar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));

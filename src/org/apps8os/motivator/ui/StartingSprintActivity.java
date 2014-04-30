@@ -44,7 +44,6 @@ public class StartingSprintActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_starting_sprint);
-		
 		Button button = (Button) findViewById(R.id.start_sprint_button);
 		final Activity activity = this;
 		

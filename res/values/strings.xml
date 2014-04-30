@@ -38,7 +38,7 @@
     <string name="energy_level4">Energized</string>
     <string name="energy_level5">Super</string>
     <string name="add_event">Add event</string>
-    <string name="show_mood_history">Your moods</string>
+    <string name="show_mood_history">Mood history</string>
     <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
     <string name="questionnaire_done_toast_good_mood">Awesome!</string>
     <string name="add_goal">Add goal</string>
@@ -70,8 +70,8 @@
     <string name="of_glory">of kudos</string>
     <string name="no_added_moods">No added moods.</string>
     <string name="amount_of_drinks">How many drinks</string>
-    <string name="swipe_right_for_plans">Swipe right to make plans</string>
-    <string name="swipe_left_for_history">Swipe left to see history</string>
+    <string name="swipe_right_for_plans">On the right you can make plans</string>
+    <string name="swipe_left_for_history">On the left you can see your history</string>
     <string name="data_analysis">View your sprint</string>
     <string name="week">Week</string>
     <string name="today_is_the_day">Today is the day</string>
@@ -93,5 +93,27 @@
     <string name="todays_events">Today\'s events</string>
     <string name="energy">Energy:</string>
     <string name="mood">Mood:</string>
+    <string name="comment">Comment</string>
+    <string name="cancel">Cancel</string>
+    <string name="drinks_today">drinks today</string>
+    <string name="drinks_planned">You have planned to drink</string>
+    <string name="no_drinks_planned">You have not planned to drink today</string>
+    <string name="name_the_event">Give the event a name</string>
+    <string name="name">Name</string>
+    <string name="add_drinks_drunk">Drinks drunk today</string>
+    <string name="event_history">Past events</string>
+    <string name="end_time">End time</string>
+    <string name="with_who">With who</string>
+    <string name="start_a_sprint">Start a Sprint</string>
+    <string name="number_of_days">Number of days</string>
+    <string name="name_of_the_sprint">Name of the Sprint</string>
+    <string name="start_the_sprint">Start the Sprint</string>
+    <string name="sprint_default_name">105 days of glory</string>
+    <string name="you_drank">You drank</string>
+    <string name="drinks_yesterday_in_total">drinks yesterday in total.</string>
+    <string name="how_did_the_event_go">How did it go?</string>
+    <string name="you_had_an_event_yesterday">You had an event yesterday. How did it go?</string>
+    <string name="drinks">drinks</string>
+    <string name="you_did_not_drink_yesterday">You did not drink yesterday!</string>
 
 </resources>

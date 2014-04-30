@@ -15,24 +15,33 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/light_gray"
      >
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="24dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_marginTop="10dp"
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        android:background="@drawable/card_background"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="10dp" >
 	    <TextView
 	        android:id="@+id/event_detail_title"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_margin="12dp"
 	        android:layout_gravity="center"
+	        android:fontFamily="sans-serif-light"
+	        android:textColor="@color/blue"
+	        android:gravity="center"
 	        android:text=""
-	        android:textAppearance="?android:textAppearanceLarge" />
+	        android:textSize="25sp" />
 	    
 	    <LinearLayout 
 	        android:layout_height="wrap_content"
@@ -85,25 +94,70 @@
 	        android:text=""
 	        android:textSize="16sp" />
 	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_margin="8dp">
+	        
+	        <TextView
+	        android:id="@+id/event_end_time"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        android:layout_weight="1"
+	        android:layout_marginRight="8dp"
+	        android:text="@string/end_time"
+	        android:textSize="16sp" />
+	        
+	        <TextView
+	        android:id="@+id/event_end_time_entry"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_marginLeft="8dp"
+	        android:text=""
+	        android:textSize="16sp" />
+	    </LinearLayout>
+	    
+	    <LinearLayout 
+	        android:layout_height="wrap_content"
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_margin="8dp">
+	        
+	        <TextView
+	        android:id="@+id/event_with_who"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:gravity="right"
+	        android:layout_weight="1"
+	        android:layout_marginRight="8dp"
+	        android:text="@string/with_who"
+	        android:textSize="16sp" />
+	        
+	        <TextView
+	        android:id="@+id/event_with_who_entry"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_marginLeft="8dp"
+	        android:text=""
+	        android:textSize="16sp" />
+	    </LinearLayout>
     
     </LinearLayout>
 
-    <LinearLayout 
-	    android:orientation="vertical"
-	    android:layout_width="match_parent"
-	    android:layout_height="48dp"
-	    android:layout_alignParentBottom="true"
-	    style="?android:attr/buttonBarStyle"
-	    android:divider="?android:attr/dividerHorizontal"
-        android:showDividers="beginning"
-         >
-	    <Button
-	        android:id="@+id/event_detail_cancel_button"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_centerHorizontal="true"
-	        android:text="@string/cancel_event"
-	        style="?android:attr/borderlessButtonStyle" />
-    </LinearLayout>
+    <include layout="@layout/element_main_activity_button_separator"></include>
+    <Button
+        android:id="@+id/event_detail_cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+    	android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:text="@string/cancel_event"
+        style="?android:attr/borderlessButtonStyle"
+        android:textColor="@color/dark_gray" />
 
-</RelativeLayout>
+</LinearLayout>

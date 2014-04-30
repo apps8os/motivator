@@ -47,7 +47,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_weight="1"
+        android:layout_weight="1.25"
         android:id="@+id/mood_history_weekview"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

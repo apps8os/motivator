@@ -35,17 +35,16 @@ import android.util.SparseArray;
  * @author Toni Järvinen
  *
  */
-public class MoodDataHandler extends MotivatorDatabaseHelper {
+public class DayDataHandler extends MotivatorDatabaseHelper {
 	
 	public static final String NO_COMMENT = "";
 	
-	private static final String TABLE_NAME = TABLE_NAME_QUESTIONNAIRE;
 	private static final String TABLE_NAME_MOOD = TABLE_NAME_MOOD_LEVELS;
 	
 	private SparseArray<Question> mQuestions;
 	private Context mContext;
 	
-	public MoodDataHandler(Context context) {
+	public DayDataHandler(Context context) {
 		super(context);
 		mContext = context;
 		
@@ -64,24 +63,6 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
 			mQuestions.put(id, question);
 		}
-	}
-	
-	public void insertAnswer(int answer, int questionId, int answersId, long content) {
-		open();
-		super.insertAnswer(answer, questionId, answersId, content, TABLE_NAME);
-		close();
-	}
-	
-	public void deleteLastRow() {
-		open();
-    	super.deleteLastRow(TABLE_NAME);
-    	close();
-    }
-	
-	public void deleteRowsWithAnsweringId(int answerId) {
-		open();
-		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
-		close();
 	}
 	
     /**
@@ -127,7 +108,7 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	Cursor query = null;
     	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
     	
-    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " > " + boundaries[0];
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " >= " + boundaries[0];
     	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP, KEY_CONTENT};
     	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
     	
@@ -135,7 +116,8 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	// Initialize the DayInHistory object with the first timestamp on the constructor.
 	    DayInHistory result = new DayInHistory(dayInMillis, mContext);
 	    // Add all moods to the DayInHistory object.
-	    while (query.getCount() > 0 && !query.isClosed()) {
+	    int queryCount = query.getCount();
+	    while (queryCount > 0 && !query.isClosed()) {
 	    	Mood mood = new Mood(query.getInt(0), query.getInt(1), query.getLong(2), query.getString(3));
 	    	result.addMood(mood);
 	    	if (query.isLast()) {
@@ -144,8 +126,31 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
 	    		query.moveToNext();
 	    	}
 	    }
+	    if (!query.isClosed()) {
+	    	query.close();
+	    }
+	    columns = new String[1];
+	    columns[0] = KEY_TIMESTAMP;
+	    query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, null);
+	    result.addAlcoholDrink(query.getCount());
 	    close();
+	    query.close();
 	    return result;
+    }
+    
+    public int getDrinksForDay(long dayInMillis) {
+    	open();
+    	Calendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(dayInMillis);
+    	Cursor query = null;
+    	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
+    	
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " >= " + boundaries[0];
+    	String columns[] = {KEY_TIMESTAMP};
+    	query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, null);
+    	int result = query.getCount();
+    	close();
+ 	    return result;
     }
     
     /**
@@ -164,6 +169,28 @@ public class MoodDataHandler extends MotivatorDatabaseHelper {
     	}
     	return days;
     }
+    
+	/**
+	 * Adds a drink to the event with given id.
+	 * @param answerId
+	 */
+	public void addDrink() {
+		open();
+		ContentValues values = new ContentValues();
+		values.put(KEY_TIMESTAMP, System.currentTimeMillis());
+		mDb.insert(TABLE_NAME_DRINKS, null, values);
+		close();
+	}
+	
+	/**
+	 * Adds a drink to the event with given id.
+	 * @param answerId
+	 */
+	public void removeDrink() {
+		open();
+		super.deleteLastRow(TABLE_NAME_DRINKS);
+		close();
+	}
     
 
 	public Question getQuestion(int id) {

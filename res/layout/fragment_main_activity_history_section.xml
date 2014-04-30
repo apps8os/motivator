@@ -42,6 +42,7 @@
 			        android:layout_weight="1"
 			        android:textColor="@color/orange"
 			        android:gravity="center"
+			        android:fontFamily="sans-serif-light"
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
@@ -65,11 +66,36 @@
 			        android:layout_weight="1"
 			        android:textColor="@color/orange"
 			        android:gravity="center"
+			        android:fontFamily="sans-serif-light"
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
 			        android:src="@drawable/app_icon_1"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:layout_weight="3"
+			         />
+			</LinearLayout>
+			
+	         <LinearLayout
+	            android:id="@+id/main_activity_event_history_button"
+			    android:orientation="horizontal"
+			    style="@style/CardButtonLinearLayout" >
+			    <TextView 
+			        android:id="@+id/card_button_middle_text"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:text="@string/event_history"
+			        android:layout_weight="1"
+			        android:textColor="@color/orange"
+			        android:gravity="center"
+			        android:fontFamily="sans-serif-light"
+			        style="@android:style/TextAppearance.Medium"
+			        />
+			        <ImageView
+			        android:id="@+id/card_button_left_image"
+			        android:src="@drawable/calendar_icon"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"

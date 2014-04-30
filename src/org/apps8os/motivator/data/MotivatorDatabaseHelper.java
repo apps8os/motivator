@@ -57,6 +57,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String KEY_TIMESTAMP = "timestamp";			// Timestamp of when the record was created.
 	protected static final String KEY_CONTENT = "specific_content";		// A special column, which is specific for the different tables. Handled differently on subclasses.
 	protected static final String KEY_SPRINT_TITLE = "sprint_title";
+	protected static final String KEY_COMMENT = "comment";
 	
 	protected static final String TABLE_NAME_QUESTIONNAIRE = "mood_answers";
 	protected static final String TABLE_NAME_EVENTS = "event_answers";
@@ -93,17 +94,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// Create the tables.
-		for (int i = 0; i < NUMBER_OF_TABLES; i++) {
-			String createTable = "CREATE TABLE " + TABLE_NAMES[i] + " (" +
-									KEY_ID + " INTEGER PRIMARY KEY, " +
-									KEY_ID_ANSWERS + " INTEGER, " +
-									KEY_ID_QUESTION + " INTEGER, " +
-									KEY_ANSWER + " INTEGER, " +
-									KEY_TIMESTAMP + " INTEGER, " +
-									KEY_CONTENT + " INTEGER);";
-			db.execSQL(createTable);
-		}
+		db.execSQL(EventDataHandler.CREATE_EVENT_TABLE);
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		db.execSQL(TABLE_CREATE_SPRINTS);
 		db.execSQL(TABLE_CREATE_DRINKS);
@@ -118,24 +109,13 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		this.onCreate(db);
 	}
 	
-	public void open(){
+	public SQLiteDatabase open(){
 		mDb = this.getWritableDatabase();
+		return mDb;
 	}
 	
 	public boolean isOpen() {
 		return mDb.isOpen();
-	}
-	
-	/**
-	 * Adds a drink to the event with given id.
-	 * @param answerId
-	 */
-	public void addDrink() {
-		open();
-		ContentValues values = new ContentValues();
-		values.put(KEY_TIMESTAMP, System.currentTimeMillis());
-		mDb.insert(TABLE_NAME_DRINKS, null, values);
-		close();
 	}
 	
 	/**

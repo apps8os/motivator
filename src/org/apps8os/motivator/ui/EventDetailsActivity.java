@@ -50,12 +50,24 @@ public class EventDetailsActivity extends Activity {
 	    mDataHandler = new EventDataHandler(this);
 	    
 	    TextView title = (TextView) findViewById(R.id.event_detail_title);
+	    String eventName = mEvent.getName();
+	    if (eventName.length() > 0) {
+	    	title.setText(Html.fromHtml(mEvent.getEventDateAsText() + "<br><small>" + eventName));
+	    } else {
 	    title.setText(mEvent.getEventDateAsText());
+	    }
 	    getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
 	    
-	    TextView text = (TextView) findViewById(R.id.event_time_to_go_entry);
+	    TextView startTimeText = (TextView) findViewById(R.id.event_time_to_go_entry);
 	    String textToAdd = mEvent.getStartTimeAsText();
-	    text.setText(Html.fromHtml(textToAdd));
+	    startTimeText.setText(Html.fromHtml(textToAdd));
+	    
+	    TextView endTimeText = (TextView) findViewById(R.id.event_end_time_entry);
+	    textToAdd = mEvent.getEndTimeAsText();
+	    endTimeText.setText(mEvent.getEndTimeAsText());
+	    
+	    TextView withWhoText = (TextView) findViewById(R.id.event_with_who_entry);
+	    withWhoText.setText(mEvent.getWithWho());
 	    
 	    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText("" + mEvent.getPlannedDrinks());
 	    

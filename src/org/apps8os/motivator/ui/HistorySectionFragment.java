@@ -71,6 +71,17 @@ public class HistorySectionFragment extends Fragment {
 			
 		});
 		
+		LinearLayout eventHistoryButton = (LinearLayout) rootView.findViewById(R.id.main_activity_event_history_button);
+		eventHistoryButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getActivity(), EventHistoryActivity.class);
+				intent.putExtra(Sprint.CURRENT_SPRINT, currentSprint);
+				startActivity(intent);
+			}
+			
+		});
+		
 		return rootView;
 	}
 }
