@@ -81,8 +81,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="mood_comment">Add a comment</string>
-    <string name="today_section">Today section</string>
-    <string name="today_section_help">Here you can see your events for the day and record your mood.</string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="select_sprint">Select sprint</string>
@@ -115,5 +113,13 @@
     <string name="you_had_an_event_yesterday">You had an event yesterday. How did it go?</string>
     <string name="drinks">drinks</string>
     <string name="you_did_not_drink_yesterday">You did not drink yesterday!</string>
+    <string name="today_section">Today section</string>
+    <string name="today_section_help">Here you can see your events for the day and record your mood. You can also record the drinks you\'ve drunk with the clicker.</string>
+    <string name="plan_section">Plan section</string>
+    <string name="plan_section_help">Here you can plan events and add goals. You can also see your upcoming events.</string>
+    <string name="history_section">History section</string>
+    <string name="history_section_help">Here you can see your past moods and events. You can also check your sprint.</string>
+    <string name="show_help">Show help</string>
+    <string name="no_events">No Events</string>
 
 </resources>

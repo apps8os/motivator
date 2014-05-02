@@ -341,18 +341,20 @@ public class MoodHistoryActivity extends Activity {
 		mDayPageTitles = new String[mNumberOfTodayInSprint];
 		mLocale = getResources().getConfiguration().locale;
 		mDateFormat = new SimpleDateFormat("dd.MM.yyyy", mLocale);
+    	Calendar date = (Calendar) mStartDate.clone();
 	    for (int i = 0; i < mDayPageTitles.length;i++) {
-	    	Calendar date = (Calendar) mStartDate.clone();
 			date.add(Calendar.DATE, i);
 			mDayPageTitles[i] = mDateFormat.format(date.getTime());
 	    }
-	    
+
 	    mWeekPageTitles = new String[mNumberOfWeeksInSprint];
 	    for (int i = 0; i < mWeekPageTitles.length;i++) {
 	    	long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(i, TimeUnit.DAYS) * 7);
-			Calendar date = new GregorianCalendar();
 			date.setTimeInMillis(dateInMillis);
-			mWeekPageTitles[i] =  getString(R.string.week)+ " " + date.get(Calendar.WEEK_OF_YEAR);
+			date.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+			mWeekPageTitles[i] =  mDateFormat.format(date.getTime());
+			date.add(Calendar.DATE, 6);
+			mWeekPageTitles[i] += " - " + mDateFormat.format(date.getTime());
 	    }
 	}
 	
@@ -451,12 +453,6 @@ public class MoodHistoryActivity extends Activity {
 		 */
 		@Override 
 		public CharSequence getPageTitle(int position) {
-			/*
-			long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS) * 7);
-			Calendar date = new GregorianCalendar();
-			date.setTimeInMillis(dateInMillis);
-			return getString(R.string.week)+ " " + date.get(Calendar.WEEK_OF_YEAR);
-			*/
 			return mWeekPageTitles[position];
 		}
 		

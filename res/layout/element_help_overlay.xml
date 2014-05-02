@@ -20,37 +20,48 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingBottom="20dp"
-    android:background="@color/white_transparent" >
+    android:background="@color/white_transparent"
+    android:clickable="true" >
 
-    <TextView
-        android:id="@+id/help_overlay_title"
+    <LinearLayout
+        android:id="@+id/help_text_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/dark_green"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:fontFamily="sans-serif-thin"
-        android:textStyle="bold" />
-    
-    <TextView
-        android:id="@+id/help_overlay_subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/dark_green"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:fontFamily="sans-serif-condensed"
-        android:layout_marginBottom="24dp" />
-
-    <Button
-        android:id="@+id/help_overlay_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OK"
-         />
-
+  		android:orientation="vertical"
+  		android:background="@color/actionbar_green"
+  		android:paddingTop="10dp"
+	    android:paddingLeft="20dp"
+	    android:paddingRight="20dp"
+	    android:paddingBottom="10dp" >
+	    <TextView
+	        android:id="@+id/help_overlay_title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@color/white"
+	        android:text=""
+	        android:textAppearance="?android:attr/textAppearanceLarge"
+	        android:fontFamily="sans-serif-light"
+	        android:textStyle="bold" />
+	    
+	    <TextView
+	        android:id="@+id/help_overlay_subtitle"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@color/white"
+	        android:text=""
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:fontFamily="sans-serif-condensed"
+	        android:layout_marginBottom="24dp" />
+	
+	    <include layout="@layout/element_card_inner_separator_horizontal"
+	        android:background="@color/white_transparent"/>
+	    <Button
+	        android:id="@+id/help_overlay_button"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/next"
+	        android:textColor="@color/white"
+	        style="?android:attr/borderlessButtonStyle"
+	         />
+    </LinearLayout>
 </LinearLayout>

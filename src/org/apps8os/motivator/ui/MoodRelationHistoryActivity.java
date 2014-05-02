@@ -60,6 +60,18 @@ public class MoodRelationHistoryActivity extends Activity {
 	private Context mContext;
 	private LinearLayout mMoodImageRoot;
 	
+	private int[] mTitlesEnergy = {
+    		R.string.energy_level1, R.string.energy_level2, 
+    		R.string.energy_level3, R.string.energy_level4,
+    		R.string.energy_level5
+    		};
+    
+	private int[] mTitlesMood = {
+    		R.string.mood_level1, R.string.mood_level2,
+    		R.string.mood_level3, R.string.mood_level4,
+    		R.string.mood_level5
+    		};
+	
 	private static final String AMOUNT_OF_DRINKS = "amount_of_drinks";
 
 	/** Called when the activity is first created. */
@@ -115,8 +127,12 @@ public class MoodRelationHistoryActivity extends Activity {
 				mAmountOfDays = 7;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
 				Mood avgMood = getAvgMood(days);
-				setMoodImages(avgMood);
-				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
+				if (avgMood.getEnergy() == -1) {
+					mAvgMoodTextView.setText(getString(R.string.no_added_moods));
+				} else {
+					setMoodImages(avgMood);
+					mAvgMoodTextView.setText("" + getString(mTitlesEnergy[avgMood.getEnergy() - 1]) + " " + getString(mTitlesMood[avgMood.getMood() - 1]));
+				}
 			} 
 			
 			else if (itemPosition == 1) {
@@ -126,8 +142,12 @@ public class MoodRelationHistoryActivity extends Activity {
 				mAmountOfDays = 14;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
 				Mood avgMood = getAvgMood(days);
-				setMoodImages(avgMood);
-				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
+				if (avgMood.getEnergy() == -1) {
+					mAvgMoodTextView.setText(getString(R.string.no_added_moods));
+				} else {
+					setMoodImages(avgMood);
+					mAvgMoodTextView.setText("" + getString(mTitlesEnergy[avgMood.getEnergy() - 1]) + " " + getString(mTitlesMood[avgMood.getMood() - 1]));
+				}
 			} 
 			
 			else if (itemPosition == 2) {
@@ -136,8 +156,12 @@ public class MoodRelationHistoryActivity extends Activity {
 				mAmountOfDays = 30;
 				DayInHistory[] days = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
 				Mood avgMood = getAvgMood(days);
-				setMoodImages(avgMood);
-				mAvgMoodTextView.setText("" + avgMood.getEnergy() + " " + avgMood.getMood());
+				if (avgMood.getEnergy() == -1) {
+					mAvgMoodTextView.setText(getString(R.string.no_added_moods));
+				} else {
+					setMoodImages(avgMood);
+					mAvgMoodTextView.setText("" + getString(mTitlesEnergy[avgMood.getEnergy() - 1]) + " " + getString(mTitlesMood[avgMood.getMood() - 1]));
+				}
 			} 
 			
 			else if (itemPosition == 3) {
@@ -167,6 +191,9 @@ public class MoodRelationHistoryActivity extends Activity {
 			if (allMoods.size() > 0) {
 				avgMood = avgMood / allMoods.size();
 				avgEnergy = avgEnergy / allMoods.size();
+			} else {
+				avgMood = -1;
+				avgEnergy = -1;
 			}
 			return new Mood(avgMood, avgEnergy, 0, "");
 		}

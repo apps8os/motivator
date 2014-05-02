@@ -19,6 +19,7 @@ package org.apps8os.motivator.ui;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
@@ -163,12 +164,17 @@ public class MoodHistoryWeekFragment extends Fragment {
 		public void onPostExecute(ArrayList<DayInHistory> result) {
 			LinearLayout dayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
 			dayLayout.setVisibility(View.GONE);
-			
+			// add the line graph.
+			Line l = new Line();
+			LinePoint p = new LinePoint();
+			DayInHistory day;
+			int resultSize = result.size();
 			// Add the lower half with day views.
-			for (int i = 0; i < result.size(); i++) {
+			for (int i = 0; i < resultSize; i++) {
+				day = result.get(i);
 				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
 				TextView dayText = (TextView) ((LinearLayout) dayView.getChildAt(0)).getChildAt(0);
-				dayText.setText(Html.fromHtml(getDay(result.get(i)) + "<br><small>" + result.get(i).getDateInString(getActivity())));
+				dayText.setText(getDay(day));
 				LinearLayout moodImageRoot = (LinearLayout) dayView.findViewById(R.id.mood_image_root);
 				ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
 				ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
@@ -176,48 +182,26 @@ public class MoodHistoryWeekFragment extends Fragment {
 					energyImage.setImageDrawable(mRes.getDrawable(R.drawable.energy_no_data));
 					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.mood_no_data));
 				} else {
-					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + result.get(i).getFirstMoodOfTheDay().getEnergy(), "drawable", getActivity().getPackageName())));
-					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + result.get(i).getFirstMoodOfTheDay().getMood(), "drawable", getActivity().getPackageName())));
+					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + day.getFirstMoodOfTheDay().getEnergy(), "drawable", getActivity().getPackageName())));
+					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + day.getFirstMoodOfTheDay().getMood(), "drawable", getActivity().getPackageName())));
 
 				}
-				
 				dayLayout.addView(dayView);
+				p.setX(i);
+				int drinks = mDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+				if (drinks > 4) {
+					drinks = 4;
+				}
+				p.setY(drinks);
+				l.addPoint(p);
+				p = new LinePoint();
 			}
-			// add the line graph.
-			Line l = new Line();
-			LinePoint p = new LinePoint();
-			p.setX(0);
-			p.setY(2);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(1);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(2);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(3);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(4);
-			p.setY(2);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(5);
-			p.setY(4);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(6);
-			p.setY(3);
-			l.addPoint(p);
 			l.setColor(Color.parseColor("#FFBB33"));
 			LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
 			li.addLine(l);
 			li.setRangeY(0, 4);
 			li.setLineToFill(0);
+			li.setUsingDips(true);
 			
 			final RelativeLayout loadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
 			

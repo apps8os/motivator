@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
@@ -78,27 +79,31 @@ public class EventHistoryActivity extends Activity {
 			mEventLayout.removeAllViews();
 			
 			int resultSize = result.size();
+			LayoutInflater inflater = getLayoutInflater();
 			MotivatorEvent event;
-			
+			if (resultSize == 0) {
+				LinearLayout noEventsText = (LinearLayout) inflater.inflate(R.layout.element_no_events, mEventLayout, false);
+				mEventLayout.addView(noEventsText);
+			}
 			// Create buttons for the result set.
 			for (int i = 0; i < resultSize; i ++) {
 				event = result.get(i);
 				event.setEventDateAsText(getString(R.string.today));
-				final LinearLayout eventButton = (LinearLayout) getLayoutInflater().inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
+				final LinearLayout eventButton = (LinearLayout) inflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
-				String startTimeAsText = event.getStartTimeAsText();
 				long eventStartTime = event.getStartTime();
 				String eventDate = UtilityMethods.getDateAsString(eventStartTime, mContext);
 				((TextView) buttonTextLayout.getChildAt(0)).setText(eventDate);
 				if (eventName.length() > 0) {
-					((TextView) buttonTextLayout.getChildAt(1)).setText(eventName);
-
+					((TextView) buttonTextLayout.getChildAt(1)).setText(eventName + ", " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+				} else {
+					((TextView) buttonTextLayout.getChildAt(1)).setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				}
 				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
-				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext));
+				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_past_icon);
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.HISTORY));
 				mEventLayout.addView(eventButton);
 			}
 		}

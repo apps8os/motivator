@@ -79,30 +79,6 @@ public class TodaySectionFragment extends Fragment {
 		mRes = getResources();
 		// The layout which has dynamic amount of future events/buttons.
 		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons);
-		final FrameLayout contentRoot = (FrameLayout) mRootView.findViewById(R.id.root_view);
-		
-		// Inflate the help overlay to the fragment.
-		mInflater.inflate(R.layout.element_help_overlay, contentRoot, true);
-		
-		((TextView) contentRoot.findViewById(R.id.help_overlay_title)).setText(getString(R.string.today_section));
-		((TextView) contentRoot.findViewById(R.id.help_overlay_subtitle)).setText(getString(R.string.today_section_help));
-		((Button) contentRoot.findViewById(R.id.help_overlay_button)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final View helpOverlay = (View) contentRoot.findViewById(R.id.help_overlay);
-				helpOverlay.animate()
-					.alpha(0f)
-					.setDuration(500)
-					.setListener(new AnimatorListenerAdapter() {
-						
-						// Set the visibility to gone when animation has ended.
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							helpOverlay.setVisibility(View.GONE);
-						}
-					});
-			}
-		});
 		
 		mDayDataHandler = new DayDataHandler(getActivity());
 		
@@ -203,6 +179,10 @@ public class TodaySectionFragment extends Fragment {
 			int resultSize = result.size();
 			MotivatorEvent event;
 			final TextView lowerDrinkButtonText = (TextView) mDrinkButton.findViewById(R.id.card_button_bottom_text);
+			if (resultSize == 0) {
+				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
+				mEventLayout.addView(noEventsText);
+			}
 			// Create buttons for the result set.
 			for (int i = 0; i < resultSize; i ++) {
 				event = result.get(i);
@@ -221,7 +201,7 @@ public class TodaySectionFragment extends Fragment {
 					((TextView) buttonTextLayout.getChildAt(2)).setText(getString(R.string.when_to_go) + ": " + startTimeAsText);
 				}
 				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext));
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.TODAY));
 				mEventLayout.addView(eventButton);
 				final int eventId = event.getId();
 				final int eventPlannedDrinks = event.getPlannedDrinks();
@@ -244,6 +224,10 @@ public class TodaySectionFragment extends Fragment {
 								}
 								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
+								if (mEventLayout.getChildCount() == 0) {
+									LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
+									mEventLayout.addView(noEventsText);
+								}
 							}
 						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 							@Override

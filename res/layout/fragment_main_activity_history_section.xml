@@ -33,7 +33,8 @@
 	         <LinearLayout
 	            android:id="@+id/main_activity_mood_history_button"
 			    android:orientation="horizontal"
-			    style="@style/CardButtonLinearLayout" >
+			    style="@style/CardButtonLinearLayout"
+			    android:layout_marginTop="6dp" >
 			    <TextView 
 			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
@@ -47,7 +48,7 @@
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
-			        android:src="@drawable/app_icon_1"
+			        android:src="@drawable/mood_history_icon"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"
@@ -59,7 +60,6 @@
 			    android:orientation="horizontal"
 			    style="@style/CardButtonLinearLayout" >
 			    <TextView 
-			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:text="@string/data_analysis"
@@ -70,8 +70,7 @@
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
-			        android:id="@+id/card_button_left_image"
-			        android:src="@drawable/app_icon_1"
+			        android:src="@drawable/relation_icon"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"
@@ -95,7 +94,7 @@
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
-			        android:src="@drawable/calendar_icon"
+			        android:src="@drawable/calendar_history_icon"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"

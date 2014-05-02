@@ -32,8 +32,8 @@
     <FrameLayout
         android:id="@+id/mood_history_week_graph"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >
+        android:layout_height="150dp"
+         >
         
         <com.echo.holographlibrary.LineGraph
 	        android:layout_width="match_parent"
@@ -47,10 +47,10 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_weight="1.25"
+        android:layout_weight="1"
         android:id="@+id/mood_history_weekview"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:layout_marginRight="2dp"
         android:layout_marginLeft="2dp" >
     </LinearLayout>

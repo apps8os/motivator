@@ -78,8 +78,6 @@
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
     <string name="mood_comment">Lisää kommentti</string>
-    <string name="today_section">Today section</string>
-    <string name="today_section_help">Here you can see your events for the day and record your mood.</string>
     <string name="today">Tänään</string>
     <string name="tomorrow">Huomenna</string>
     <string name="select_sprint">Valitse jakso</string>
@@ -111,5 +109,13 @@
     <string name="you_had_an_event_yesterday">Sinulla oli tapahtuma eilen. Miten meni?</string>
     <string name="drinks">juomaa</string>
     <string name="you_did_not_drink_yesterday">Et juonut eilen!</string>
+     <string name="today_section">Tänään osio</string>
+    <string name="today_section_help">Tässä voit katsoa tämänpäivän tapahtumasi ja vastata fiiliskyselyyn. Voit myös lisätä ottamasi juomat laskuriin.</string>
+    <string name="plan_section">Suunnittele osio</string>
+    <string name="plan_section_help">Tässä voit suunnitella tapahtumia ja lisätä tavoitteita. Voit myös katsoa tulevia tapahtumiasi.</string>
+    <string name="history_section">Historia osio</string>
+    <string name="history_section_help">Tässä voit katsoa fiilishistoriaasi ja menneitä tapahtumia. Voit myös tarkastella jaksoasi.</string>
+    <string name="show_help">Näytä ohjeet</string>
+    <string name="no_events">Ei tapahtumia</string>
     
 </resources>

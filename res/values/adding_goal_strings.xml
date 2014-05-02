@@ -11,24 +11,59 @@
   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
     
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
-  THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+  THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO goal SHALL THE AUTHORS 
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string-array name="adding_goal1">
-        <item >What do you want to achieve?</item>
-        <item >Drink less beer</item>
-        <item >Don\'t go to bars</item>
-        <item >Drink water</item>
-    </string-array>
-    <string-array name="adding_goal2">
-        <item name="question">How much?</item>
-        <item >Less than 3</item>
-        <item >5 to 10</item>
-        <item >10 to 15</item>
+   <string name="goal_question_1">What do you want to achieve?</string>
+    <string name="goal_question_1_answer_1">Drink less than X drinks on any given day.</string>
+    <string name="goal_question_1_answer_2">Drink on less than X days.</string>
+    <string name="goal_question_1_answer_3">Stay in the amount of drinks planned.</string>
+    <string name="goal_question_1_answer_4">Drink only when you have planned.</string>
+    
+    <string name="goal_question_2">Choose a timeframe for the goal.</string>
+    <string name="goal_question_2_answer_1">A week</string>
+    <string name="goal_question_2_answer_2">Two weeks</string>
+    <string name="goal_question_2_answer_3">Four weeks</string>
+    
+    <string-array name="id3000">
+        <item >@string/goal_question_1</item>
+        <item >@string/goal_question_1_answer_1</item>
+        <item >@string/goal_question_1_answer_2</item>
+        <item >@string/goal_question_1_answer_3</item>
+        <item >@string/goal_question_1_answer_4</item>
     </string-array>
     
+    <string-array name="id3001">
+        <item >@string/goal_question_2</item>
+        <item >@string/goal_question_2_answer_1</item>
+        <item >@string/goal_question_2_answer_2</item>
+        <item >@string/goal_question_2_answer_3</item>
+    </string-array>
     
-    <integer name ="adding_goal_amount">2</integer>
+    <string-array name="what_answers">
+        <item ></item>
+        <item >@string/goal_question_1_answer_1</item>
+        <item >@string/goal_question_1_answer_2</item>
+        <item >@string/goal_question_1_answer_3</item>
+        <item >@string/goal_question_1_answer_4</item>
+    </string-array>
+    
+    <string-array name="timeframe_answers">
+        <item ></item>
+        <item >@string/goal_question_2_answer_1</item>
+        <item >@string/goal_question_2_answer_2</item>
+        <item >@string/goal_question_2_answer_3</item>
+    </string-array>
+    
+    <string-array name="goal_question_ids">
+        <item >id3000</item>
+        <item >id3001</item>
+    </string-array>
+    
+    <string-array name="goal_required_ids">
+        <item >id3000</item>
+        <item >id3001</item>
+    </string-array>
 </resources>

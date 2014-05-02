@@ -25,6 +25,12 @@ public class MotivatorEvent implements Parcelable {
 	
 	public static final String EVENT = "event";
 	public static final String YESTERDAYS_EVENTS = "yesterdays_events";
+	public static final String EVENT_WITH_DATE = "event_with_date";
+	public static final String SECTION = "section";
+	
+	public static final int HISTORY = 0;
+	public static final int TODAY = 1;
+	public static final int PLAN = 2;
 	
 	private long mStartTime = 0;
 	private long mEndTime = 0;

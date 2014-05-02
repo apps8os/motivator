@@ -64,19 +64,19 @@ public class MoodQuestionActivity extends Activity {
             R.drawable.energy5
             };
 	
-	 private int[] mImages2 = {
+	private int[] mImages2 = {
 	    		R.drawable.mood1, R.drawable.mood2,
 	            R.drawable.mood3, R.drawable.mood4,
 	            R.drawable.mood5
 	            };
 	 
-	 private int[] mTitles1 = {
+	private int[] mTitles1 = {
 	    		R.string.energy_level1, R.string.energy_level2, 
 	    		R.string.energy_level3, R.string.energy_level4,
 	    		R.string.energy_level5
 	    		};
 	    
-	    private int[] mTitles2 = {
+	private int[] mTitles2 = {
 	    		R.string.mood_level1, R.string.mood_level2,
 	    		R.string.mood_level3, R.string.mood_level4,
 	    		R.string.mood_level5

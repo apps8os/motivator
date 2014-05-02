@@ -22,6 +22,8 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -37,6 +39,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,7 +84,7 @@ public class PlanSectionFragment extends Fragment {
 		addGoalButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddingGoalActivity.class);
+				Intent intent = new Intent(getActivity(), AddGoalActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -139,6 +142,10 @@ public class PlanSectionFragment extends Fragment {
 			
 			int resultSize = result.size();
 			MotivatorEvent event;
+			if (resultSize == 0) {
+				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
+				mEventLayout.addView(noEventsText);
+			}
 			// Create buttons for the result set.
 			for (int i = 0; i < resultSize; i ++) {
 				event = result.get(i);
@@ -163,7 +170,7 @@ public class PlanSectionFragment extends Fragment {
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
 				
-				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext));
+				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.PLAN));
 				final int eventId = event.getId();
 				mEventLayout.addView(eventButton);
 				
@@ -178,6 +185,10 @@ public class PlanSectionFragment extends Fragment {
 									int which) {
 								mDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
+								if (mEventLayout.getChildCount() == 0) {
+									LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
+									mEventLayout.addView(noEventsText);
+								}
 							}
 						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 							@Override

@@ -32,22 +32,25 @@ public class OpenEventDetailViewOnClickListener implements OnClickListener {
 	
 	private MotivatorEvent mEvent;
 	private Context mContext;
+	private int mSection;
 	
 	/**
 	 * Create a listener for the event provided.
 	 * @param event
 	 * @param context
 	 */
-	public OpenEventDetailViewOnClickListener(MotivatorEvent event, Context context) {
+	public OpenEventDetailViewOnClickListener(MotivatorEvent event, Context context, int section) {
 		super();
 		mEvent =event;
 		mContext = context;
+		mSection = section;
 	}
 
 	@Override
 	public void onClick(View arg0) {
 		Intent intent = new Intent(mContext, EventDetailsActivity.class);
 		intent.putExtra(MotivatorEvent.EVENT, mEvent);
+		intent.putExtra(MotivatorEvent.SECTION, mSection);
 		mContext.startActivity(intent);
 	}
 

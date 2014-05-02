@@ -25,5 +25,11 @@
     <item android:id="@+id/action_info" android:title="@string/action_info"></item>
     
     <item android:id="@+id/action_start_sprint" android:title="@string/action_start_sprint"></item>
+    
+    <item android:id="@+id/action_show_help" 
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/show_help"></item>
+    
 
 </menu>

@@ -87,7 +87,7 @@ public class DayInHistory implements Parcelable{
 	};
 	
 	public void addAlcoholDrink(int amount) {
-		mAlcoholDrinks += 1;
+		mAlcoholDrinks = amount;
 	}
 	
 	public void addMood(Mood mood) {

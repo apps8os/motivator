@@ -42,12 +42,16 @@ public class GoalDataHandler extends MotivatorDatabaseHelper {
 		mQuestions = new SparseArray<Question>();
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
-		for (int i = 1; i <= res.getInteger(R.integer.adding_goal_amount); i++) {
+		String[] goalQuestionIds =  res.getStringArray(R.array.goal_question_ids);
+		String[] requiredQuestionIds = res.getStringArray(R.array.goal_required_ids);
+		for (int i = 0; i < goalQuestionIds.length; i++) {
+			boolean required = Arrays.asList(requiredQuestionIds).contains(goalQuestionIds[i]);
 			// String array of questions
-			String[] questionAndAnswers = res.getStringArray(res.getIdentifier("adding_goal" + i, "array" , context.getPackageName()));
-			int id = i;
+			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(goalQuestionIds[i], "array", context.getPackageName()));
+			// discard the "id" part of the question id
+			int id = Integer.parseInt(goalQuestionIds[i].substring(2));
 			// Creation of new Question object and inserting it to the array.
-			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), true);
+			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
 			mQuestions.put(id, question);
 		}
 	}

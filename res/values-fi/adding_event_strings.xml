@@ -25,8 +25,8 @@
     <string name="event_question_2_answer_1">En yhtään</string>
     <string name="event_question_2_answer_2">Yhden</string>
     <string name="event_question_2_answer_3">Pari</string>
-    <string name="event_question_2_answer_4">Kolme tai neljä</string>
-    <string name="event_question_2_answer_5">Enemmän kuin neljä</string>
+    <string name="event_question_2_answer_4">Kolme</string>
+    <string name="event_question_2_answer_5">Neljä tai enemmän</string>
     
     <string name="event_question_3">Monelta otat ekan?</string>
     <string name="event_question_3_answer_1">Ennen kuutta</string>

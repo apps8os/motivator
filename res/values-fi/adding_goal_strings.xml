@@ -16,18 +16,16 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <resources>
-    <string-array name="adding_goal1">
-        <item >Mitä haluat saavuttaa?</item>
-        <item >Juoda vähemmän kaljaa</item>
-        <item >En käy baareissa</item>
-        <item >Juoda vettä</item>
-    </string-array>
-    <string-array name="adding_goal2">
-        <item name="question">How much?</item>
-        <item >Vähemmän kuin 3</item>
-        <item >5:stä 10:neen</item>
-        <item >10:stä 15:sta</item>
-    </string-array>
+    <string name="goal_question_1">Mitä haluat saavuttaa?</string>
+    <string name="goal_question_1_answer_1">Juo vähemmän kuin X juomaa minään päivänä.</string>
+    <string name="goal_question_1_answer_2">Juo vain X:nä päivänä.</string>
+    <string name="goal_question_1_answer_3">Pysy suunnitelluiden tapahtumien juomisrajoissa.</string>
+    <string name="goal_question_1_answer_4">Juo vain silloin kun olet suunnitellut.</string>
+    
+    <string name="goal_question_2">Valitse aikajakso tavoitteelle.</string>
+    <string name="goal_question_2_answer_1">Viikko</string>
+    <string name="goal_question_2_answer_2">Kaksi viikkoa</string>
+    <string name="goal_question_2_answer_3">Neljä viikkoa</string>
     
     
     <integer name ="adding_goal_amount">2</integer>

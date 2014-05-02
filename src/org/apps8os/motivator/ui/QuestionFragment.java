@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 /**
@@ -67,7 +68,15 @@ public class QuestionFragment extends Fragment {
 			radioButton.setText(mQuestion.getAnswer(i));
 			mAnswerGroupView.addView(radioButton);
 		}
-				
+		
+		mAnswerGroupView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				((QuestionnaireActivityInterface) getActivity()).setChecked(mQuestion.getId());
+			}
+			
+		});
 		return rootView;
 	}
 	

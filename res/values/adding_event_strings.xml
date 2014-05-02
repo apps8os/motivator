@@ -25,8 +25,8 @@
     <string name="event_question_2_answer_1">Nothing</string>
     <string name="event_question_2_answer_2">One</string>
     <string name="event_question_2_answer_3">Couple</string>
-    <string name="event_question_2_answer_4">Three or four</string>
-    <string name="event_question_2_answer_5">More than four</string>
+    <string name="event_question_2_answer_4">Three</string>
+    <string name="event_question_2_answer_5">Four or more</string>
     
     <string name="event_question_3">When will you start drinking?</string>
     <string name="event_question_3_answer_1">Before 6pm</string>

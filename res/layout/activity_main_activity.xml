@@ -14,38 +14,43 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-   <com.viewpagerindicator.TitlePageIndicator
-    android:id="@+id/indicator"
-    android:padding="10dip"
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:background="@drawable/action_bar_green"
-    android:textColor="@color/gray"
-    app:footerColor="@color/green"
-    app:footerLineHeight="1dp"
-    app:footerIndicatorHeight="5dp"
-    app:footerIndicatorStyle="underline"
-    app:selectedColor="@color/medium_gray"
-    app:selectedBold="true" />
-
-	<android.support.v4.view.ViewPager 
-		xmlns:tools="http://schemas.android.com/tools"
-	    android:id="@+id/main_activity_pager"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    tools:context=".MainActivity" >
-	    <!--
-	    This title strip will display the currently visible page title, as well as the page
-	    titles for adjacent pages.
-	    -->
-
-</android.support.v4.view.ViewPager>
-</LinearLayout>
-
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
+	
+	   <com.viewpagerindicator.TitlePageIndicator
+	    android:id="@+id/indicator"
+	    android:padding="10dip"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:background="@drawable/action_bar_green"
+	    android:textColor="@color/gray"
+	    app:footerColor="@color/green"
+	    app:footerLineHeight="1dp"
+	    app:footerIndicatorHeight="5dp"
+	    app:footerIndicatorStyle="underline"
+	    app:selectedColor="@color/medium_gray"
+	    app:selectedBold="true" />
+	
+		<android.support.v4.view.ViewPager 
+			xmlns:tools="http://schemas.android.com/tools"
+		    android:id="@+id/main_activity_pager"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    tools:context=".MainActivity" >
+		    <!--
+		    This title strip will display the currently visible page title, as well as the page
+		    titles for adjacent pages.
+		    -->
+	
+	</android.support.v4.view.ViewPager>
+	</LinearLayout>
+</FrameLayout>
