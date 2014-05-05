@@ -57,6 +57,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 	private DayDataHandler mDataHandler;
 	private View mRootView;
 	private LayoutInflater mInflater;
+	private ArrayList<DayInHistory> mDays;
 	private long mSprintStartDate;
 	private int mPosition;
 
@@ -169,6 +170,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 			LinePoint p = new LinePoint();
 			DayInHistory day;
 			int resultSize = result.size();
+			mDays = result;
 			// Add the lower half with day views.
 			for (int i = 0; i < resultSize; i++) {
 				day = result.get(i);
@@ -250,104 +252,27 @@ public class MoodHistoryWeekFragment extends Fragment {
 		LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
 		switch (selector) {
 		case DayInHistory.AMOUNT_OF_DRINKS:
-			p.setX(0);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(1);
-			p.setY(3);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(2);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(3);
-			p.setY(2);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(4);
-			p.setY(3);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(5);
-			p.setY(4);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(6);
-			p.setY(1);
-			l.addPoint(p);
-			l.setColor(Color.parseColor("#99CC00"));
-
+			int daysSize = mDays.size();
+			DayInHistory day;
 			li.removeAllLines();
+			for (int i = 0; i < daysSize; i++) {
+				day = mDays.get(i);
+				p.setX(i);
+				int drinks = mDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+				if (drinks > 4) {
+					drinks = 4;
+				}
+				p.setY(drinks);
+				l.addPoint(p);
+				p = new LinePoint();
+			}
+			l.setColor(Color.parseColor("#FFBB33"));
 			li.addLine(l);
 			li.setRangeY(0, 4);
 			li.setLineToFill(0);
+			li.setUsingDips(true);
 			break;
 		case DayInHistory.ALL:
-			p.setX(0);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(1);
-			p.setY(3);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(2);
-			p.setY(1);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(3);
-			p.setY(2);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(4);
-			p.setY(3);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(5);
-			p.setY(4);
-			l.addPoint(p);
-			p = new LinePoint();
-			p.setX(6);
-			p.setY(1);
-			l.addPoint(p);
-			l.setColor(Color.parseColor("#99CC00"));
-			
-			Line line = new Line();
-			p = new LinePoint();
-			p.setX(0);
-			p.setY(2);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(1);
-			p.setY(1);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(2);
-			p.setY(1);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(3);
-			p.setY(1);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(4);
-			p.setY(2);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(5);
-			p.setY(4);
-			line.addPoint(p);
-			p = new LinePoint();
-			p.setX(6);
-			p.setY(3);
-			line.addPoint(p);
-			line.setColor(Color.parseColor("#FFBB33"));
-			li.addLine(l);
-			li.addLine(line);
-			li.setRangeY(0, 4);
-			li.setLineToFill(0);
 			break;
 		}
 	}

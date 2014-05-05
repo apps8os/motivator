@@ -121,5 +121,6 @@
     <string name="history_section_help">Here you can see your past moods and events. You can also check your sprint.</string>
     <string name="show_help">Show help</string>
     <string name="no_events">No Events</string>
+    <string name="average_mood">Avg Mood</string>
 
 </resources>

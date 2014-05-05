@@ -16,43 +16,74 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:baselineAligned="false"
     android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    android:id="@+id/mood_history_week_root" >
-
-    <RelativeLayout
-	    style="@style/LoadingBackground"
-	    android:id="@+id/mood_history_loading_panel"
-    >
-    <ProgressBar
-        style="@style/LoadingIndicator"/>
-	</RelativeLayout>
-    
-    <FrameLayout
-        android:id="@+id/mood_history_week_graph"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-         >
-        
-        <com.echo.holographlibrary.LineGraph
+	android:layout_height="fill_parent"
+	android:orientation="horizontal">
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="0dp"
+	    android:layout_height="match_parent"
+	    android:layout_weight="1">
+	    <ImageView
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
+	        android:src="@drawable/drink_icon"
+	        android:layout_marginTop="4dp"
+	        ></ImageView>
+	    <include layout="@layout/element_main_activity_button_separator"/>
+	    <TextView 
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-	        android:layout_marginLeft="10dp"
-	        android:layout_marginRight="60dp"
-	        android:layout_marginTop="10dp"
-	        android:id="@+id/graph"/>
+	        android:layout_weight="1"
+	        android:text="@string/average_mood"
+	        style="@style/CardSeparatorTitle"
+	        />
+	</LinearLayout>
+	<LinearLayout 
+	    android:orientation="vertical"
+	    android:layout_width="0dp"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="9"
+	    android:id="@+id/mood_history_week_root" >
+	
+	    <RelativeLayout
+		    style="@style/LoadingBackground"
+		    android:id="@+id/mood_history_loading_panel"
+	    >
+	    <ProgressBar
+	        style="@style/LoadingIndicator"/>
+		</RelativeLayout>
+	    
+	    <FrameLayout
+	        android:id="@+id/mood_history_week_graph"
+	        android:layout_width="match_parent"
+	        android:layout_height="150dp"
+	        android:layout_marginLeft="4dp"
+	        android:layout_marginRight="4dp"
+	        android:layout_marginTop="4dp"
+	        android:background="@drawable/card_background"
+	         >
 	        
-    </FrameLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_weight="1"
-        android:id="@+id/mood_history_weekview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="2dp"
-        android:layout_marginLeft="2dp" >
-    </LinearLayout>
-
+	        <com.echo.holographlibrary.LineGraph
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginLeft="8dp"
+		        android:layout_marginRight="48dp"
+		        android:layout_marginTop="8dp"
+		        android:id="@+id/graph"/>
+		        
+	    </FrameLayout>
+	    <include layout="@layout/element_main_activity_button_separator"/>
+	    <LinearLayout
+	        android:orientation="horizontal"
+	        android:layout_weight="1"
+	        android:id="@+id/mood_history_weekview"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginTop="2dp"
+	        android:layout_marginLeft="2dp" >
+	    </LinearLayout>
+	</LinearLayout>
 </LinearLayout>

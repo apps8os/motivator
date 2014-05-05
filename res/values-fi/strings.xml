@@ -117,5 +117,6 @@
     <string name="history_section_help">Tässä voit katsoa fiilishistoriaasi ja menneitä tapahtumia. Voit myös tarkastella jaksoasi.</string>
     <string name="show_help">Näytä ohjeet</string>
     <string name="no_events">Ei tapahtumia</string>
+    <string name="average_mood">Keskim. Fiilis</string>
     
 </resources>
