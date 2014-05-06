@@ -48,7 +48,7 @@
 			        />
 			        <ImageView
 			        android:id="@+id/card_button_left_image"
-			        android:src="@drawable/mood_history_icon"
+			        android:src="@drawable/day_history_icon2"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="3"

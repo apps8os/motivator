@@ -25,6 +25,8 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.data.SprintDataHandler;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -34,6 +36,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,6 +63,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	private DayDataHandler mDataHandler;
 	private int mAvgMood = 0;
 	private TextView mAvgMoodTextView;
+	private TextView mAvgEnergyTextView;
 	private Context mContext;
 	private LinearLayout mMoodImageRoot;
 	private DayInHistory[] mDays;
@@ -93,7 +97,10 @@ public class MoodRelationHistoryActivity extends Activity {
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 	    bar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
 	    
+	    ((TextView) findViewById(R.id.mood_relation_history_top_title)).setText(Html.fromHtml(getString(R.string.filter_by) + ":<br>" + getString(R.string.amount_of_drinks)));
+	    
 	    mAvgMoodTextView = (TextView) findViewById(R.id.mood_relation_history_average_mood);
+	    mAvgEnergyTextView = (TextView) findViewById(R.id.mood_relation_history_average_energy);
 	    mMoodImageRoot = (LinearLayout) findViewById(R.id.mood_image_root);
 	    
 	    final Button zeroAmount = (Button) findViewById(R.id.mood_relation_history_top_button1);
@@ -104,10 +111,17 @@ public class MoodRelationHistoryActivity extends Activity {
 	    zeroAmount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCaseSelector = AMOUNT_OF_DRINKS;
-				mArgument = 0;
+				if (zeroAmount.isSelected()) {
+					mArgument = -1;
+					mCaseSelector = ALL;
+					zeroAmount.setSelected(false);
+				} else {
+					mArgument = 0;
+					mCaseSelector = AMOUNT_OF_DRINKS;
+					zeroAmount.setSelected(true);
+				}
 				setAvgMood(mDays, mCaseSelector, mArgument);
-				zeroAmount.setSelected(true);
+				
 				oneAmount.setSelected(false);
 				twoAmount.setSelected(false);
 				threeAmount.setSelected(false);
@@ -117,11 +131,17 @@ public class MoodRelationHistoryActivity extends Activity {
 	    oneAmount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCaseSelector = AMOUNT_OF_DRINKS;
-				mArgument = 1;
+				if (oneAmount.isSelected()) {
+					mArgument = -1;
+					mCaseSelector = ALL;
+					oneAmount.setSelected(false);
+				} else {
+					mArgument = 1;
+					mCaseSelector = AMOUNT_OF_DRINKS;
+					oneAmount.setSelected(true);
+				}
 				setAvgMood(mDays, mCaseSelector, mArgument);
 				zeroAmount.setSelected(false);
-				oneAmount.setSelected(true);
 				twoAmount.setSelected(false);
 				threeAmount.setSelected(false);
 			}
@@ -130,12 +150,18 @@ public class MoodRelationHistoryActivity extends Activity {
 	    twoAmount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCaseSelector = AMOUNT_OF_DRINKS;
-				mArgument = 2;
+				if (twoAmount.isSelected()) {
+					mArgument = -1;
+					mCaseSelector = ALL;
+					twoAmount.setSelected(false);
+				} else {
+					mArgument = 2;
+					mCaseSelector = AMOUNT_OF_DRINKS;
+					twoAmount.setSelected(true);
+				}
 				setAvgMood(mDays, mCaseSelector, mArgument);
 				zeroAmount.setSelected(false);
 				oneAmount.setSelected(false);
-				twoAmount.setSelected(true);
 				threeAmount.setSelected(false);
 			}
 	    });
@@ -143,13 +169,19 @@ public class MoodRelationHistoryActivity extends Activity {
 	    threeAmount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCaseSelector = AMOUNT_OF_DRINKS;
-				mArgument = 3;
+				if (threeAmount.isSelected()) {
+					mArgument = -1;
+					mCaseSelector = ALL;
+					threeAmount.setSelected(false);
+				} else {
+					mArgument = 3;
+					mCaseSelector = AMOUNT_OF_DRINKS;
+					threeAmount.setSelected(true);
+				}
 				setAvgMood(mDays, mCaseSelector, mArgument);
 				zeroAmount.setSelected(false);
 				oneAmount.setSelected(false);
 				twoAmount.setSelected(false);
-				threeAmount.setSelected(true);
 			}
 	    });
 	    
@@ -208,8 +240,10 @@ public class MoodRelationHistoryActivity extends Activity {
 		setMoodImages(avgMoods);
 		if (avgMoods.getEnergy() == -1) {
 			mAvgMoodTextView.setText(getString(R.string.no_added_moods));
+			mAvgEnergyTextView.setText("");
 		} else {
-			mAvgMoodTextView.setText("" + getString(mTitlesEnergy[avgMoods.getEnergy() - 1]) + " " + getString(mTitlesMood[avgMoods.getMood() - 1]));
+			mAvgMoodTextView.setText("" + getString(R.string.energy) + " " + getString(mTitlesMood[avgMoods.getMood() - 1]));
+			mAvgEnergyTextView.setText("" + getString(R.string.mood) + " " + getString(mTitlesEnergy[avgMoods.getEnergy() - 1]));
 		}
 	}
 	
@@ -250,6 +284,15 @@ public class MoodRelationHistoryActivity extends Activity {
 			} 
 			
 			else if (itemPosition == 3) {
+				SprintDataHandler sprintHandler = new SprintDataHandler(MoodRelationHistoryActivity.this);
+				Sprint current = sprintHandler.getCurrentSprint();
+				mFromTimeInMillis = current.getStartTime();
+				mAmountOfDays = current.getCurrentDayOfTheSprint();
+				mDays = mDataHandler.getDaysAfter(mFromTimeInMillis, mAmountOfDays);
+				setAvgMood(mDays, mCaseSelector, mArgument);
+			} 
+			
+			else if (itemPosition == 4) {
 				showTimeFramePicker();
 			}
 			

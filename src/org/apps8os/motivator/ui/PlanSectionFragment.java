@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents the planning section in the UI.
@@ -189,6 +191,15 @@ public class PlanSectionFragment extends Fragment {
 									LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 									mEventLayout.addView(noEventsText);
 								}
+								View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, null);
+								TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+								toastText.setText(getString(R.string.event_canceled));
+								toastText.setTextColor(Color.WHITE);
+								
+								Toast canceled = new Toast(mContext);
+								canceled.setDuration(Toast.LENGTH_SHORT);
+								canceled.setView(toastLayout);
+								canceled.show();
 							}
 						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 							@Override

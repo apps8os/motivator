@@ -22,12 +22,15 @@ import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents a details activity for an event.
@@ -78,6 +81,16 @@ public class EventDetailsActivity extends Activity {
 				public void onClick(View arg0) {
 					// Delete the answers with the event/answers id
 					mDataHandler.deleteEvent(eventId);
+					
+					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(getString(R.string.event_canceled));
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast canceled = new Toast(getApplicationContext());
+					canceled.setDuration(Toast.LENGTH_SHORT);
+					canceled.setView(toastLayout);
+					canceled.show();
 					parentActivity.finish();
 				}
 		    	

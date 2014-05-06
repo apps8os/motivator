@@ -27,6 +27,7 @@
         <item>Viime viikko</item>
         <item>Viimeiset kaksi viikkoa</item>
         <item>Viimeiset 30 päivää</item>
+        <item>Nykyinen jakso</item>
         <item>Valitse aikajakso</item>
     </string-array>
 </resources>

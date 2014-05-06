@@ -181,7 +181,6 @@ public class AddingEventActivity extends Activity {
 					mProgressBar.incrementProgressBy(1);
 				} else {
 					// Initialize the amount of drinks to zero.
-					mDataHandler.insertAnswer(0, MotivatorDatabaseHelper.DRINK_AMOUNT_ID, mAnswerId);
 					// Questionnaire is done
 					finish();
 				}

@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -64,6 +66,7 @@ public class TodaySectionFragment extends Fragment {
 	private LinearLayout mEventLayout;
 	private LinearLayout mDrinkButton;
 	private TextView mDrinkCounterTextView;
+	private TextView mPlannedDrinksTextView;
 	private Resources mRes;
 	private View mRootView;
 	private LayoutInflater mInflater;
@@ -100,6 +103,7 @@ public class TodaySectionFragment extends Fragment {
 		ImageButton addDrink = (ImageButton) mDrinkButton.findViewById(R.id.add_drink_button);
 		ImageButton removeDrink = (ImageButton) mDrinkButton.findViewById(R.id.remove_drink_button);
 		mDrinkCounterTextView.setTextColor(mRes.getColor(R.color.medium_gray));
+		mPlannedDrinksTextView = (TextView) mDrinkButton.findViewById(R.id.card_button_bottom_text);
 		
 		addDrink.setOnClickListener(new OnClickListener() {
 			@Override
@@ -107,6 +111,9 @@ public class TodaySectionFragment extends Fragment {
 				mDrinkCounter += 1;
 				mDayDataHandler.addDrink();
 				mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
+				if (mDrinkCounter > mPlannedDrinks) {
+					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
+				}
 			}
 		});
 		
@@ -117,6 +124,9 @@ public class TodaySectionFragment extends Fragment {
 					mDrinkCounter -= 1;
 					mDayDataHandler.removeDrink();
 					mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
+				}
+				if (mDrinkCounter <= mPlannedDrinks) {
+					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.medium_gray));
 				}
 			}
 		});
@@ -178,7 +188,6 @@ public class TodaySectionFragment extends Fragment {
 			mPlannedDrinks = 0;
 			int resultSize = result.size();
 			MotivatorEvent event;
-			final TextView lowerDrinkButtonText = (TextView) mDrinkButton.findViewById(R.id.card_button_bottom_text);
 			if (resultSize == 0) {
 				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
@@ -191,7 +200,7 @@ public class TodaySectionFragment extends Fragment {
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
 				String startTimeAsText = event.getStartTimeAsText();
-				((TextView) buttonTextLayout.getChildAt(1)).setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
+				((TextView) buttonTextLayout.getChildAt(1)).setText(mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(event.getPlannedDrinks()) + " " + getString(R.string.drinks));
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 				} else {
@@ -218,9 +227,9 @@ public class TodaySectionFragment extends Fragment {
 									int which) {
 								mPlannedDrinks -= eventPlannedDrinks;
 								if (mPlannedDrinks == 0) {
-									lowerDrinkButtonText.setText(getString(R.string.no_drinks_planned));
+									mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 								} else {
-									lowerDrinkButtonText.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
+									mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
 								}
 								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
@@ -228,6 +237,15 @@ public class TodaySectionFragment extends Fragment {
 									LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 									mEventLayout.addView(noEventsText);
 								}
+								View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, null);
+								TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+								toastText.setText(getString(R.string.event_canceled));
+								toastText.setTextColor(Color.WHITE);
+								
+								Toast canceled = new Toast(mContext);
+								canceled.setDuration(Toast.LENGTH_SHORT);
+								canceled.setView(toastLayout);
+								canceled.show();
 							}
 						}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 							@Override
@@ -240,11 +258,15 @@ public class TodaySectionFragment extends Fragment {
 					}
 				});
 			}
-			lowerDrinkButtonText.setTextColor(mRes.getColor(R.color.medium_gray));
 			if (mPlannedDrinks == 0) {
-				lowerDrinkButtonText.setText(getString(R.string.no_drinks_planned));
+				mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 			} else {
-				lowerDrinkButtonText.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
+				mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
+			}
+			if (mDrinkCounter > mPlannedDrinks) {
+				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
+			} else {
+				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.medium_gray));
 			}
 		}
 	}

@@ -28,6 +28,16 @@
         <item>@string/every_hour_value</item>
     </string-array>
     
+    <string-array name="languages">
+        <item>@string/english</item>
+        <item>@string/finnish</item>
+    </string-array>
+    
+    <string-array name="languages_entryvalues">
+        <item>en</item>
+        <item>fi</item>
+    </string-array>
+    
     <!-- No need to translate as they are used only as programmatic selector -->
     <string name="in_the_morning_value">AM</string>
     <string name="morning_and_evening_value">AMPM</string>
@@ -37,6 +47,7 @@
         <item>Last week</item>
         <item>Last two weeks</item>
         <item>Last 30 days</item>
+        <item>Current sprint</item>
         <item>Specific timeframe</item>
     </string-array>
     

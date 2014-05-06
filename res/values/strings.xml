@@ -38,7 +38,7 @@
     <string name="energy_level4">Energized</string>
     <string name="energy_level5">Super</string>
     <string name="add_event">Add event</string>
-    <string name="show_mood_history">Mood history</string>
+    <string name="show_mood_history">Day history</string>
     <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
     <string name="questionnaire_done_toast_good_mood">Awesome!</string>
     <string name="add_goal">Add goal</string>
@@ -72,7 +72,7 @@
     <string name="amount_of_drinks">How many drinks</string>
     <string name="swipe_right_for_plans">On the right you can make plans</string>
     <string name="swipe_left_for_history">On the left you can see your history</string>
-    <string name="data_analysis">View your sprint</string>
+    <string name="data_analysis">View your moods</string>
     <string name="week">Week</string>
     <string name="today_is_the_day">Today is the day</string>
     <string name="select_a_timeframe">Select a timeframe</string>
@@ -122,5 +122,11 @@
     <string name="show_help">Show help</string>
     <string name="no_events">No Events</string>
     <string name="average_mood">Avg Mood</string>
+    <string name="filter_by">Filter by</string>
+    <string name="select_language">Select language</string>
+    <string name="english">English</string>
+    <string name="finnish">Finnish</string>
+    <string name="event_added">Event Added</string>
+    <string name="event_canceled">Event Canceled</string>
 
 </resources>

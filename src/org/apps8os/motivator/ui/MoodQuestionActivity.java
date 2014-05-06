@@ -129,6 +129,8 @@ public class MoodQuestionActivity extends Activity {
     				Intent intent = new Intent(MoodQuestionActivity.this, CheckEventsActivity.class);
     				intent.putExtra(MotivatorEvent.YESTERDAYS_EVENTS, extras.getParcelableArrayList(MotivatorEvent.YESTERDAYS_EVENTS));
     				startActivity(intent);
+    				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    		        notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
     				finish();
     			}
             	
@@ -160,14 +162,15 @@ public class MoodQuestionActivity extends Activity {
 					questionnaireDone.setView(toastLayout);
 					questionnaireDone.show();
 					
+					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			        notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
+			        
 					finish();
 				}
 	        	
 	        });
 	        buttons.addView(okButton);
         }
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(NotificationService.NOTIFICATION_ID_MOOD);
 	}
 	
 	/**

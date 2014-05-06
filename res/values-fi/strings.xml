@@ -39,7 +39,7 @@
     <string name="energy_level4">Energinen</string>
     <string name="energy_level5">Super</string>
     <string name="add_event">Lisää tapahtuma</string>
-    <string name="show_mood_history">Fiilishistoria</string>
+    <string name="show_mood_history">Päivähistoria</string>
     <string name="questionnaire_done_toast_bad_mood">Tsemppiä!</string>
     <string name="questionnaire_done_toast_good_mood">Hyvin menee!</string>
     <string name="add_goal">Lisää tavoite</string>
@@ -69,7 +69,7 @@
     <string name="amount_of_drinks">Kuinka monta juomaa</string>
     <string name="swipe_right_for_plans">Oikealla voit tehdä suunnitelmia</string>
     <string name="swipe_left_for_history">Vasemmalla näet historiasi</string>
-    <string name="data_analysis">Tarkastele jaksoa</string>
+    <string name="data_analysis">Tarkastele fiiliksiäsi</string>
     <string name="week">Viikko</string>
     <string name="today_is_the_day">Tänään on</string>
     <string name="select_a_timeframe">Valitse aikaväli</string>
@@ -118,5 +118,11 @@
     <string name="show_help">Näytä ohjeet</string>
     <string name="no_events">Ei tapahtumia</string>
     <string name="average_mood">Keskim. Fiilis</string>
+    <string name="filter_by">Suodata</string>
+    <string name="select_language">Valitse kieli</string>
+    <string name="english">Englanti</string>
+    <string name="finnish">Suomi</string>
+    <string name="event_added">Tapahtuma Lisätty</string>
+    <string name="event_canceled">Tapahtuma Peruutettu</string>
     
 </resources>

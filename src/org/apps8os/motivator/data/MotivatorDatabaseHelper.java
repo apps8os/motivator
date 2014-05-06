@@ -37,7 +37,6 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	public static final String ANSWER_ID_INCREMENT_PREFS = "incrementing_prefs";
 	public static final String ANSWER_ID = "incrementing_id";
 	public static final int COMMENT_ID = 1901;
-	public static final int DRINK_AMOUNT_ID = 1900;
 
 	private static final int DATABASE_VERSION = 1;
 	private static final int NUMBER_OF_TABLES = 3;						// Number of tables with the same questionnaire format.

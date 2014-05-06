@@ -48,7 +48,7 @@ import android.util.SparseArray;
 public class EventDataHandler extends MotivatorDatabaseHelper {
 	
 	public static final int QUESTION_ID_WHEN = 1000;
-	public static final int QUESTION_ID_WHERE = 1001;
+	public static final int QUESTION_ID_HOW_MUCH = 1001;
 	public static final int QUESTION_ID_TIME_TO_GO = 1002;
 	public static final int QUESTION_ID_TIME_TO_COME_BACK = 1003;
 	public static final int QUESTION_ID_WITH_WHO = 1004;
@@ -380,9 +380,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	public Question getQuestion(int id) {
-		if (id == MotivatorDatabaseHelper.DRINK_AMOUNT_ID) {
-			return null;
-		}
 		return mQuestions.get(id);
 	}
 	

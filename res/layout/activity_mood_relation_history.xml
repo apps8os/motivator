@@ -15,111 +15,125 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="10dp"
-    android:background="@color/light_gray"
-    android:orientation="vertical" >
-    
-    <LinearLayout
-        android:background="@drawable/card_background"
-        android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:layout_marginLeft="2dp"
-        >
-	    <TextView
-	        android:id="@+id/mood_relation_history_top_title"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="9dp"
-	        android:layout_marginBottom="9dp"
-	        android:layout_gravity="center"
-	        android:textColor="@color/medium_gray"
-	        android:text="@string/amount_of_drinks"
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ScrollViewBackground" >
+	<LinearLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="10dp"
+	    android:background="@color/light_gray"
+	    android:orientation="vertical" >
 	    
 	    <LinearLayout
-	        android:id="@+id/mood_relation_history_top_buttons"
+	        android:background="@drawable/card_background"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:layout_margin="4dp"
-	        style="?android:attr/buttonBarStyle" >
-	        <Button
-	            android:id="@+id/mood_relation_history_top_button1"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textColor="@color/button_selected_orange_text"
-	            android:text="0"
-	            style="?android:attr/borderlessButtonStyle"
-	            android:background="@drawable/button_selected_orange_bg" />
-	
-	        <Button
-	            android:id="@+id/mood_relation_history_top_button2"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textColor="@color/button_selected_orange_text"
-	            android:text="1"
-	            style="?android:attr/borderlessButtonStyle"
-	            android:background="@drawable/button_selected_orange_bg" />
-	
-	        <Button
-	            android:id="@+id/mood_relation_history_top_button3"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textColor="@color/button_selected_orange_text"
-	            android:text="2-3"
-	            style="?android:attr/borderlessButtonStyle"
-	            android:background="@drawable/button_selected_orange_bg" />
-	
-	        <Button
-	            android:id="@+id/mood_relation_history_top_button4"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:textColor="@color/button_selected_orange_text"
-	            android:text="4+"
-	            style="?android:attr/borderlessButtonStyle"
-	            android:background="@drawable/button_selected_orange_bg" />
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginLeft="2dp"
+	        >
+		    <TextView
+		        android:id="@+id/mood_relation_history_top_title"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="9dp"
+		        android:layout_marginBottom="9dp"
+		        android:layout_gravity="center"
+		        android:gravity="center"
+		        android:fontFamily="sans-serif-light"
+		        android:textColor="@color/medium_gray"
+		        android:text="@string/amount_of_drinks"
+		        android:textAppearance="?android:attr/textAppearanceLarge" />
+		    
+		    <LinearLayout
+		        android:id="@+id/mood_relation_history_top_buttons"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="horizontal"
+		        android:layout_margin="4dp"
+		        style="?android:attr/buttonBarStyle" >
+		        <Button
+		            android:id="@+id/mood_relation_history_top_button1"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:textColor="@color/button_selected_orange_text"
+		            android:text="0"
+		            style="?android:attr/borderlessButtonStyle"
+		            android:background="@drawable/button_selected_orange_bg" />
+		
+		        <Button
+		            android:id="@+id/mood_relation_history_top_button2"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:textColor="@color/button_selected_orange_text"
+		            android:text="1"
+		            style="?android:attr/borderlessButtonStyle"
+		            android:background="@drawable/button_selected_orange_bg" />
+		
+		        <Button
+		            android:id="@+id/mood_relation_history_top_button3"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:textColor="@color/button_selected_orange_text"
+		            android:text="2-3"
+		            style="?android:attr/borderlessButtonStyle"
+		            android:background="@drawable/button_selected_orange_bg" />
+		
+		        <Button
+		            android:id="@+id/mood_relation_history_top_button4"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1"
+		            android:textColor="@color/button_selected_orange_text"
+		            android:text="4+"
+		            style="?android:attr/borderlessButtonStyle"
+		            android:background="@drawable/button_selected_orange_bg" />
+		    </LinearLayout>
 	    </LinearLayout>
-    </LinearLayout>
-    <TextView
-        style="@style/CardSeparatorTitle"
-        android:text="Your average mood"
-         />
-    <include layout="@layout/element_main_activity_button_separator"/>
-    
-    <LinearLayout
-        android:background="@drawable/card_background"
-        android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="8dp"
-	    android:orientation="vertical"
-        >
-	    <include 
-	        layout="@layout/element_mood_image"
-	        android:layout_width="220dp"
-		    android:layout_height="210dp"
-	        android:layout_gravity="center"
-	        android:layout_margin="20dp"/>
-	    
 	    <TextView
-	        android:id="@+id/mood_relation_history_average_mood"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_gravity="center"
-	        android:layout_marginBottom="20dp"
-	        android:textColor="@color/medium_gray"
-	        android:text=""
-	        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-   </LinearLayout>
-
-</LinearLayout>
+	        style="@style/CardSeparatorTitle"
+	        android:text="Your average mood"
+	         />
+	    <include layout="@layout/element_main_activity_button_separator"/>
+	    
+	    <LinearLayout
+	        android:background="@drawable/card_background"
+	        android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="8dp"
+		    android:orientation="vertical"
+	        >
+		    <TextView
+		        android:id="@+id/mood_relation_history_average_energy"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"
+		        android:layout_marginTop="20dp"
+		        android:textColor="@color/medium_gray"
+		        android:text=""
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    <include 
+		        layout="@layout/element_mood_image"
+		        android:layout_width="210dp"
+			    android:layout_height="200dp"
+		        android:layout_gravity="center"
+		        android:layout_margin="10dp"/>
+		    
+		    <TextView
+		        android:id="@+id/mood_relation_history_average_mood"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"
+		        android:layout_marginBottom="20dp"
+		        android:textColor="@color/medium_gray"
+		        android:text=""
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	   </LinearLayout>
+	
+	</LinearLayout>
+</ScrollView>

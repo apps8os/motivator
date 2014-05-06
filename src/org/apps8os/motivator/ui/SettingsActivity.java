@@ -19,6 +19,7 @@ package org.apps8os.motivator.ui;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.services.NotificationService;
@@ -30,9 +31,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 
 /**
  * A settings activity for application settings.
@@ -92,6 +95,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 		
 	}
 	
+
 	/**
 	 * Set the notifications based on the selected interval.
 	 * @param pendingNotificationIntent
