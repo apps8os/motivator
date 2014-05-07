@@ -79,6 +79,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		// Set the notification to repeat over the given time at notificationTime
 		Intent notificationIntent = new Intent(this, NotificationService.class);
+		notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_MOOD);
 		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);	
 		// Check if we need to send notifications or not.
 		if (key.equals(KEY_SEND_NOTIFICATIONS)) {
@@ -109,6 +110,12 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 
 		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.in_the_morning_value));
 		alarmManager.cancel(pendingNotificationIntent);
+		if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
+			notificationTime.add(Calendar.DATE, 1);
+		}
+		notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
+		/**
 		if (mTimeToNotify == mRes.getString(R.string.in_the_morning_value)) {
 			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 				notificationTime.add(Calendar.DATE, 1);
@@ -129,6 +136,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 			notificationTime.add(Calendar.HOUR_OF_DAY, 1);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingNotificationIntent);
 		}
+		**/
 	}
 
 }

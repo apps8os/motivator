@@ -128,5 +128,9 @@
     <string name="finnish">Finnish</string>
     <string name="event_added">Event Added</string>
     <string name="event_canceled">Event Canceled</string>
-
+    <string name="event_will_be_deleted">The event will be deleted.</string>
+    <string name="substance_help">We provide substance abuse counseling and help around the clock, every day of the year - completely free of charge and anonymously. Call us on 0800 900 45 and ask for advice from substance abuse professionals.</string>
+	<string name="call_substance_work">Call Substance Work</string>
+	<string name="visit_substance_work_website">Visit Substance Work Website</string>
+	
 </resources>

@@ -181,7 +181,7 @@ public class PlanSectionFragment extends Fragment {
 					@Override
 					public boolean onLongClick(View v) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-						builder.setMessage(getString(R.string.cancel_event)+ "?").setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						builder.setTitle(getString(R.string.cancel_event) + "?").setMessage(getString(R.string.event_will_be_deleted)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {

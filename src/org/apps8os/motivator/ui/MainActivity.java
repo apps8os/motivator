@@ -41,6 +41,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -277,8 +278,15 @@ public class MainActivity extends Activity {
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		// Set the notification to repeat over the given time at notificationTime
 		Intent notificationIntent = new Intent(this, NotificationService.class);
+		notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_MOOD);
 		PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 		alarmManager.cancel(pendingNotificationIntent);
+		if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
+			notificationTime.add(Calendar.DATE, 1);
+		}
+		notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
+		/**
 		if (mTimeToNotify == getString(R.string.in_the_morning_value)) {
 			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 				notificationTime.add(Calendar.DATE, 1);
@@ -299,6 +307,12 @@ public class MainActivity extends Activity {
 			notificationTime.add(Calendar.HOUR_OF_DAY, 1);
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingNotificationIntent);
 		}
+		**/
+	}
+	
+	public void visitWebsite(View view) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.paihdeneuvonta.fi"));
+		startActivity(browserIntent);
 	}
 
 	/**

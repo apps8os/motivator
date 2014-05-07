@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -104,7 +105,7 @@ public class TodaySectionFragment extends Fragment {
 		ImageButton removeDrink = (ImageButton) mDrinkButton.findViewById(R.id.remove_drink_button);
 		mDrinkCounterTextView.setTextColor(mRes.getColor(R.color.medium_gray));
 		mPlannedDrinksTextView = (TextView) mDrinkButton.findViewById(R.id.card_button_bottom_text);
-		
+		final Context context = getActivity();
 		addDrink.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -113,6 +114,49 @@ public class TodaySectionFragment extends Fragment {
 				mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
 				if (mDrinkCounter > mPlannedDrinks) {
 					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
+					mDrinkButton.setBackgroundResource(R.drawable.card_background_red);
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setTitle("Kaikki OK?").setMessage("Menit ylitse suunniteltujen juomien.").setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, null);
+							TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+							toastText.setText("Hyvä! Pidä hauskaa.");
+							toastText.setTextColor(Color.WHITE);
+							
+							Toast canceled = new Toast(context);
+							canceled.setDuration(Toast.LENGTH_SHORT);
+							canceled.setView(toastLayout);
+							canceled.show();
+						}
+					}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+							LinearLayout helpDialogLayout = (LinearLayout) mInflater.inflate(R.layout.element_alcohol_help_dialog, null);
+							builder.setView(helpDialogLayout);
+							builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									View toastLayout = (View) mInflater.inflate(R.layout.element_mood_toast, null);
+									TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+									toastText.setText(getString(R.string.questionnaire_done_toast_bad_mood));
+									toastText.setTextColor(Color.WHITE);
+									
+									Toast canceled = new Toast(context);
+									canceled.setDuration(Toast.LENGTH_SHORT);
+									canceled.setView(toastLayout);
+									canceled.show();
+								}
+							});
+							Dialog helpDialog = builder.create();
+							helpDialog.show();
+						}
+					});
+					Dialog dialog = builder.create();
+					dialog.show();
 				}
 			}
 		});
@@ -127,6 +171,7 @@ public class TodaySectionFragment extends Fragment {
 				}
 				if (mDrinkCounter <= mPlannedDrinks) {
 					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.medium_gray));
+					mDrinkButton.setBackgroundResource(R.drawable.card_background);
 				}
 			}
 		});
@@ -221,7 +266,7 @@ public class TodaySectionFragment extends Fragment {
 					@Override
 					public boolean onLongClick(View v) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-						builder.setMessage(getString(R.string.cancel_event)+ "?").setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						builder.setTitle(getString(R.string.cancel_event) + "?").setMessage(getString(R.string.event_will_be_deleted)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
@@ -265,8 +310,10 @@ public class TodaySectionFragment extends Fragment {
 			}
 			if (mDrinkCounter > mPlannedDrinks) {
 				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
+				mDrinkButton.setBackgroundResource(R.drawable.card_background_red);
 			} else {
 				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.medium_gray));
+				mDrinkButton.setBackgroundResource(R.drawable.card_background);
 			}
 		}
 	}

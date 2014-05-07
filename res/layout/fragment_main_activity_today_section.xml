@@ -86,7 +86,7 @@
 				        android:layout_width="match_parent"
 				        android:layout_height="match_parent"
 				        android:layout_weight="3"
-				        android:src="@drawable/app_icon_1"
+				        android:src="@drawable/mood_question_icon"
 				         />
 			</LinearLayout>
 			

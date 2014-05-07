@@ -124,5 +124,9 @@
     <string name="finnish">Suomi</string>
     <string name="event_added">Tapahtuma Lisätty</string>
     <string name="event_canceled">Tapahtuma Peruutettu</string>
+    <string name="event_will_be_deleted">Tapahtuma poistetaan.</string>
+    <string name="substance_help">Tarjoamme päihdeneuvontaa ja apua kellon ympäri, vuoden jokaisena päivänä – täysin ilmaiseksi ja nimettömästi. Soita numeroon 0800 900 45 ja kysy neuvoa päihdetyön ammattilaisilta.</string>
+    <string name="call_substance_work">Soita Päihdeneuvontaan</string>
+    <string name="visit_substance_work_website">Käy Päihdeneuvonnan Sivuilla</string>
     
 </resources>

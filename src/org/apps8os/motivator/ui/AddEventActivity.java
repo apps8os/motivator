@@ -23,6 +23,7 @@ import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.services.NotificationService;
 
 import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.IconPagerAdapter;
@@ -30,10 +31,14 @@ import com.viewpagerindicator.LinePageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -148,6 +153,7 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	 * Sets up the listeners for the buttons.
 	 */
 	private void setButtons() {
+		final Context context = this;
 		final Button nextButton = (Button) findViewById(R.id.questions_next_button);
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override

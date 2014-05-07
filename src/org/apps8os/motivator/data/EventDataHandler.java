@@ -27,11 +27,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.R.array;
+import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.ui.MainActivity;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -150,6 +155,17 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 		values.put(KEY_EVENT_ID, eventId);
 		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
+		
+		if (startTimeAnswer > -1) {
+			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+			// Set the notification to repeat over the given time at notificationTime
+			Intent notificationIntent = new Intent(mContext, NotificationService.class);
+			notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_START);
+			notificationIntent.putExtra(EVENT_ID, eventId);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, eventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarmManager.set(AlarmManager.RTC_WAKEUP, calendarCache.getTimeInMillis(), pendingNotificationIntent);
+		}
+		
 		UtilityMethods.setToDayStart(calendarCache);
 		values.put(KEY_DAY_ANSWER, dayAnswer);
 		values.put(KEY_PLANNED_AMOUNT_OF_DRINKS, plannedDrinks);
@@ -387,10 +403,20 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return mQuestions.keyAt(0);
 	}
 
-	public void deleteEvent(int mEventId) {
+	public void deleteEvent(int eventId) {
 		open();
-		String selection = KEY_EVENT_ID + " = " + mEventId;
+		String selection = KEY_EVENT_ID + " = " + eventId;
 		mDb.delete(TABLE_NAME, selection, null);
+		AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+		// Set the notification to repeat over the given time at notificationTime
+		Intent notificationIntent = new Intent(mContext, NotificationService.class);
+		notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_START);
+		notificationIntent.putExtra(EVENT_ID, eventId);
+		PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, eventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		alarmManager.cancel(pendingNotificationIntent);
+		
+		NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.cancel(eventId);
 		close();
 	}
 	

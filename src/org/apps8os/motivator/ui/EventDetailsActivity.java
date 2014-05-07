@@ -22,6 +22,10 @@ import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
@@ -29,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +58,8 @@ public class EventDetailsActivity extends Activity {
 	    mEvent = extras.getParcelable(MotivatorEvent.EVENT);
 	    int section = extras.getInt(MotivatorEvent.SECTION);
 	    mDataHandler = new EventDataHandler(this);
+	    
+	    final Context context = this;
 	    
 	    TextView titleView = (TextView) findViewById(R.id.event_detail_title);
 	    String title; 
@@ -79,19 +86,31 @@ public class EventDetailsActivity extends Activity {
 		    cancelButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					// Delete the answers with the event/answers id
-					mDataHandler.deleteEvent(eventId);
-					
-					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
-					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
-					toastText.setText(getString(R.string.event_canceled));
-					toastText.setTextColor(Color.WHITE);
-					
-					Toast canceled = new Toast(getApplicationContext());
-					canceled.setDuration(Toast.LENGTH_SHORT);
-					canceled.setView(toastLayout);
-					canceled.show();
-					parentActivity.finish();
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					builder.setTitle(getString(R.string.cancel_event) + "?").setMessage(getString(R.string.event_will_be_deleted)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							mDataHandler.deleteEvent(eventId);
+							
+							View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, null);
+							TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+							toastText.setText(getString(R.string.event_canceled));
+							toastText.setTextColor(Color.WHITE);
+							
+							Toast canceled = new Toast(context);
+							canceled.setDuration(Toast.LENGTH_SHORT);
+							canceled.setView(toastLayout);
+							canceled.show();
+							parentActivity.finish();
+						}
+					}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					Dialog dialog = builder.create();
+					dialog.show();
 				}
 		    	
 		    });

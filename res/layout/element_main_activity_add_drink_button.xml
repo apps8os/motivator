@@ -56,25 +56,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
-    <ImageButton
-	    android:id="@+id/remove_drink_button"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="1.5"
-	    style="?android:attr/borderlessButtonStyle"
-	    android:src="@drawable/remove_drink"
-	    android:scaleType="fitCenter"
-     />
-    <include layout="@layout/element_card_inner_separator_vertical"/>
-    
-    <ImageButton
-	    android:id="@+id/add_drink_button"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_weight="1.5"
-	    style="?android:attr/borderlessButtonStyle"
-	    android:src="@drawable/add_drink"
-	    android:scaleType="fitCenter"
-     />
+	    <ImageButton
+		    android:id="@+id/remove_drink_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1.5"
+		    style="?android:attr/borderlessButtonStyle"
+		    android:src="@drawable/remove_drink"
+		    android:scaleType="fitCenter"
+	     />
+	    <include layout="@layout/element_card_inner_separator_vertical"/>
+	    
+	    <ImageButton
+		    android:id="@+id/add_drink_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:layout_weight="1.5"
+		    style="?android:attr/borderlessButtonStyle"
+		    android:src="@drawable/add_drink"
+		    android:scaleType="fitCenter"
+	     />
     </LinearLayout>
 </LinearLayout>
