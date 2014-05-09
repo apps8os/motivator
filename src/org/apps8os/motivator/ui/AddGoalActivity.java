@@ -15,6 +15,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class AddGoalActivity extends Activity implements QuestionnaireActivityInterface {
 	
@@ -138,10 +141,38 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 			@Override
 			public void onClick(View v) {
 				int answers[]  = new int[mNumberOfQuestions];
+				int amountAnswer = -2;
 				for (int i = 0; i < mNumberOfQuestions; i++) {
 					answers[i] = mQuestionsPagerAdapter.getFragment(i).getAnswer();
+					if (i == 0) {
+						amountAnswer = mQuestionsPagerAdapter.getFragment(i).getXAmount();
+					}
 				}
-				//TODO: Insert goal
+				if (answers[0] < 2 && amountAnswer < 1) {
+					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(getString(R.string.goal_not_added));
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast questionnaireDone = new Toast(getApplicationContext());
+					questionnaireDone.setDuration(Toast.LENGTH_LONG);
+					questionnaireDone.setView(toastLayout);
+					questionnaireDone.show();
+					
+				} else {
+					mDataHandler.insertGoal(System.currentTimeMillis(), answers[1], answers[0], amountAnswer);
+					
+					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(getString(R.string.goal_added));
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast questionnaireDone = new Toast(getApplicationContext());
+					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+					questionnaireDone.setView(toastLayout);
+					questionnaireDone.show();
+					
+				}
 				finish();
 			}
 		});

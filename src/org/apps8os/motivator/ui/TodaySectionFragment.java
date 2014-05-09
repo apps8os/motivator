@@ -23,6 +23,8 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.Goal;
+import org.apps8os.motivator.data.GoalDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 
@@ -64,6 +66,7 @@ public class TodaySectionFragment extends Fragment {
 	
 	private EventDataHandler mEventDataHandler;
 	private DayDataHandler mDayDataHandler;
+	// private GoalDataHandler mGoalDataHandler;
 	private LinearLayout mEventLayout;
 	private LinearLayout mDrinkButton;
 	private TextView mDrinkCounterTextView;
@@ -73,6 +76,8 @@ public class TodaySectionFragment extends Fragment {
 	private LayoutInflater mInflater;
 	private int mDrinkCounter = 0;
 	private int mPlannedDrinks = 0;
+	private int mShowHelpAmount = 1;
+	// private LinearLayout mGoalLayout;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,9 +87,12 @@ public class TodaySectionFragment extends Fragment {
 				R.layout.fragment_main_activity_today_section, container, false);
 		mRes = getResources();
 		// The layout which has dynamic amount of future events/buttons.
-		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_dynamic_buttons);
+		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.today_section_events);
+		// mGoalLayout = (LinearLayout) mRootView.findViewById(R.id.today_section_goals);
 		
 		mDayDataHandler = new DayDataHandler(getActivity());
+		// mGoalDataHandler = new GoalDataHandler(getActivity());
+		mEventDataHandler = new EventDataHandler(getActivity());
 		
 		// two buttons that are always present
 		
@@ -115,8 +123,27 @@ public class TodaySectionFragment extends Fragment {
 				if (mDrinkCounter > mPlannedDrinks) {
 					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
 					mDrinkButton.setBackgroundResource(R.drawable.card_background_red);
+				}
+				if (mPlannedDrinks == 0 && mDrinkCounter == 1) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setTitle("Kaikki OK?").setMessage("Menit ylitse suunniteltujen juomien.").setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					builder.setTitle(getString(R.string.you_have_no_plans)).setMessage(getString(R.string.do_you_want_to_add_event)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							Intent intent = new Intent(getActivity(), AddEventActivity.class);
+							startActivity(intent);
+						}
+					}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					Dialog dialog = builder.create();
+					dialog.show();
+				} else if (mDrinkCounter == mPlannedDrinks + 1 || mDrinkCounter >= mShowHelpAmount) {
+					mShowHelpAmount = mShowHelpAmount + 5;
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					builder.setTitle(getString(R.string.you_went_over_planned_drinks)).setMessage(getString(R.string.is_everything_ok)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {
@@ -196,7 +223,7 @@ public class TodaySectionFragment extends Fragment {
 		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "/" + currentSprint.getDaysInSprint()));
 		
 		new LoadPlansTask(getActivity()).execute();
-		
+		// new LoadGoalsTask().execute();
 
 		super.onResume();
 	}
@@ -212,7 +239,6 @@ public class TodaySectionFragment extends Fragment {
 
 		public LoadPlansTask(Context context) {
 			mContext = context;
-			mEventDataHandler = new EventDataHandler(getActivity());
 		}
 
 		/**
@@ -236,6 +262,16 @@ public class TodaySectionFragment extends Fragment {
 			if (resultSize == 0) {
 				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
+				/**
+				noEventsText.setClickable(true);
+				noEventsText.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(getActivity(), AddEventActivity.class);
+						startActivity(intent);
+					}
+				});
+				**/
 			}
 			// Create buttons for the result set.
 			for (int i = 0; i < resultSize; i ++) {
@@ -253,8 +289,10 @@ public class TodaySectionFragment extends Fragment {
 				}
 				if (startTimeAsText.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(2)).setText(getString(R.string.when_to_go) + ": " + startTimeAsText);
+				} else {
+					((TextView) buttonTextLayout.getChildAt(2)).setVisibility(View.GONE);
 				}
-				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
+				((ImageView) eventButton.getChildAt(2)).setImageResource(R.drawable.event_today_icon);
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.TODAY));
 				mEventLayout.addView(eventButton);
 				final int eventId = event.getId();
@@ -315,6 +353,49 @@ public class TodaySectionFragment extends Fragment {
 				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.medium_gray));
 				mDrinkButton.setBackgroundResource(R.drawable.card_background);
 			}
+			if (mShowHelpAmount < mPlannedDrinks) {
+				mShowHelpAmount = mPlannedDrinks + 1;
+			}
 		}
 	}
+	
+	/**
+	private class LoadGoalsTask extends AsyncTask<Void, Void, ArrayList<Goal>> {
+
+		@Override
+		protected ArrayList<Goal> doInBackground(Void... params) {
+			return mGoalDataHandler.getOngoingGoals();
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<Goal> result) {
+			mGoalLayout.removeAllViews();
+			int resultSize = result.size();
+			if (resultSize == 0) {
+				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mGoalLayout, false);
+				((TextView) noEventsText.getChildAt(0)).setText(getString(R.string.no_goals));
+				mGoalLayout.addView(noEventsText);
+			} else {
+				Goal goal;
+				for (int i = 0; i < resultSize; i++) {
+					goal = result.get(i);
+					final LinearLayout goalButton = (LinearLayout) mInflater.inflate(R.layout.element_goal_button, mGoalLayout, false);
+					LinearLayout buttonTextLayout = (LinearLayout) goalButton.getChildAt(0);
+					((TextView) buttonTextLayout.getChildAt(0)).setText(goal.getGoalAsText());
+					int days = goal.getDays();
+					if (goal.getGoalId() < 2) {
+						((TextView) buttonTextLayout.getChildAt(1)).setText(goal.getCurrentAmount(getActivity()) + "/" + goal.getTargetAmount());
+					}  else {
+						((TextView) buttonTextLayout.getChildAt(1)).setVisibility(View.GONE);
+					}
+					ProgressBar goalProgress = (ProgressBar) buttonTextLayout.getChildAt(2);
+					goalProgress.setMax(goal.getDays());
+					goalProgress.setProgress(goal.getCurrentDayInGoal());
+					mGoalLayout.addView(goalButton);
+				}
+			}
+		}
+		
+	}
+	**/
 }

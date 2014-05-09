@@ -138,7 +138,7 @@ public class AddingGoalActivity extends Activity {
 		if (mQuestionId > 1) {
 			incrementQuestion(false);
 			mProgressBar.incrementProgressBy(-1);
-			mDataHandler.deleteLastRow();
+			//mDataHandler.deleteLastRow();
 		} else {
 			super.onBackPressed();
 		}
@@ -149,7 +149,7 @@ public class AddingGoalActivity extends Activity {
 	    switch (item.getItemId()) {
 	    // Respond to the action bar's Up/Home button
 	    case android.R.id.home:
-	        mDataHandler.deleteRowsWithAnsweringId(mAnswerId);
+	       // mDataHandler.deleteRowsWithAnsweringId(mAnswerId);
 	        return super.onOptionsItemSelected(item);
 	    }
 	    return super.onOptionsItemSelected(item);
@@ -174,7 +174,7 @@ public class AddingGoalActivity extends Activity {
 			// Check if the user has selected an answer
 			if (mAnswerGroupView.getCheckedRadioButtonId() != -1) {
 
-				mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId, 010);
+				//mDataHandler.insertAnswer(answer, mQuestionId, mAnswerId, 010);
 
 				
 				// Determine if we have already asked enough questions

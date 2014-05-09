@@ -18,49 +18,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     style="@style/CardButtonLinearLayout"
-    android:layout_height="120dp" >
+    android:layout_height="100dp" >
     <LinearLayout
        android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:layout_marginTop="10dp"
-       android:layout_marginBottom="10dp"
        android:layout_weight="1" >
-       <TextView 
+	    <TextView 
 	        android:id="@+id/card_button_top_text"
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
-	        android:layout_weight="1"
+	        android:layout_weight="2"
 	        android:gravity="center"
 	        android:textColor="@color/medium_gray"
 	        android:fontFamily="sans-serif-light"
-	        style="@android:style/TextAppearance.Large"
+	        style="@android:style/TextAppearance.Medium"
 	        />
 	    <TextView 
 	        android:id="@+id/card_button_middle_text"
 	        android:layout_width="match_parent"
 	        android:layout_height="0dp"
 	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:textColor="@color/dark_gray"
-	        style="@android:style/TextAppearance.Small"
-	        />
-	    <TextView 
-	        android:id="@+id/card_button_bottom_text"
-	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
 	        android:gravity="center|top"
-	        android:textColor="@color/dark_gray"
-	        style="@android:style/TextAppearance.Small"
+	        android:textColor="@color/medium_gray"
+	        android:fontFamily="sans-serif-condensed"
+	        style="@android:style/TextAppearance.Medium"
 	        />
+	    <ProgressBar
+		      android:id="@+id/goal_progress_bar"
+		      style="?android:attr/progressBarStyleHorizontal"
+		      android:layout_width="match_parent"
+		      android:layout_gravity="center"
+		      android:layout_marginLeft="10dp"
+		      android:layout_marginRight="10dp"
+		      android:layout_weight="1"
+		      android:layout_height="0dp" />
     </LinearLayout>
-    <include layout="@layout/element_card_inner_separator_vertical"/>
-	<ImageView
+        <ImageView
         android:id="@+id/card_button_left_image"
+        android:src="@drawable/goal_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
          />
 </LinearLayout>

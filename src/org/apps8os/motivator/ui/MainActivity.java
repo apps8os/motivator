@@ -22,6 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.services.NotificationService;
@@ -39,6 +40,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -179,7 +181,21 @@ public class MainActivity extends Activity {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
-			mActionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint());
+			mActionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + "/" + mCurrentSprint.getDaysInSprint());
+		}
+		
+		SharedPreferences motivatorPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
+		int eventAdded = motivatorPrefs.getInt(AddEventActivity.EVENT_ADDED, -1);
+		if (eventAdded == MotivatorEvent.TODAY) {
+			mViewPager.setCurrentItem(1);
+			Editor editor = motivatorPrefs.edit();
+			editor.putInt(AddEventActivity.EVENT_ADDED, -1);
+			editor.commit();
+		} else if (eventAdded == MotivatorEvent.PLAN){
+			mViewPager.setCurrentItem(2);
+			Editor editor = motivatorPrefs.edit();
+			editor.putInt(AddEventActivity.EVENT_ADDED, -1);
+			editor.commit();
 		}
 	}
 

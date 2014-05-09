@@ -102,7 +102,7 @@ public class EventHistoryActivity extends Activity {
 				}
 				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
-				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_past_icon);
+				((ImageView) eventButton.getChildAt(2)).setImageResource(R.drawable.calendar_past_icon);
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.HISTORY));
 				mEventLayout.addView(eventButton);
 			}

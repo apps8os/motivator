@@ -70,6 +70,7 @@
     <string name="of_glory">of kudos</string>
     <string name="no_added_moods">No added moods.</string>
     <string name="amount_of_drinks">How many drinks</string>
+    <string name="amount_of_drinks_on_the_previous_day">How many drinks on the previous day</string>
     <string name="swipe_right_for_plans">On the right you can make plans</string>
     <string name="swipe_left_for_history">On the left you can see your history</string>
     <string name="data_analysis">View your moods</string>
@@ -121,6 +122,7 @@
     <string name="history_section_help">Here you can see your past moods and events. You can also check your sprint.</string>
     <string name="show_help">Show help</string>
     <string name="no_events">No Events</string>
+    <string name="no_goals">No Goals</string>
     <string name="average_mood">Avg Mood</string>
     <string name="filter_by">Filter by</string>
     <string name="select_language">Select language</string>
@@ -132,5 +134,19 @@
     <string name="substance_help">We provide substance abuse counseling and help around the clock, every day of the year - completely free of charge and anonymously. Call us on 0800 900 45 and ask for advice from substance abuse professionals.</string>
 	<string name="call_substance_work">Call Substance Work</string>
 	<string name="visit_substance_work_website">Visit Substance Work Website</string>
+	<string name="x_amount">X amount</string>
+	<string name="goal_added">Goal Added</string>
+	<string name="goal_not_added">You did not provide the X amount, goal not added.</string>
+	<string name="ongoing_goals">Goals in Progress</string>
+	<string name="in_a_week">in a week</string>
+	<string name="in_two_weeks">in two weeks</string>
+	<string name="in_four_weeks">in four weeks</string>
+	<string name="for_a_week">for a week</string>
+	<string name="for_two_weeks">for two weeks</string>
+	<string name="for_four_weeks">for four weeks</string>
+	<string name="you_have_no_plans">You do not have any drinks planned.</string>
+	<string name="do_you_want_to_add_event">Do you want to add a plan for today?</string>
+	<string name="you_went_over_planned_drinks">You went over the drinks you had planned.</string>
+	<string name="is_everything_ok">Is everything ok?</string>
 	
 </resources>

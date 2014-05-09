@@ -22,6 +22,7 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.MotivatorDatabaseHelper;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Question;
 import org.apps8os.motivator.services.NotificationService;
 
@@ -40,6 +41,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -66,6 +68,7 @@ import android.widget.LinearLayout.LayoutParams;
  */
 public class AddEventActivity extends Activity implements QuestionnaireActivityInterface {
 	
+	public static final String EVENT_ADDED = "event_added";
 	private ViewPager mViewPager;
 	private EventDataHandler mDataHandler;
 	private int mNumberOfQuestions;
@@ -153,7 +156,6 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	 * Sets up the listeners for the buttons.
 	 */
 	private void setButtons() {
-		final Context context = this;
 		final Button nextButton = (Button) findViewById(R.id.questions_next_button);
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -170,6 +172,7 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 			}
 		});
 		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);
+		final Activity thisActivity = this;
 		mCompleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -188,6 +191,14 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
 				questionnaireDone.setView(toastLayout);
 				questionnaireDone.show();
+				SharedPreferences motivatorPrefs = getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
+				Editor editor = motivatorPrefs.edit();
+				if (answers[0] == 0) {
+					editor.putInt(EVENT_ADDED, MotivatorEvent.TODAY);
+				} else {
+					editor.putInt(EVENT_ADDED, MotivatorEvent.PLAN);
+				}
+				editor.commit();
 				finish();
 			}
 		});

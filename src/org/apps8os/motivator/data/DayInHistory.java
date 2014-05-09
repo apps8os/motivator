@@ -40,6 +40,7 @@ public class DayInHistory implements Parcelable{
 	public static final String DAY_IN_HISTORY_ARRAY = "day_in_history_array";
 	
 	private int mAlcoholDrinks = 0;
+	private int mPlannedDrinks = 0;
 	private long mDateInMillis;
 	private ArrayList<MotivatorEvent> mEvents = new ArrayList<MotivatorEvent>();
 	private ArrayList<Mood> mMoods = new ArrayList<Mood>();
@@ -66,6 +67,7 @@ public class DayInHistory implements Parcelable{
 	 */
 	private DayInHistory(Parcel source) {
 		mAlcoholDrinks = source.readInt();
+		mPlannedDrinks = source.readInt();
 		mDateInMillis = source.readLong();
 		source.readTypedList(mEvents, MotivatorEvent.CREATOR);
 		source.readTypedList(mMoods, Mood.CREATOR);
@@ -134,8 +136,18 @@ public class DayInHistory implements Parcelable{
 	/**
 	 * @return the mAlcoholDrinks
 	 */
-	public int getAlcoholDrinks() {
-		return mAlcoholDrinks;
+	public int getAlcoholDrinks(Context context) {
+		DayDataHandler dataHandler = new DayDataHandler(context);
+		return dataHandler.getDrinksForDay(mDateInMillis);
+	}
+	
+	public int getPlannedAlcoholDrinks(Context context) {
+		int events = mEvents.size();
+		int totalPlannedDrinks = 0;
+		for (int i = 0; i < events; i++) {
+			totalPlannedDrinks = totalPlannedDrinks + mEvents.get(i).getPlannedDrinks();
+		}
+		return totalPlannedDrinks;
 	}
 
 
@@ -166,6 +178,7 @@ public class DayInHistory implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(mAlcoholDrinks);
+		dest.writeInt(mPlannedDrinks);
 		dest.writeLong(mDateInMillis);
 		dest.writeTypedList(mEvents);
 		dest.writeTypedList(mMoods);

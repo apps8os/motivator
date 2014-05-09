@@ -17,10 +17,9 @@
 -->
 <resources>
     <string name="goal_question_1">Mitä haluat saavuttaa?</string>
-    <string name="goal_question_1_answer_1">Juo vähemmän kuin X juomaa minään päivänä.</string>
-    <string name="goal_question_1_answer_2">Juo vain X:nä päivänä.</string>
-    <string name="goal_question_1_answer_3">Pysy suunnitelluiden tapahtumien juomisrajoissa.</string>
-    <string name="goal_question_1_answer_4">Juo vain silloin kun olet suunnitellut.</string>
+    <string name="goal_question_1_answer_1">Juo vähemmän kuin X juomaa päivässä</string>
+    <string name="goal_question_1_answer_2">Juo vain X:nä päivänä</string>
+    <string name="goal_question_1_answer_3">Juo vain silloin kun olet suunnitellut</string>
     
     <string name="goal_question_2">Valitse aikajakso tavoitteelle.</string>
     <string name="goal_question_2_answer_1">Viikko</string>

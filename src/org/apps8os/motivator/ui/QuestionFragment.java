@@ -17,17 +17,28 @@
 package org.apps8os.motivator.ui;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.GoalDataHandler;
 import org.apps8os.motivator.data.Question;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -41,6 +52,8 @@ public class QuestionFragment extends Fragment {
 	private RadioGroup mAnswerGroupView;
 	private TextView mQuestionTextView;
 	private TextView mRequiredTextView;
+	private int mXAmount = 0;
+	private String mPreviousX = "X";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +63,8 @@ public class QuestionFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
-		LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.fragment_question, viewGroup, false);
+		final LayoutInflater layoutInflater = inflater;
+		LinearLayout rootView = (LinearLayout) layoutInflater.inflate(R.layout.fragment_question, viewGroup, false);
 		mAnswerGroupView = (RadioGroup) rootView.findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) rootView.findViewById(R.id.questionnaire_question);
 		mRequiredTextView = (TextView) rootView.findViewById(R.id.questionnaire_required);
@@ -63,20 +77,61 @@ public class QuestionFragment extends Fragment {
 		mQuestionTextView.setText(mQuestion.getQuestion());
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
 		for (int i = 0; i < mQuestion.getAnswerCount(); i++) {
-			RadioButton radioButton = (RadioButton) inflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroupView, false);
+			RadioButton radioButton = (RadioButton) layoutInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroupView, false);
 			radioButton.setId(i);
 			radioButton.setText(mQuestion.getAnswer(i));
 			mAnswerGroupView.addView(radioButton);
 		}
-		
+		final Resources res = getResources();
 		mAnswerGroupView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
+			public void onCheckedChanged(RadioGroup rGroup, int checkedID) {
+				final RadioGroup group = rGroup;
+				final int checkedId = checkedID;
 				((QuestionnaireActivityInterface) getActivity()).setChecked(mQuestion.getId());
+				
+				if (mQuestion.getId() == GoalDataHandler.QUESTION_ID_WHAT_TO_ACHIEVE && (checkedId == 0 || checkedId == 1)) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+					final LinearLayout xAmountLayout = (LinearLayout) layoutInflater.inflate(R.layout.element_number_entry, null);
+					builder.setView(xAmountLayout);
+					builder.setTitle(mQuestion.getAnswer(checkedId)).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+						}
+					});
+					final AlertDialog helpDialog = builder.create();
+					
+					helpDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+						@Override
+						public void onShow(DialogInterface dialog) {
+							Button button = helpDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+							button.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									String xAnswer = ((EditText) xAmountLayout.findViewById(R.id.number_entry_edit_text)).getText().toString();
+									if (xAnswer.length() > 0) {
+										mXAmount = Integer.parseInt(xAnswer);
+										helpDialog.dismiss();
+										RadioButton radioButton = (RadioButton) group.getChildAt(checkedId);
+										String radioText = (String) radioButton.getText();
+										radioText = radioText.replaceAll(mPreviousX, "" + mXAmount);
+										mPreviousX = "" + mXAmount;
+										radioButton.setText(radioText);
+									} else {
+										((TextView) xAmountLayout.findViewById(R.id.number_entry_title)).setTextColor(res.getColor(R.color.red));
+									}
+								}
+							});
+						}
+					});
+					helpDialog.show();
+				}
 			}
 			
 		});
+		
 		return rootView;
 	}
 	
@@ -94,6 +149,14 @@ public class QuestionFragment extends Fragment {
 	 */
 	public int getQuestionId() {
 		return mQuestion.getId();
+	}
+	
+	public int getXAmount() {
+		if (mQuestion.getId() == GoalDataHandler.QUESTION_ID_WHAT_TO_ACHIEVE &&  getAnswer() < 2 && getAnswer() > -1) {
+			return mXAmount;
+		} else {
+			return -1;
+		}
 	}
 
 }

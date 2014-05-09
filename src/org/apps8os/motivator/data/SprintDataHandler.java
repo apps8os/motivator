@@ -142,9 +142,20 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 			cursor.close();
 			return latest;
 		}
-		close();
 		cursor.close();
+		close();
 		return null;
+	}
+	
+	public long getFirstSprintStart() {
+		open();
+		String selection = "SELECT MIN(" + KEY_SPRINT_START + ") FROM " + TABLE_NAME_SPRINTS;
+		Cursor query = mDb.rawQuery(selection, null);
+		query.moveToFirst();
+		long result = query.getLong(0);
+		query.close();
+		close();
+		return result;
 	}
 
 }

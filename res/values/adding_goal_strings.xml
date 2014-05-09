@@ -17,10 +17,9 @@
 -->
 <resources>
    <string name="goal_question_1">What do you want to achieve?</string>
-    <string name="goal_question_1_answer_1">Drink less than X drinks on any given day.</string>
-    <string name="goal_question_1_answer_2">Drink on less than X days.</string>
-    <string name="goal_question_1_answer_3">Stay in the amount of drinks planned.</string>
-    <string name="goal_question_1_answer_4">Drink only when you have planned.</string>
+    <string name="goal_question_1_answer_1">Drink less than X drinks on any given day</string>
+    <string name="goal_question_1_answer_2">Drink on less than X days</string>
+    <string name="goal_question_1_answer_3">Drink only when you have planned</string>
     
     <string name="goal_question_2">Choose a timeframe for the goal.</string>
     <string name="goal_question_2_answer_1">A week</string>
@@ -32,7 +31,6 @@
         <item >@string/goal_question_1_answer_1</item>
         <item >@string/goal_question_1_answer_2</item>
         <item >@string/goal_question_1_answer_3</item>
-        <item >@string/goal_question_1_answer_4</item>
     </string-array>
     
     <string-array name="id3001">
@@ -47,7 +45,6 @@
         <item >@string/goal_question_1_answer_1</item>
         <item >@string/goal_question_1_answer_2</item>
         <item >@string/goal_question_1_answer_3</item>
-        <item >@string/goal_question_1_answer_4</item>
     </string-array>
     
     <string-array name="timeframe_answers">

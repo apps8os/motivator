@@ -94,6 +94,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(EventDataHandler.CREATE_EVENT_TABLE);
+		db.execSQL(GoalDataHandler.CREATE_GOAL_TABLE);
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		db.execSQL(TABLE_CREATE_SPRINTS);
 		db.execSQL(TABLE_CREATE_DRINKS);

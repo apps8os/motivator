@@ -52,19 +52,26 @@
             android:textSize="25sp" />
 	</LinearLayout>
 	<ScrollView 
+	    
 	    android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4">
-	    <RadioGroup
-	        android:id="@+id/questionnaire_answers_group"
+	    <LinearLayout
+	        android:id="@+id/question_scrollable_view"
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
-	        android:layout_gravity="right"
-	        android:layout_marginBottom="12dp"
-	        android:layout_marginLeft="25dp"
-	        android:layout_marginRight="25dp"
-	        android:orientation="vertical"
-	        android:divider="?android:attr/dividerHorizontal"
-	        android:showDividers="middle" />
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+		    <RadioGroup
+		        android:id="@+id/questionnaire_answers_group"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_gravity="right"
+		        android:layout_marginBottom="12dp"
+		        android:layout_marginLeft="25dp"
+		        android:layout_marginRight="25dp"
+		        android:orientation="vertical"
+		        android:divider="?android:attr/dividerHorizontal"
+		        android:showDividers="middle" />
+	    </LinearLayout>
 	</ScrollView>
 </LinearLayout>

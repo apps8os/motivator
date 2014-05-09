@@ -102,62 +102,25 @@
 	        <include layout="@layout/element_main_activity_button_separator"/>
 	        
 	        <LinearLayout
-	            android:id="@+id/main_activity_today_dynamic_buttons"
+	            android:id="@+id/today_section_events"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
 	            android:orientation="vertical" >
 	        </LinearLayout>
-	        <!--  
+	       <!-- 
+	        <TextView 
+	            style="@style/CardSeparatorTitle"
+	            android:text="@string/ongoing_goals"
+	            android:id="@+id/ongoing_goals_text"/>
+	        <include layout="@layout/element_main_activity_button_separator"/>
+	        
 	        <LinearLayout
-	            android:id="@+id/main_activity_today_bottom_items"
+	            android:id="@+id/today_section_goals"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:orientation="vertical"
-	            android:layout_marginTop="8dp" >
-	
-	            <LinearLayout
-	                android:layout_width="match_parent"
-	                android:layout_height="40dp"
-	                android:orientation="horizontal"
-	                 >
-	
-	                <TextView
-	                    android:id="@+id/textView1"
-	                    style="@style/CardSeparatorTitle"
-	                    android:layout_weight="1"
-	                    android:text="@string/swipe_right_for_plans"
-	                     />
-	
-	                <ImageView
-	                    android:id="@+id/imageView1"
-	                    android:layout_width="match_parent"
-	                    android:layout_height="match_parent"
-	                    android:layout_weight="3"
-	                    android:src="@drawable/ic_action_next_item" />
-	                
-	                
-	            </LinearLayout>
-	            
-	            <LinearLayout
-	                android:layout_width="match_parent"
-	                android:layout_height="40dp"
-	                android:orientation="horizontal"
-	                 >
-	             <ImageView
-	                 android:id="@+id/imageView1"
-	                 android:layout_width="match_parent"
-	                 android:layout_height="match_parent"
-	                 android:layout_weight="3"
-	                 android:src="@drawable/ic_action_previous_item" />
-	             <TextView
-	                    android:id="@+id/textView1"
-	                    android:layout_weight="1"
-	                    style="@style/CardSeparatorTitle"
-	                    android:text="@string/swipe_left_for_history"
-	                     />
-				</LinearLayout>
+	            android:orientation="vertical" >
 	        </LinearLayout>
-			-->
+	         -->
 	    </LinearLayout>
     
     </FrameLayout>

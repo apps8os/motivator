@@ -37,13 +37,12 @@
 		        android:id="@+id/mood_relation_history_top_title"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_marginTop="9dp"
-		        android:layout_marginBottom="9dp"
+		        android:layout_margin="9dp"
 		        android:layout_gravity="center"
 		        android:gravity="center"
 		        android:fontFamily="sans-serif-light"
 		        android:textColor="@color/medium_gray"
-		        android:text="@string/amount_of_drinks"
+		        android:text="@string/amount_of_drinks_on_the_previous_day"
 		        android:textAppearance="?android:attr/textAppearanceLarge" />
 		    
 		    <LinearLayout

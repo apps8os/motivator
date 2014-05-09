@@ -81,7 +81,7 @@ public class PlanSectionFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		
+		/**
 		LinearLayout addGoalButton = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_add_goal_button);
 		addGoalButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -90,7 +90,7 @@ public class PlanSectionFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		
+		**/
 		return rootView;
 	}
 	
@@ -166,11 +166,13 @@ public class PlanSectionFragment extends Fragment {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(event.getEventDateAsText());
 					if (startTimeAsText.length() > 0) {
 						((TextView) buttonTextLayout.getChildAt(1)).setText(startTimeAsText);
+					} else {
+						((TextView) buttonTextLayout.getChildAt(1)).setVisibility(View.GONE);
 					}
 				}
 				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
-				((ImageView) eventButton.getChildAt(1)).setImageResource(R.drawable.calendar_icon);
+				((ImageView) eventButton.getChildAt(2)).setImageResource(R.drawable.calendar_icon);
 				
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.PLAN));
 				final int eventId = event.getId();

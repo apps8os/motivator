@@ -16,6 +16,7 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -138,6 +139,51 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	    return result;
     }
     
+    /**
+     * Used to get a DayInHistory representing the day given as milliseconds.
+     * @param dayInMillis
+     * @return
+     */
+    public DayInHistory getDayInHistoryWithMoods(long dayInMillis) {
+    	open();
+    	Calendar calendar = new GregorianCalendar();
+		calendar.setTimeInMillis(dayInMillis);
+    	Cursor query = null;
+    	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
+    	
+    	String selection = KEY_TIMESTAMP + " < " + boundaries[1] + " AND " + KEY_TIMESTAMP +  " >= " + boundaries[0];
+    	String columns[] = {KEY_MOODLEVEL, KEY_ENERGYLEVEL, KEY_TIMESTAMP, KEY_CONTENT};
+    	query = mDb.query(TABLE_NAME_MOOD, columns, selection, null, null, null, null);
+    	
+    	query.moveToFirst();
+    	// Initialize the DayInHistory object with the first timestamp on the constructor.
+	    DayInHistory result = new DayInHistory(dayInMillis, mContext);
+	    // Add all moods to the DayInHistory object.
+	    int queryCount = query.getCount();
+	    while (queryCount > 0 && !query.isClosed()) {
+	    	Mood mood = new Mood(query.getInt(0), query.getInt(1), query.getLong(2), query.getString(3));
+	    	result.addMood(mood);
+	    	if (query.isLast()) {
+	    		query.close();
+	    	} else {
+	    		query.moveToNext();
+	    	}
+	    }
+	    if (!query.isClosed()) {
+	    	query.close();
+	    }
+	    columns = new String[1];
+	    columns[0] = KEY_TIMESTAMP;
+	    query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, null);
+	    result.addAlcoholDrink(query.getCount());
+	    close();
+	    query.close();
+	    if (result.getMoods().size() == 0) {
+	    	return null;
+	    }
+	    return result;
+    }
+    
     public int getDrinksForDay(long dayInMillis) {
     	open();
     	Calendar calendar = new GregorianCalendar();
@@ -153,6 +199,24 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
  	    return result;
     }
     
+    public long[] getTimestampsForDrinksBetween(long fromMillis, long toMillis) {
+    	open();
+    	String selection = KEY_TIMESTAMP + " >= " + fromMillis + " AND " + KEY_TIMESTAMP + " < " + toMillis;
+    	String columns[] = {KEY_TIMESTAMP};
+    	Cursor query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, KEY_TIMESTAMP);
+    	int count = query.getCount();
+    	long[] result = new long[count];
+    	if (query.moveToFirst()) {
+    		for (int i = 0; i < count; i++) {
+    			result[i] = query.getLong(0);
+    			query.moveToNext();
+    		}
+    	}
+    	query.close();
+    	close();
+    	return result;
+    }
+    
     /**
      * Used to get an array of days from given timestamp.
      * @param fromInMillis from timestamp
@@ -165,6 +229,21 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     	calendar.setTimeInMillis(fromInMillis);
     	for (int i = 0; i < amountOfDays; i++) {
     		days[i] = getDayInHistory(calendar.getTimeInMillis());
+    		calendar.add(Calendar.DATE, 1);
+    	}
+    	return days;
+    }
+    
+    public ArrayList<DayInHistory> getDaysWithMoodsAfter(long fromInMillis, int amountOfDays) {
+    	ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
+    	GregorianCalendar calendar = new GregorianCalendar();
+    	DayInHistory day;
+    	calendar.setTimeInMillis(fromInMillis);
+    	for (int i = 0; i < amountOfDays; i++) {
+    		day = getDayInHistoryWithMoods(calendar.getTimeInMillis());
+    		if (day != null) {
+    			days.add(day);
+    		}
     		calendar.add(Calendar.DATE, 1);
     	}
     	return days;
