@@ -148,5 +148,6 @@
 	<string name="do_you_want_to_add_event">Do you want to add a plan for today?</string>
 	<string name="you_went_over_planned_drinks">You went over the drinks you had planned.</string>
 	<string name="is_everything_ok">Is everything ok?</string>
+	<string name="your_average_mood">Your average mood</string>
 	
 </resources>

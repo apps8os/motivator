@@ -41,8 +41,7 @@
             android:layout_width="224dp"
             android:layout_height="238dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/temp_emoticon" />
+            android:layout_marginBottom="24dp" />
         
         <TextView
             android:id="@+id/mood_history_comment"
@@ -58,8 +57,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_above="@+id/mood_history_comment"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/pullo1" />
+            android:layout_alignParentLeft="true" />
         
     </RelativeLayout>
     

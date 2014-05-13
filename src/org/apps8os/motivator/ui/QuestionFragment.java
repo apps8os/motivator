@@ -79,7 +79,7 @@ public class QuestionFragment extends Fragment {
 		for (int i = 0; i < mQuestion.getAnswerCount(); i++) {
 			RadioButton radioButton = (RadioButton) layoutInflater.inflate(R.layout.element_questionnaire_radiobutton, mAnswerGroupView, false);
 			radioButton.setId(i);
-			radioButton.setText(mQuestion.getAnswer(i));
+			radioButton.setText(mQuestion.getAnswer(i + 1));
 			mAnswerGroupView.addView(radioButton);
 		}
 		final Resources res = getResources();
@@ -140,7 +140,7 @@ public class QuestionFragment extends Fragment {
 	 * @return
 	 */
 	public int getAnswer() {
-		return mAnswerGroupView.getCheckedRadioButtonId();
+		return mAnswerGroupView.getCheckedRadioButtonId() + 1;
 	}
 	
 	/**

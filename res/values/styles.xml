@@ -27,11 +27,12 @@
             backward-compatibility can go here.
         -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        
+        <item name="android:actionDropDownStyle">@style/MyActionBarSpinnerStyle</item>
     </style>
     
      <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -39,6 +40,10 @@
         <item name="android:subtitleTextStyle">@style/MyTheme.ActionBar.Subtitle</item>
         <item name="android:titleTextStyle">@style/MyTheme.ActionBar.Title</item>
     </style>
+    
+    <style name="MyActionBarSpinnerStyle" parent="@android:style/Widget.Holo.Spinner">
+    	<item name="android:background">@drawable/spinner_bg_statelist</item>
+	</style>
     
     <style name="MyTheme.ActionBar.Subtitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse">
     	<item name="android:textColor">#FFFFFF</item>

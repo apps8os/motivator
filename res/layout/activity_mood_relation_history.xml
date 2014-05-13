@@ -95,7 +95,7 @@
 	    </LinearLayout>
 	    <TextView
 	        style="@style/CardSeparatorTitle"
-	        android:text="Your average mood"
+	        android:text="@string/your_average_mood"
 	         />
 	    <include layout="@layout/element_main_activity_button_separator"/>
 	    

@@ -116,6 +116,24 @@
 		            android:layout_height="wrap_content"
 		            android:layout_weight="1" />
 		    </LinearLayout>
+		    <LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal">
+		        <TextView
+			        android:text="@string/with_who"
+			        android:layout_width="0dp"
+			   		android:layout_height="wrap_content"
+			   		android:layout_weight="1"
+			        android:layout_gravity="center"
+			        android:gravity="center"/>
+
+		        <Spinner
+		            android:id="@+id/with_who_spinner"
+		            android:layout_width="0dp"
+		            android:layout_height="wrap_content"
+		            android:layout_weight="1" />
+		    </LinearLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

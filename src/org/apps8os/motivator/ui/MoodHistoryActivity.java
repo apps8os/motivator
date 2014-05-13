@@ -343,8 +343,8 @@ public class MoodHistoryActivity extends Activity {
 		mDateFormat = new SimpleDateFormat("dd.MM.yyyy", mLocale);
     	Calendar date = (Calendar) mStartDate.clone();
 	    for (int i = 0; i < mDayPageTitles.length;i++) {
-			date.add(Calendar.DATE, i);
 			mDayPageTitles[i] = mDateFormat.format(date.getTime());
+			date.add(Calendar.DATE, 1);
 	    }
 
 	    mWeekPageTitles = new String[mNumberOfWeeksInSprint];

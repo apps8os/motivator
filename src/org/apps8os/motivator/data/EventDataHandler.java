@@ -58,6 +58,9 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public static final int QUESTION_ID_TIME_TO_COME_BACK = 1003;
 	public static final int QUESTION_ID_WITH_WHO = 1004;
 	
+	public static final int EVENT_NOT_CHECKED = 0;
+	public static final int EVENT_CHECKED = 0;
+	
 	public static final String EVENT_ID = "event_id";
 	public static final String EVENTS_TO_CHECK = "events_to_check";
 	
@@ -112,51 +115,59 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
-	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
+	private void insertEvent(int eventId, int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment, int checked) {
 		// Use SharedPreferences to store the event id so that it can be incremented even if the app is killed
 		SharedPreferences eventIdIncrement = mContext.getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
-		int eventId = eventIdIncrement.getInt(EVENT_ID, 1);
-		SharedPreferences.Editor editor = eventIdIncrement.edit();
-		editor.putInt(EVENT_ID, eventId + 1);
-		editor.commit();
+		int innerEventId;
+		if (eventId == -1) {
+			innerEventId = eventIdIncrement.getInt(EVENT_ID, 1);
+			SharedPreferences.Editor editor = eventIdIncrement.edit();
+			editor.putInt(EVENT_ID, innerEventId + 1);
+			editor.commit();
+		} else {
+			innerEventId = eventId;
+		}
 		
 		SQLiteDatabase db = super.open();
 		ContentValues values = new ContentValues();
 		// Initialize the cache calendar for today/now
 		GregorianCalendar calendarCache = new GregorianCalendar();
+		if (checked == EVENT_CHECKED) {
+			calendarCache.add(Calendar.DATE, -1);
+		}
 		UtilityMethods.setToDayStart(calendarCache);
 		switch (dayAnswer) {
 			// Answer today, no need to do anything
-			case 0: {
+			case 1: {
 				break;
 			}
 			// Tomorrow, set the calendar to tomorrow midnight.
-			case 1: {
+			case 2: {
 				calendarCache.add(Calendar.DATE, 1);
 				break;
 			}
 			// Next weekend, set the calendar to next friday at midnight.
-			case 2: {
+			case 3: {
 				int daysUntilNextFriday = (Calendar.FRIDAY - calendarCache.get(Calendar.DAY_OF_WEEK));
 				calendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
 				break;
 			}
 		}
 		switch (startTimeAnswer) {
-			case 0: 
+			case 1: 
 				calendarCache.set(Calendar.HOUR_OF_DAY, 16);
 				break;
-			case 1:
+			case 2:
 				calendarCache.set(Calendar.HOUR_OF_DAY, 18);
 				break;
-			case 2:
+			case 3:
 				calendarCache.set(Calendar.HOUR_OF_DAY, 21);
 				break;
 		}
-		values.put(KEY_EVENT_ID, eventId);
+		values.put(KEY_EVENT_ID, innerEventId);
 		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
 		
-		if (startTimeAnswer > -1) {
+		if (startTimeAnswer > 0) {
 			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 			// Set the notification to repeat over the given time at notificationTime
 			Intent notificationIntent = new Intent(mContext, NotificationService.class);
@@ -168,22 +179,22 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		
 		UtilityMethods.setToDayStart(calendarCache);
 		values.put(KEY_DAY_ANSWER, dayAnswer);
-		values.put(KEY_PLANNED_AMOUNT_OF_DRINKS, plannedDrinks);
-		values.put(KEY_EVENT_CHECKED, 0);
+		values.put(KEY_PLANNED_AMOUNT_OF_DRINKS, plannedDrinks - 1);
+		values.put(KEY_EVENT_CHECKED, checked);
 		values.put(KEY_TIMESTAMP, System.currentTimeMillis());
-		if (startTimeAnswer != -1) {
+		if (startTimeAnswer != 0) {
 			values.put(KEY_START_TIME_ANSWER, startTimeAnswer);
 		}
-		if (endTimeAnswer != -1) {
+		if (endTimeAnswer != 0) {
 			switch (endTimeAnswer) {
-				case 0: 
+				case 1: 
 					calendarCache.set(Calendar.HOUR_OF_DAY, 21);
 					break;
-				case 1:
+				case 2:
 					calendarCache.set(Calendar.HOUR_OF_DAY, 23);
 					calendarCache.set(Calendar.MINUTE, 59);
 					break;
-				case 2:
+				case 3:
 					calendarCache.add(Calendar.DATE, 1);
 					calendarCache.set(Calendar.HOUR_OF_DAY, 2);
 					break;
@@ -191,7 +202,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			values.put(KEY_END_TIME, calendarCache.getTimeInMillis());
 			values.put(KEY_END_TIME_ANSWER, endTimeAnswer);
 		}
-		if (withWho != -1) {
+		if (withWho != 0) {
 			values.put(KEY_WITH_WHO, withWho);
 		}
 		if (comment != null) {
@@ -199,6 +210,14 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 		db.insert(TABLE_NAME_EVENTS, null, values);
 		db.close();
+	}
+	
+	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
+		insertEvent(-1, dayAnswer, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 0);
+	}
+	
+	public void insertCheckedEvent(int eventId, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
+		insertEvent(eventId, 1, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 1);
 	}
 	
 	/**
@@ -325,7 +344,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
 		String selection = KEY_START_TIME + " >= " + todayMidnight.getTimeInMillis() + " AND " + KEY_START_TIME + " < " + tomorrowMidnight.getTimeInMillis();
-		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
 		
 		addEvents(events, query);
 		
@@ -349,7 +368,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		long dayEndInMillis = calendar.getTimeInMillis();
 		
 		String selection = KEY_START_TIME + " >= " + dayStartInMillis + " AND " + KEY_START_TIME + " < " + dayEndInMillis;
-		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		
 		addEvents(events, query);
@@ -358,7 +377,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return events;
 	}
 	
-	public ArrayList<MotivatorEvent> getEventsBetween(long startDayInMillis, long endDayInMillis) {
+	public ArrayList<MotivatorEvent> getUncheckedEventsBetween(long startDayInMillis, long endDayInMillis) {
 		open();
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(startDayInMillis);
@@ -369,14 +388,30 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		long endTimestamp = calendar.getTimeInMillis();
 		
 
-		String selection = KEY_START_TIME + " >= " + startTimestamp + " AND " + KEY_START_TIME + " < " + endTimestamp;
-		Cursor query = mDb.query(TABLE_NAME, null, selection, null, null, null, null);
+		String selection = KEY_START_TIME + " >= " + startTimestamp + " AND " + KEY_START_TIME + " < " + endTimestamp + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_NOT_CHECKED;
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		
 		addEvents(events, query);
 		query.close();
 		close();
 		return events;
+	}
+	
+	public MotivatorEvent getCheckedEvent(int uncheckedEventId) {
+		open();
+		String selection = KEY_EVENT_ID + " = " + uncheckedEventId + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_CHECKED;
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
+		
+		addEvents(events, query);
+		query.close();
+		close();
+		if (events.size() > 0) {
+			return events.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	public int getAmountOfQuestions() {
@@ -418,6 +453,36 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		NotificationManager manager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.cancel(eventId);
 		close();
+	}
+	
+	public int getRawFieldUnchecked(int eventId, String field) {
+		boolean validField = false;
+		String fields[] = {KEY_PLANNED_AMOUNT_OF_DRINKS, KEY_WITH_WHO, KEY_START_TIME_ANSWER, KEY_END_TIME_ANSWER, KEY_DAY_ANSWER};
+		for (String element: fields) {
+			if (element == field) {
+				validField = true;
+				break;
+			}
+		}
+		if (validField) {
+			open();
+			String selection = KEY_EVENT_ID + " = " + eventId + " AND " + KEY_EVENT_CHECKED + " = " + 0;
+			String columns[] = {field};
+			Cursor query = mDb.query(TABLE_NAME_EVENTS, columns, selection, null, null, null, null);
+			if (query.moveToFirst()) {
+				int result = query.getInt(0);
+				query.close();
+				close();
+				return result;
+			} else {
+				query.close();
+				close();
+				return -2;
+			}
+			
+		} else {
+			return -1;
+		}
 	}
 	
 }

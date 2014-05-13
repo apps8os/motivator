@@ -172,7 +172,6 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 			}
 		});
 		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);
-		final Activity thisActivity = this;
 		mCompleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

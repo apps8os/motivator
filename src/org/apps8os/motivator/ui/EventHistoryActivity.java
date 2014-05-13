@@ -66,9 +66,9 @@ public class EventHistoryActivity extends Activity {
 		@Override
 		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {
 			if (mSelectedSprint.getEndTime() > System.currentTimeMillis()) {
-				return mEventDataHandler.getEventsBetween(mSelectedSprint.getStartTime(), System.currentTimeMillis());
+				return mEventDataHandler.getUncheckedEventsBetween(mSelectedSprint.getStartTime(), System.currentTimeMillis());
 			}
-			return mEventDataHandler.getEventsBetween(mSelectedSprint.getStartTime(), mSelectedSprint.getEndTime());
+			return mEventDataHandler.getUncheckedEventsBetween(mSelectedSprint.getStartTime(), mSelectedSprint.getEndTime());
 		}
 		
 		/**

@@ -69,7 +69,7 @@ public class Question implements Parcelable{
 	}
 
 	public String getAnswer(int number) {
-		return mAnswers[number];
+		return mAnswers[number - 1];
 	}
 	
 	public int getAnswerCount() {

@@ -281,7 +281,7 @@ public class TodaySectionFragment extends Fragment {
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
 				String startTimeAsText = event.getStartTimeAsText();
-				((TextView) buttonTextLayout.getChildAt(1)).setText(mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(event.getPlannedDrinks()) + " " + getString(R.string.drinks));
+				((TextView) buttonTextLayout.getChildAt(1)).setText(mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(event.getPlannedDrinks() + 1) + " " + getString(R.string.drinks));
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 				} else {

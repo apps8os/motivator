@@ -144,5 +144,6 @@
 	<string name="do_you_want_to_add_event">Haluatko lisätä suunnitelman?</string>
 	<string name="you_went_over_planned_drinks">Lisäsit enemmän juomia kuin olit suunnitellut.</string>
 	<string name="is_everything_ok">Onko kaikki hyvin?</string>
+	<string name="your_average_mood">Keskimääräinen fiiliksesi</string>
 	
 </resources>
