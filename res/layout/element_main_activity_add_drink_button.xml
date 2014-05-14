@@ -32,15 +32,16 @@
 	    <TextView 
 	        android:id="@+id/card_button_middle_text"
 	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
+	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:gravity="center|bottom"
+	        android:textStyle="bold"
 	        style="@android:style/TextAppearance.Medium"
 	        />
 	    <TextView 
 	        android:id="@+id/card_button_bottom_text"
 	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
+	        android:layout_height="match_parent"
 	        android:layout_weight="1"
 	        android:gravity="center|top"
 	        android:fontFamily="sans-serif-condensed"

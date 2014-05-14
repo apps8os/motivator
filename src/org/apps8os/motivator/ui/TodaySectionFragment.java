@@ -78,7 +78,10 @@ public class TodaySectionFragment extends Fragment {
 	private int mPlannedDrinks = 0;
 	private int mShowHelpAmount = 1;
 	// private LinearLayout mGoalLayout;
-
+	
+	private int[] mAmountImages = {R.drawable.amount_zero, R.drawable.amount_one,
+			R.drawable.amount_two, R.drawable.amount_three, R.drawable.amount_fourplus};
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -95,7 +98,6 @@ public class TodaySectionFragment extends Fragment {
 		mEventDataHandler = new EventDataHandler(getActivity());
 		
 		// two buttons that are always present
-		
 		LinearLayout moodQuestion = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_mood_button);
 		moodQuestion.setOnClickListener(new OnClickListener() {
 			@Override
@@ -107,6 +109,37 @@ public class TodaySectionFragment extends Fragment {
 			}
 		});
 		
+		setDrinksButton();
+		
+		return mRootView;
+	}
+	
+	/**
+	 * Update the events for today on resume with an async task.
+	 */
+	@Override
+	public void onResume() {
+		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
+		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
+		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
+		
+		mDrinkCounter = mDayDataHandler.getDrinksForDay(System.currentTimeMillis());
+		mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
+		
+		sprintProgress.setMax(currentSprint.getDaysInSprint() -1);
+		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
+		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "/" + currentSprint.getDaysInSprint()));
+		
+		new LoadPlansTask(getActivity()).execute();
+		// new LoadGoalsTask().execute();
+
+		super.onResume();
+	}
+	
+	/**
+	 * Sets the layout, which allows the user to add drinks, with listeners.
+	 */
+	private void setDrinksButton() {
 		mDrinkButton = (LinearLayout) mRootView.findViewById(R.id.drinks_button);
 		mDrinkCounterTextView = (TextView) mDrinkButton.findViewById(R.id.card_button_middle_text);
 		ImageButton addDrink = (ImageButton) mDrinkButton.findViewById(R.id.add_drink_button);
@@ -202,30 +235,6 @@ public class TodaySectionFragment extends Fragment {
 				}
 			}
 		});
-		
-		return mRootView;
-	}
-	
-	/**
-	 * Update the events for today on resume with an async task.
-	 */
-	@Override
-	public void onResume() {
-		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
-		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
-		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
-		
-		mDrinkCounter = mDayDataHandler.getDrinksForDay(System.currentTimeMillis());
-		mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
-		
-		sprintProgress.setMax(currentSprint.getDaysInSprint() -1);
-		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
-		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "/" + currentSprint.getDaysInSprint()));
-		
-		new LoadPlansTask(getActivity()).execute();
-		// new LoadGoalsTask().execute();
-
-		super.onResume();
 	}
 	
 	/**
@@ -281,7 +290,9 @@ public class TodaySectionFragment extends Fragment {
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
 				String startTimeAsText = event.getStartTimeAsText();
-				((TextView) buttonTextLayout.getChildAt(1)).setText(mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(event.getPlannedDrinks() + 1) + " " + getString(R.string.drinks));
+				LinearLayout drinkAmountLayout = ((LinearLayout) buttonTextLayout.getChildAt(1));
+				((TextView) drinkAmountLayout.getChildAt(1)).setText(" " + getString(R.string.drinks));
+				((ImageView) eventButton.findViewById(R.id.drink_amount_image)).setImageResource(mAmountImages[event.getPlannedDrinks()]);
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 				} else {
@@ -312,7 +323,13 @@ public class TodaySectionFragment extends Fragment {
 								if (mPlannedDrinks == 0) {
 									mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 								} else {
-									mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
+									String drinkAmount;
+									if (mPlannedDrinks < 4) {
+										drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
+									} else {
+										drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(5);
+									}
+									mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + drinkAmount);
 								}
 								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
@@ -344,7 +361,13 @@ public class TodaySectionFragment extends Fragment {
 			if (mPlannedDrinks == 0) {
 				mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 			} else {
-				mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
+				String drinkAmount;
+				if (mPlannedDrinks < 4) {
+					drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
+				} else {
+					drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(5);
+				}
+				mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + drinkAmount);
 			}
 			if (mDrinkCounter > mPlannedDrinks) {
 				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));

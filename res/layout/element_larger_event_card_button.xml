@@ -21,46 +21,53 @@
     android:layout_height="120dp" >
     <LinearLayout
        android:orientation="vertical"
-       android:layout_width="match_parent"
+       android:layout_width="0dp"
        android:layout_height="match_parent"
+       android:gravity="left|center"
+       android:layout_marginLeft="14dp"
        android:layout_marginTop="10dp"
        android:layout_marginBottom="10dp"
-       android:layout_weight="1" >
+       android:layout_weight="3" >
        <TextView 
 	        android:id="@+id/card_button_top_text"
 	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:textColor="@color/medium_gray"
-	        android:fontFamily="sans-serif-light"
+	        android:layout_height="wrap_content"
+	        android:textColor="@color/actionbar_green"
+	        android:textStyle="bold"
 	        style="@android:style/TextAppearance.Large"
 	        />
-	    <TextView 
-	        android:id="@+id/card_button_middle_text"
-	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:textColor="@color/dark_gray"
-	        style="@android:style/TextAppearance.Small"
-	        />
+       <LinearLayout
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" >
+           <ImageView
+               android:id="@+id/drink_amount_image"
+               android:layout_width="18dp"
+		       android:layout_height="18dp"
+		       android:src="@drawable/amount_two"
+               />
+		   <TextView 
+		        android:id="@+id/card_button_middle_text"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textColor="@color/medium_gray"
+		        style="@android:style/TextAppearance.Small"
+		        />
+	    </LinearLayout>
 	    <TextView 
 	        android:id="@+id/card_button_bottom_text"
 	        android:layout_width="match_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="1"
-	        android:gravity="center|top"
-	        android:textColor="@color/dark_gray"
+	        android:layout_height="wrap_content"
+	        android:textColor="@color/medium_gray"
 	        style="@android:style/TextAppearance.Small"
 	        />
     </LinearLayout>
     <include layout="@layout/element_card_inner_separator_vertical"/>
 	<ImageView
         android:id="@+id/card_button_left_image"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"
-        android:layout_weight="3"
+        android:layout_weight="1"
          />
 </LinearLayout>

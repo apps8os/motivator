@@ -22,21 +22,22 @@
        android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:layout_weight="1" >
+       android:layout_marginLeft="14dp"
+       android:layout_weight="1"
+       android:gravity="left|center" >
     <TextView 
         android:id="@+id/card_button_middle_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
         style="@android:style/TextAppearance.Medium"
         />
     <TextView 
         android:id="@+id/card_button_bottom_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center|top"
+        android:layout_height="wrap_content"
         style="@android:style/TextAppearance.Small"
         />
     </LinearLayout>

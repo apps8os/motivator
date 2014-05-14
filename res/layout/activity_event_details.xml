@@ -56,6 +56,8 @@
 	        android:gravity="right"
 	        android:layout_weight="1"
 	        android:text="@string/when_to_go"
+	        android:textColor="@color/medium_gray"
+	        android:fontFamily="sans-serif-condensed"
 	        android:layout_marginRight="8dp"
 	        android:textSize="16sp" />
 	        
@@ -82,6 +84,8 @@
 	        android:gravity="right"
 	        android:layout_weight="1"
 	        android:layout_marginRight="8dp"
+	        android:textColor="@color/medium_gray"
+	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/amount_of_drinks"
 	        android:textSize="16sp" />
 	        
@@ -108,6 +112,8 @@
 	        android:gravity="right"
 	        android:layout_weight="1"
 	        android:layout_marginRight="8dp"
+	        android:textColor="@color/medium_gray"
+	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/end_time"
 	        android:textSize="16sp" />
 	        
@@ -134,6 +140,8 @@
 	        android:gravity="right"
 	        android:layout_weight="1"
 	        android:layout_marginRight="8dp"
+	        android:textColor="@color/medium_gray"
+	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/with_who"
 	        android:textSize="16sp" />
 	        
@@ -155,7 +163,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
     	android:layout_weight="1"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:text="@string/cancel_event"
         style="?android:attr/borderlessButtonStyle"
         android:textColor="@color/dark_gray" />

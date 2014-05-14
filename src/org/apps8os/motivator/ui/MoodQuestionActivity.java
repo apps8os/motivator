@@ -200,18 +200,6 @@ public class MoodQuestionActivity extends Activity {
 		}
 	}
 	
-	public void goToQuestionnaire() {
-		int mood = mCardsViewPagerMood.getCurrentItem();
-		Intent intent = new Intent(this, QuestionnaireActivity.class);
-		if (mood < 2) {
-			intent.putExtra(GOODMOOD, false);
-		} else {
-			intent.putExtra(GOODMOOD, true);
-		}
-		startActivity(intent);
-		finish();
-	}
-	
 	/**
 	 * Inner class for changing text when the user scrolls the viewpager.
 	 * @author Toni Järvinen

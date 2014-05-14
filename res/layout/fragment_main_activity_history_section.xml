@@ -36,7 +36,6 @@
 			    style="@style/CardButtonLinearLayout"
 			    android:layout_marginTop="6dp" >
 			    <TextView 
-			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:text="@string/show_mood_history"
@@ -47,7 +46,6 @@
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
-			        android:id="@+id/card_button_left_image"
 			        android:src="@drawable/day_history_icon2"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
@@ -82,7 +80,6 @@
 			    android:orientation="horizontal"
 			    style="@style/CardButtonLinearLayout" >
 			    <TextView 
-			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:text="@string/event_history"
@@ -93,7 +90,6 @@
 			        style="@android:style/TextAppearance.Medium"
 			        />
 			        <ImageView
-			        android:id="@+id/card_button_left_image"
 			        android:src="@drawable/calendar_history_icon"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"

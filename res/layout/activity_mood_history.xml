@@ -20,21 +20,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent" xmlns:tools="http://schemas.android.com/tools">
 
    <com.viewpagerindicator.TitlePageIndicator
-   	android:id="@+id/indicator"
-    android:padding="10dip"
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    android:background="@color/light_gray"
-    android:textColor="@color/gray"
-    app:footerColor="@color/actionbar_orange"
-    app:footerLineHeight="1dp"
-    app:footerIndicatorHeight="7dp"
-    app:footerIndicatorStyle="triangle"
-    app:selectedColor="@color/medium_gray"
-    app:selectedBold="true" />
+       android:id="@+id/indicator"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/light_gray"
+       android:padding="10dip"
+       android:textColor="@color/gray"
+       app:footerColor="@color/actionbar_orange"
+       app:footerIndicatorHeight="7dp"
+       app:footerIndicatorStyle="triangle"
+       app:footerLineHeight="1dp"
+       app:selectedBold="true"
+       app:selectedColor="@color/medium_gray"
+       tools:ignore="MissingRegistered" />
+
 	<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
 	    xmlns:tools="http://schemas.android.com/tools"
 	    android:id="@+id/activity_mood_history_viewpager"

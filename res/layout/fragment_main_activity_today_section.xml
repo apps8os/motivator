@@ -30,13 +30,14 @@
 	        android:orientation="vertical"
 	        style="@style/LinearBackground"
 	        tools:context=".MainScreen$TodaySectionFragment" >
-	        
+
 	       <LinearLayout
 	           android:layout_height="60dp"
 	           android:layout_width="match_parent"
 	           android:layout_marginTop="6dp"
 	           android:background="@drawable/card_background_inactive"
-	           android:orientation="vertical" >
+	           android:orientation="vertical"
+	           android:visibility="gone" >
 	           
 	           <TextView
 	               android:id="@+id/today_section_sprint_progress_text"
@@ -70,7 +71,6 @@
 			    android:layout_height="100dp"
 			     >
 			    <TextView 
-			        android:id="@+id/card_button_middle_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="1"
@@ -82,7 +82,6 @@
 			        style="@android:style/TextAppearance.Large"
 			        />
 			        <ImageView
-				        android:id="@+id/card_button_left_image"
 				        android:layout_width="match_parent"
 				        android:layout_height="match_parent"
 				        android:layout_weight="3"

@@ -20,16 +20,17 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:background="@color/light_gray"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent" xmlns:tools="http://schemas.android.com/tools">
 
    <com.viewpagerindicator.LinePageIndicator
-    android:id="@+id/indicator"
-    android:padding="10dip"
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
-    app:selectedColor="@color/actionbar_blue"
-    app:lineWidth="24dp"
-    app:strokeWidth="8dp" />
+       android:id="@+id/indicator"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:padding="10dip"
+       app:lineWidth="24dp"
+       app:selectedColor="@color/actionbar_blue"
+       app:strokeWidth="8dp"
+       tools:ignore="MissingRegistered" />
 
 	<android.support.v4.view.ViewPager 
 		xmlns:tools="http://schemas.android.com/tools"

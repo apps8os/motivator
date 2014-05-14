@@ -59,7 +59,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public static final int QUESTION_ID_WITH_WHO = 1004;
 	
 	public static final int EVENT_NOT_CHECKED = 0;
-	public static final int EVENT_CHECKED = 0;
+	public static final int EVENT_CHECKED = 1;
 	
 	public static final String EVENT_ID = "event_id";
 	public static final String EVENTS_TO_CHECK = "events_to_check";

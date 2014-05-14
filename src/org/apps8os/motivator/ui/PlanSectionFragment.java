@@ -158,7 +158,7 @@ public class PlanSectionFragment extends Fragment {
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 					if (startTimeAsText.length() > 0) {
-						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText() + ", " + startTimeAsText);
+						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText() + " \u25A0 " + startTimeAsText);
 					} else {
 						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText());
 					}
@@ -170,7 +170,7 @@ public class PlanSectionFragment extends Fragment {
 						((TextView) buttonTextLayout.getChildAt(1)).setVisibility(View.GONE);
 					}
 				}
-				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.medium_gray));
+				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.actionbar_blue));
 				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
 				((ImageView) eventButton.getChildAt(2)).setImageResource(R.drawable.calendar_icon);
 				

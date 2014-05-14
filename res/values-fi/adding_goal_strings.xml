@@ -26,6 +26,15 @@
     <string name="goal_question_2_answer_2">Kaksi viikkoa</string>
     <string name="goal_question_2_answer_3">Neljä viikkoa</string>
     
+    <string-array name="goal_question_ids">
+        <item >id3000</item>
+        <item >id3001</item>
+    </string-array>
+    
+    <string-array name="goal_required_ids">
+        <item >id3000</item>
+        <item >id3001</item>
+    </string-array>
     
     <integer name ="adding_goal_amount">2</integer>
 </resources>

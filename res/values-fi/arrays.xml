@@ -30,4 +30,9 @@
         <item>Nykyinen jakso</item>
         <item>Valitse aikajakso</item>
     </string-array>
+    
+    <string-array name="languages_entryvalues">
+        <item>en</item>
+        <item>fi</item>
+    </string-array>
 </resources>

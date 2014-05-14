@@ -33,5 +33,10 @@
         <item >id2001</item>
     </string-array>
     
+    <string-array name="mood_required_ids">
+        <item >id2000</item>
+        <item >id2001</item>
+    </string-array>
+    
     <integer name ="mood_question_amount">2</integer>
 </resources>

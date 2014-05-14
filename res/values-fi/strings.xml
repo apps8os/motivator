@@ -19,6 +19,9 @@
 
     <string name="app_name">Motivaattori</string>
     <string name="action_settings">Asetukset</string>
+    <string name="action_select_attribute">Etsi</string>
+    <string name="action_attribute_drinking">Juomien määrä</string>
+    <string name="action_attribute_all">Kaikki</string>
     <string name="title_section1">Miten mennyt</string>
     <string name="title_section2">Tänään</string>
     <string name="title_section3">Suunnittele</string>
