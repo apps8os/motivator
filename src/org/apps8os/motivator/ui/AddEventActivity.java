@@ -192,7 +192,7 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 				questionnaireDone.show();
 				SharedPreferences motivatorPrefs = getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
 				Editor editor = motivatorPrefs.edit();
-				if (answers[0] == 0) {
+				if (answers[0] == 1) {
 					editor.putInt(EVENT_ADDED, MotivatorEvent.TODAY);
 				} else {
 					editor.putInt(EVENT_ADDED, MotivatorEvent.PLAN);

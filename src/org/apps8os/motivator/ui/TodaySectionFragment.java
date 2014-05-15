@@ -173,8 +173,7 @@ public class TodaySectionFragment extends Fragment {
 					});
 					Dialog dialog = builder.create();
 					dialog.show();
-				} else if (mDrinkCounter == mPlannedDrinks + 1 || mDrinkCounter >= mShowHelpAmount) {
-					mShowHelpAmount = mShowHelpAmount + 5;
+				} else if (mPlannedDrinks > 0 && mDrinkCounter == mPlannedDrinks + 1) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle(getString(R.string.you_went_over_planned_drinks)).setMessage(getString(R.string.is_everything_ok)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override

@@ -58,6 +58,7 @@
     <string name="action_search">Search</string>
     <string name="action_select_attribute">Search</string>
     <string name="action_attribute_drinking">Amount of drinks</string>
+    <string name="action_attribute_moods">Moods</string>
     <string name="action_attribute_all">All</string>
     <string name="action_start_sprint">Start a sprint</string>
     <string name="ok">OK</string>
@@ -99,7 +100,6 @@
     <string name="no_drinks_planned">You have not planned to drink today</string>
     <string name="name_the_event">Give the event a name</string>
     <string name="name">Name</string>
-    <string name="add_drinks_drunk">Drinks drunk today</string>
     <string name="event_history">Past events</string>
     <string name="end_time">End time</string>
     <string name="with_who">With who</string>
@@ -149,5 +149,7 @@
 	<string name="you_went_over_planned_drinks">You went over the drinks you had planned.</string>
 	<string name="is_everything_ok">Is everything ok?</string>
 	<string name="your_average_mood">Your average mood</string>
+	<string name="not_defined">Not defined</string>
+	<string name="first_mood_of_the_next_day">First mood on the next day</string>
 	
 </resources>

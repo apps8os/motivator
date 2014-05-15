@@ -111,6 +111,10 @@ public class Sprint implements Parcelable {
 	public int getDaysInSprint() {
 		return (int) TimeUnit.DAYS.convert(mEndTime - mStartTime, TimeUnit.MILLISECONDS);
 	}
+	
+	public boolean isOver() {
+		return (mEndTime < System.currentTimeMillis());
+	}
 
 	/**
 	 * @param mDaysInSprint the mDaysInSprint to set

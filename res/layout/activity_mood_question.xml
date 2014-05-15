@@ -65,6 +65,7 @@
 		        android:layout_weight="1"
 		        android:text=""
 		        android:textColor="@color/dark_gray"
+		        android:textStyle="bold"
 		        android:gravity="left|center"
 		        android:layout_marginLeft="6dp"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -109,6 +110,7 @@
 		        android:layout_height="match_parent"
 		        android:layout_weight="1"
 		        android:text=""
+		        android:textStyle="bold"
 		        android:textColor="@color/dark_gray"
 		        android:layout_marginLeft="6dp"
 		        android:gravity="left|center"

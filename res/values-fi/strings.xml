@@ -21,6 +21,7 @@
     <string name="action_settings">Asetukset</string>
     <string name="action_select_attribute">Etsi</string>
     <string name="action_attribute_drinking">Juomien määrä</string>
+    <string name="action_attribute_moods">Fiilikset</string>
     <string name="action_attribute_all">Kaikki</string>
     <string name="title_section1">Miten mennyt</string>
     <string name="title_section2">Tänään</string>
@@ -148,5 +149,7 @@
 	<string name="you_went_over_planned_drinks">Lisäsit enemmän juomia kuin olit suunnitellut.</string>
 	<string name="is_everything_ok">Onko kaikki hyvin?</string>
 	<string name="your_average_mood">Keskimääräinen fiiliksesi</string>
+	<string name="not_defined">Ei määritelty</string>
+	<string name="first_mood_of_the_next_day">Ensimmäinen fiilis seuraavana päivänä</string>
 	
 </resources>

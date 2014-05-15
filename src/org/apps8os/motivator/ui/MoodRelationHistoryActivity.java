@@ -245,8 +245,8 @@ public class MoodRelationHistoryActivity extends Activity {
 			mAvgMoodTextView.setText(getString(R.string.no_added_moods));
 			mAvgEnergyTextView.setText("");
 		} else {
-			mAvgMoodTextView.setText("" + getString(R.string.energy) + " " + getString(mTitlesMood[avgMoods.getMood() - 1]));
-			mAvgEnergyTextView.setText("" + getString(R.string.mood) + " " + getString(mTitlesEnergy[avgMoods.getEnergy() - 1]));
+			mAvgMoodTextView.setText(Html.fromHtml(getString(R.string.mood) + " <b>" + getString(mTitlesMood[avgMoods.getMood() - 1])));
+			mAvgEnergyTextView.setText(Html.fromHtml(getString(R.string.energy) + " <b>" + getString(mTitlesEnergy[avgMoods.getEnergy() - 1])));
 		}
 	}
 	

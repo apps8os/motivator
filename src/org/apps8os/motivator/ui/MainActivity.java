@@ -17,11 +17,16 @@
 package org.apps8os.motivator.ui;
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
@@ -34,15 +39,19 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -58,6 +67,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -197,6 +207,32 @@ public class MainActivity extends Activity {
 			editor.putInt(AddEventActivity.EVENT_ADDED, -1);
 			editor.commit();
 		}
+		DayDataHandler dataHandler = new DayDataHandler(this);
+		DayInHistory yesterday = dataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+	    yesterday.setEvents();
+	    final Context context = this;
+	    final ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents();
+	    if (!yesterdayEvents.isEmpty()) {
+	    	
+	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.you_had_an_event_yesterday)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
+					Intent resultIntent = new Intent(context, MoodQuestionActivity.class);
+			    	resultIntent.putExtra(MotivatorEvent.YESTERDAYS_EVENTS, yesterdayEvents);
+			    	resultIntent.putExtra(EventDataHandler.EVENTS_TO_CHECK, true);
+			    	startActivity(resultIntent);
+			    	
+				}
+			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+			Dialog dialog = builder.create();
+			dialog.show();
+	    }
 	}
 
 	@Override

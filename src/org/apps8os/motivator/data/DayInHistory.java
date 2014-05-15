@@ -47,7 +47,8 @@ public class DayInHistory implements Parcelable{
 	private Context mContext;
 	
 	public static final int AMOUNT_OF_DRINKS = 1;
-	public static final int ALL = 2;
+	public static final int MOODS = 2;
+	public static final int ALL = 3;
 	
 	/**
 	 * Create an instance. Set the date in millis to midnight of the day.

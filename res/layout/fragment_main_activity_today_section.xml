@@ -68,6 +68,7 @@
 	            android:id="@+id/main_activity_today_mood_button"
 			    android:orientation="horizontal"
 			    style="@style/CardButtonLinearLayout"
+			    android:layout_marginTop="6dp"
 			    android:layout_height="100dp"
 			     >
 			    <TextView 

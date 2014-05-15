@@ -24,8 +24,8 @@
           <menu>
               <item android:id="@+id/mood_history_attribute_drinking"
                   android:title="@string/action_attribute_drinking" ></item>
-              <item android:id="@+id/mood_history_attribute_all"
-                  android:title="@string/action_attribute_all" ></item>
+              <item android:id="@+id/mood_history_attribute_moods"
+                  android:title="@string/action_attribute_moods" ></item>
           </menu>
     </item>
     

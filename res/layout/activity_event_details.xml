@@ -21,7 +21,12 @@
     android:orientation="vertical"
     android:background="@color/light_gray"
      >
+    <ScrollView
+        android:layout_height="0dp"
+        android:layout_weight="9"
+        android:layout_width="match_parent" >
     <LinearLayout
+        android:id="@+id/event_info_layout"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="0dp"
@@ -30,6 +35,7 @@
         android:background="@drawable/card_background"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:paddingBottom="30dp"
         android:layout_marginBottom="10dp" >
 	    <TextView
 	        android:id="@+id/event_detail_title"
@@ -43,11 +49,16 @@
 	        android:text=""
 	        android:textSize="25sp" />
 	    
+	    <include layout="@layout/element_card_inner_separator_horizontal"/>
+	    
 	    <LinearLayout 
 	        android:layout_height="wrap_content"
 	        android:layout_width="match_parent"
 	        android:orientation="horizontal"
-	        android:layout_margin="8dp">
+	        android:layout_marginLeft="8dp"
+	        android:layout_marginRight="8dp"
+	        android:layout_marginBottom="8dp"
+	        android:layout_marginTop="14dp">
 	        
 	        <TextView
 	        android:id="@+id/event_time_to_go"
@@ -60,15 +71,27 @@
 	        android:fontFamily="sans-serif-condensed"
 	        android:layout_marginRight="8dp"
 	        android:textSize="16sp" />
-	        
-	        <TextView
-	        android:id="@+id/event_time_to_go_entry"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="8dp"
-	        android:text=""
-	        android:textSize="16sp" />
+	        <LinearLayout
+	            android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="2"
+		        android:layout_marginLeft="8dp"
+		        android:orientation="vertical" >
+		        <TextView
+			        android:id="@+id/event_time_to_go_entry"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text="@string/not_defined"
+			        android:textColor="@color/medium_gray"
+			        android:textSize="16sp" />
+		        <TextView
+			        android:id="@+id/event_time_to_go_actual"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text=""
+			        android:textColor="@color/actionbar_orange"
+			        android:textSize="16sp" />
+	        </LinearLayout>
 	    </LinearLayout>
 	    
 	    <LinearLayout 
@@ -89,14 +112,27 @@
 	        android:text="@string/amount_of_drinks"
 	        android:textSize="16sp" />
 	        
-	        <TextView
-	        android:id="@+id/event_amount_of_drinks_entry"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="8dp"
-	        android:text=""
-	        android:textSize="16sp" />
+	        <LinearLayout
+	            android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="2"
+		        android:layout_marginLeft="8dp"
+		        android:orientation="vertical" >
+		        <TextView
+			        android:id="@+id/event_amount_of_drinks_entry"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text="@string/not_defined"
+			        android:textColor="@color/medium_gray"
+			        android:textSize="16sp" />
+		        <TextView
+			        android:id="@+id/event_amount_of_drinks_actual"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text=""
+			        android:textColor="@color/actionbar_orange"
+			        android:textSize="16sp" />
+	        </LinearLayout>
 	    </LinearLayout>
 	    
 	    <LinearLayout 
@@ -117,14 +153,27 @@
 	        android:text="@string/end_time"
 	        android:textSize="16sp" />
 	        
-	        <TextView
-	        android:id="@+id/event_end_time_entry"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="8dp"
-	        android:text=""
-	        android:textSize="16sp" />
+	        <LinearLayout
+	            android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="2"
+		        android:layout_marginLeft="8dp"
+		        android:orientation="vertical" >
+		        <TextView
+			        android:id="@+id/event_end_time_entry"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text="@string/not_defined"
+			        android:textColor="@color/medium_gray"
+			        android:textSize="16sp" />
+		        <TextView
+			        android:id="@+id/event_end_time_actual"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text=""
+			        android:textColor="@color/actionbar_orange"
+			        android:textSize="16sp" />
+	        </LinearLayout>
 	    </LinearLayout>
 	    
 	    <LinearLayout 
@@ -145,18 +194,32 @@
 	        android:text="@string/with_who"
 	        android:textSize="16sp" />
 	        
-	        <TextView
-	        android:id="@+id/event_with_who_entry"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:layout_marginLeft="8dp"
-	        android:text=""
-	        android:textSize="16sp" />
+	       <LinearLayout
+	            android:layout_width="0dp"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="2"
+		        android:layout_marginLeft="8dp"
+		        android:orientation="vertical" >
+		        <TextView
+			        android:id="@+id/event_with_who_entry"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text="@string/not_defined"
+			        android:textColor="@color/medium_gray"
+			        android:textSize="16sp" />
+		        <TextView
+			        android:id="@+id/event_with_who_actual"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+			        android:text=""
+			        android:textColor="@color/actionbar_orange"
+			        android:textSize="16sp" />
+	        </LinearLayout>
 	    </LinearLayout>
     
     </LinearLayout>
 
+    </ScrollView>
     <include layout="@layout/element_main_activity_button_separator"></include>
     <Button
         android:id="@+id/event_detail_cancel_button"

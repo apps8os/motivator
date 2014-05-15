@@ -31,6 +31,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -111,8 +112,13 @@ public class EventHistoryActivity extends Activity {
 				long eventStartTime = event.getStartTime();
 				String eventDate = UtilityMethods.getDateAsString(eventStartTime, mContext);
 				((TextView) buttonTextLayout.getChildAt(0)).setText(eventDate);
+				MotivatorEvent checked = mEventDataHandler.getCheckedEvent(event.getId());
+				if (checked != null) {
+					Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
+					((TextView) buttonTextLayout.getChildAt(0)).setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
+				}
 				if (eventName.length() > 0) {
-					((TextView) buttonTextLayout.getChildAt(1)).setText(eventName + ", " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					((TextView) buttonTextLayout.getChildAt(1)).setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				} else {
 					((TextView) buttonTextLayout.getChildAt(1)).setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				}

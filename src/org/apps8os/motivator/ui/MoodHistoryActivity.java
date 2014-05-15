@@ -89,6 +89,7 @@ public class MoodHistoryActivity extends Activity {
 
 	private TitlePageIndicator titleIndicator;
 	private static Calendar mStartDate;
+	private int mSelectedAttribute = DayInHistory.AMOUNT_OF_DRINKS;
 
 
 	/** Called when the activity is first created. */
@@ -137,6 +138,7 @@ public class MoodHistoryActivity extends Activity {
 		mSelectedDay = mNumberOfTodayInSprint - 1;
 		mSelectedWeek = mNumberOfWeeksInSprint - 1;
 	    mViewPager = (ViewPager) findViewById(R.id.activity_mood_history_viewpager);
+	    
 	    titleIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
 	    
 	    // Page change listener to keep the selected week and day in a member.
@@ -155,6 +157,10 @@ public class MoodHistoryActivity extends Activity {
 			    	mSelectedDay = arg0;
 			    } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			    	mSelectedWeek = arg0;
+			    	MoodHistoryWeekFragment fragment = mPagerAdapterWeek.getWeekFragment(arg0);
+			    	if (fragment != null) {
+			    		fragment.updateSelectedAttribute(mSelectedAttribute);
+			    	}
 			    }
 			}
 	    });
@@ -177,13 +183,15 @@ public class MoodHistoryActivity extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Selecting the different attributes in the week view, not visible in portrait day view.
-		MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
-		if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-			loadPortraitView();
-			selectAttribute.setVisible(false);
-		} else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			loadLandscapeView();
-			selectAttribute.setVisible(true);
+		if (mMenu != null) {
+			MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
+			if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+				loadPortraitView();
+				selectAttribute.setVisible(false);
+			} else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				loadLandscapeView();
+				selectAttribute.setVisible(true);
+			}
 		}
 	}
 	
@@ -218,13 +226,14 @@ public class MoodHistoryActivity extends Activity {
 			return true;
 		case R.id.mood_history_attribute_drinking:
 			// Setting the selected attribute in landscape view.
+			mSelectedAttribute = DayInHistory.AMOUNT_OF_DRINKS;
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
 			weekFragment.updateSelectedAttribute(DayInHistory.AMOUNT_OF_DRINKS);
 			return true;
-		case R.id.mood_history_attribute_all:
-			// Setting the selected attribute in landscape view.
+		case R.id.mood_history_attribute_moods:
+			mSelectedAttribute = DayInHistory.MOODS;
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
-			weekFragment.updateSelectedAttribute(DayInHistory.ALL);
+			weekFragment.updateSelectedAttribute(DayInHistory.MOODS);
 			return true;
 		case R.id.mood_history_change_sprint:
 			// Spawn a dialog where the user can select the sprint depicted in this history.
@@ -306,6 +315,10 @@ public class MoodHistoryActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+	}
+	
+	public int getSelectedAttribute() {
+		return mSelectedAttribute;
 	}
 	
 	/**

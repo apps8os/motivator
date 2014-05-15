@@ -27,7 +27,7 @@
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal">
 	     <TextView
          	android:id="@+id/event_title"
@@ -42,7 +42,7 @@
 	<ScrollView 
 	    android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4">
+        android:layout_weight="5">
 		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
@@ -60,7 +60,8 @@
 		        android:layout_width="match_parent"
 		   		android:layout_height="wrap_content"
 		        android:gravity="center"
-		        style="?android:attr/textAppearanceMedium"/>
+		        style="?android:attr/textAppearanceMedium"
+		        android:layout_marginBottom="10dp"/>
 		    
 		    <LinearLayout 
 			    android:layout_width="match_parent"
@@ -72,13 +73,15 @@
 			   		android:layout_height="wrap_content"
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
-			        android:gravity="center"/>
+			        android:gravity="center|right"
+			        android:textColor="@color/medium_gray"
+			        android:layout_marginRight="10dp"/>
 
 		        <Spinner
 		            android:id="@+id/planned_drinks_spinner"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
-		            android:layout_weight="1" />
+		            android:layout_weight="2" />
 		    </LinearLayout>
 		    <LinearLayout 
 			    android:layout_width="match_parent"
@@ -90,13 +93,15 @@
 			   		android:layout_height="wrap_content"
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
-			        android:gravity="center"/>
+			        android:gravity="center|right"
+			        android:textColor="@color/medium_gray"
+			        android:layout_marginRight="10dp"/>
 
 		        <Spinner
 		            android:id="@+id/start_time_spinner"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
-		            android:layout_weight="1" />
+		            android:layout_weight="2" />
 		    </LinearLayout>
 		    <LinearLayout 
 			    android:layout_width="match_parent"
@@ -108,13 +113,15 @@
 			   		android:layout_height="wrap_content"
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
-			        android:gravity="center"/>
+			        android:gravity="center|right"
+			        android:textColor="@color/medium_gray"
+			        android:layout_marginRight="10dp"/>
 
 		        <Spinner
 		            android:id="@+id/end_time_spinner"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
-		            android:layout_weight="1" />
+		            android:layout_weight="2" />
 		    </LinearLayout>
 		    <LinearLayout 
 			    android:layout_width="match_parent"
@@ -126,13 +133,15 @@
 			   		android:layout_height="wrap_content"
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
-			        android:gravity="center"/>
+			        android:gravity="center|right"
+			        android:textColor="@color/medium_gray"
+			        android:layout_marginRight="10dp"/>
 
 		        <Spinner
 		            android:id="@+id/with_who_spinner"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
-		            android:layout_weight="1" />
+		            android:layout_weight="2" />
 		    </LinearLayout>
 		</LinearLayout>
 	</ScrollView>

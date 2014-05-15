@@ -16,8 +16,13 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.concurrent.TimeUnit;
+
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
+import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.utils.UtilityMethods;
 
@@ -27,12 +32,16 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,7 +74,17 @@ public class EventDetailsActivity extends Activity {
 	    String title; 
 	    final EventDetailsActivity parentActivity = this;
 	    final int eventId = mEvent.getId();
+	    MotivatorEvent checkedEvent = null;
+	    if (section == MotivatorEvent.TODAY) {
+	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_green));
+	    	titleView.setTextColor(getResources().getColor(R.color.actionbar_green));
+	    } else if (section == MotivatorEvent.PLAN) {
+	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
+	    }
+	    
 	    if (section == MotivatorEvent.HISTORY) {
+	    	checkedEvent = mDataHandler.getCheckedEvent(mEvent.getId());
+		    
 	    	title = UtilityMethods.getDateAsString(mEvent.getStartTime(), this);
 	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
 	    	titleView.setTextColor(getResources().getColor(R.color.orange));
@@ -81,7 +100,6 @@ public class EventDetailsActivity extends Activity {
 		    });
 	    } else {
 	    	title = mEvent.getEventDateAsText();
-	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
 	    	Button cancelButton = (Button) findViewById(R.id.event_detail_cancel_button);
 		    cancelButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -121,19 +139,70 @@ public class EventDetailsActivity extends Activity {
 	    } else {
 	    	titleView.setText(title);
 	    }
-	    
-	    TextView startTimeText = (TextView) findViewById(R.id.event_time_to_go_entry);
+	    TextView textView = (TextView) findViewById(R.id.event_time_to_go_entry);
 	    String textToAdd = mEvent.getStartTimeAsText();
-	    startTimeText.setText(Html.fromHtml(textToAdd));
+	    if (textToAdd.length() > 0) {
+	    	textView.setText(Html.fromHtml(textToAdd));
+	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	textView.setTypeface(null, Typeface.BOLD);
+	    }
 	    
-	    TextView endTimeText = (TextView) findViewById(R.id.event_end_time_entry);
+	    textView = (TextView) findViewById(R.id.event_end_time_entry);
 	    textToAdd = mEvent.getEndTimeAsText();
-	    endTimeText.setText(mEvent.getEndTimeAsText());
+	    if (textToAdd.length() > 0) {
+	    	textView.setText(Html.fromHtml(textToAdd));
+	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	textView.setTypeface(null, Typeface.BOLD);
+	    }
 	    
-	    TextView withWhoText = (TextView) findViewById(R.id.event_with_who_entry);
-	    withWhoText.setText(mEvent.getWithWho());
+	    textView = (TextView) findViewById(R.id.event_with_who_entry);
+	    textToAdd = mEvent.getWithWho();
+	    if (textToAdd.length() > 0) {
+	    	textView.setText(Html.fromHtml(textToAdd));
+	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	textView.setTypeface(null, Typeface.BOLD);
+	    }
 	    
-	    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText("" + mEvent.getPlannedDrinks());
+	    textToAdd = "" + mEvent.getPlannedDrinks();
+	    if (textToAdd.length() > 0) {
+		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText(textToAdd);
+		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setTextColor(getResources().getColor(R.color.dark_gray));
+		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setTypeface(null, Typeface.BOLD);
+	    }
+	    if (checkedEvent != null) {
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText("" + checkedEvent.getPlannedDrinks());
+	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setText(checkedEvent.getStartTimeAsText());
+	    	((TextView) findViewById(R.id.event_end_time_actual)).setText(checkedEvent.getEndTimeAsText());
+	    	((TextView) findViewById(R.id.event_with_who_actual)).setText(checkedEvent.getWithWho());
+	    	
+	    } else {
+	    }
+	    DayDataHandler dataHandler = new DayDataHandler(this);
+	    DayInHistory day = dataHandler.getDayInHistory(mEvent.getStartTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+	    Mood firstMood = day.getFirstMoodOfTheDay();
+	    if (firstMood.getEnergy() > 0) {
+	    	final float scale = getResources().getDisplayMetrics().density;
+	    	textView = new TextView(this);
+	    	textView.setText(getString(R.string.first_mood_of_the_next_day));
+	    	LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+	    	params.setMargins((int) (10 * scale), (int) (20 * scale), (int) (10 * scale), (int) (10 * scale));
+	    	textView.setLayoutParams(params);
+	    	textView.setGravity(Gravity.CENTER);
+	    	textView.setTextSize(14);
+	    	textView.setTypeface(null, Typeface.BOLD);
+	    	textView.setTextColor(getResources().getColor(R.color.medium_gray));
+	    	LinearLayout rootLayout = (LinearLayout) findViewById(R.id.event_info_layout);
+	    	LinearLayout moodImage = (LinearLayout) getLayoutInflater().inflate(R.layout.element_mood_image, rootLayout, false);
+	    	((ImageView) moodImage.getChildAt(0)).setImageResource(getResources().getIdentifier("energy" + firstMood.getEnergy(), "drawable", getPackageName()));
+	    	((ImageView) moodImage.getChildAt(1)).setImageResource(getResources().getIdentifier("mood" + firstMood.getMood(), "drawable", getPackageName()));
+	    	
+	    	
+	    	params = new LinearLayout.LayoutParams((int) (105 * scale), (int) (100 * scale));
+	    	params.gravity = Gravity.CENTER;
+	    	moodImage.setLayoutParams(params);
+	    	rootLayout.addView(textView);
+	    	rootLayout.addView(moodImage);
+	    }
 	}
 
 }
