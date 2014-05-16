@@ -88,7 +88,7 @@ public class NotificationService extends IntentService {
 				// Check if there were events yesterday.
 				DayInHistory yesterday = moodDataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 			    yesterday.setEvents();
-			    ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents();
+			    ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents(this);
 			    if (!yesterdayEvents.isEmpty()) {
 			    	// Put the events as extras to the intent so that we can pass them to the checking activity.
 			    	resultIntent.putExtra(MotivatorEvent.YESTERDAYS_EVENTS, yesterdayEvents);

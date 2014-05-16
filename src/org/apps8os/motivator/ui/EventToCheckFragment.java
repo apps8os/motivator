@@ -16,8 +16,6 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
@@ -26,16 +24,13 @@ import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
 import android.app.Fragment;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 
@@ -103,11 +98,20 @@ public class EventToCheckFragment extends Fragment {
 		return rootView;
 	}
 	
+	/**
+	 * 
+	 * @return the answers for this checked event.
+	 */
 	public int[] getAnswers() {
-		int[] answers = {mDrinksSpinner.getSelectedItemPosition() + 1, mStartTimeSpinner.getSelectedItemPosition(), mEndTimeSpinner.getSelectedItemPosition(), mWithWhoSpinner.getSelectedItemPosition()};
+		int[] answers = {mDrinksSpinner.getSelectedItemPosition() + 1, mStartTimeSpinner.getSelectedItemPosition(), 
+				mEndTimeSpinner.getSelectedItemPosition(), mWithWhoSpinner.getSelectedItemPosition()};
 		return answers;
 	}
 	
+	/**
+	 * 
+	 * @return the event that this fragment represents.
+	 */
 	public MotivatorEvent getEvent() {
 		return mEvent;
 	}

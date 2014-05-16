@@ -18,10 +18,7 @@ package org.apps8os.motivator.ui;
 
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
-import org.apps8os.motivator.R;
 import org.apps8os.motivator.services.NotificationService;
 
 import android.app.Activity;
@@ -31,11 +28,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 
 /**
  * A settings activity for application settings.
@@ -46,8 +40,6 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	
 	public static final String KEY_SEND_NOTIFICATIONS = "send_notifications";
 	public static final String KEY_NOTIFICATION_INTERVAL = "minimum_notification_interval";
-	private String mTimeToNotify;
-	private Resources mRes;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -56,8 +48,6 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	    getFragmentManager().beginTransaction()
         .replace(android.R.id.content, new SettingsFragment())
         .commit();
-	    mRes = getResources();
-	    mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.in_the_morning_value));
 	}
 	
 	@Override
@@ -104,11 +94,11 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	 */
 	public void setNotifications(PendingIntent pendingNotificationIntent, AlarmManager alarmManager) {
 		// The time to notify the user
-		GregorianCalendar notificationTime = new GregorianCalendar();
+		Calendar notificationTime = Calendar.getInstance();
 		notificationTime.set(Calendar.MINUTE, 0);
 		notificationTime.set(Calendar.SECOND, 0);
 
-		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.in_the_morning_value));
+		//mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, mRes.getString(R.string.in_the_morning_value));
 		alarmManager.cancel(pendingNotificationIntent);
 		if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 			notificationTime.add(Calendar.DATE, 1);

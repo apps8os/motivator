@@ -20,16 +20,12 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
-import org.apps8os.motivator.data.DayDataHandler;
-import org.apps8os.motivator.data.Goal;
-import org.apps8os.motivator.data.GoalDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -38,26 +34,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents the today section in the UI.
@@ -146,6 +136,7 @@ public class TodaySectionFragment extends Fragment {
 		ImageButton removeDrink = (ImageButton) mDrinkButton.findViewById(R.id.remove_drink_button);
 		mDrinkCounterTextView.setTextColor(mRes.getColor(R.color.medium_gray));
 		mPlannedDrinksTextView = (TextView) mDrinkButton.findViewById(R.id.card_button_bottom_text);
+		
 		final Context context = getActivity();
 		addDrink.setOnClickListener(new OnClickListener() {
 			@Override
@@ -153,13 +144,18 @@ public class TodaySectionFragment extends Fragment {
 				mDrinkCounter += 1;
 				mDayDataHandler.addDrink();
 				mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
+				
+				// Opening prompts depending on the amount of drinks drunk and planned amounts
+				
 				if (mDrinkCounter > mPlannedDrinks) {
 					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
 					mDrinkButton.setBackgroundResource(R.drawable.card_background_red);
 				}
 				if (mPlannedDrinks == 0 && mDrinkCounter == 1) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setTitle(getString(R.string.you_have_no_plans)).setMessage(getString(R.string.do_you_want_to_add_event)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					builder.setTitle(getString(R.string.you_have_no_plans))
+						.setMessage(getString(R.string.do_you_want_to_add_event))
+						.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {
@@ -173,9 +169,12 @@ public class TodaySectionFragment extends Fragment {
 					});
 					Dialog dialog = builder.create();
 					dialog.show();
+					
 				} else if (mPlannedDrinks > 0 && mDrinkCounter == mPlannedDrinks + 1) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-					builder.setTitle(getString(R.string.you_went_over_planned_drinks)).setMessage(getString(R.string.is_everything_ok)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					builder.setTitle(getString(R.string.you_went_over_planned_drinks))
+						.setMessage(getString(R.string.is_everything_ok))
+						.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {
@@ -266,7 +265,6 @@ public class TodaySectionFragment extends Fragment {
 			
 			mPlannedDrinks = 0;
 			int resultSize = result.size();
-			MotivatorEvent event;
 			if (resultSize == 0) {
 				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
@@ -282,8 +280,7 @@ public class TodaySectionFragment extends Fragment {
 				**/
 			}
 			// Create buttons for the result set.
-			for (int i = 0; i < resultSize; i ++) {
-				event = result.get(i);
+			for (MotivatorEvent event : result) {
 				event.setEventDateAsText(getString(R.string.today));
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_larger_event_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
@@ -292,6 +289,7 @@ public class TodaySectionFragment extends Fragment {
 				LinearLayout drinkAmountLayout = ((LinearLayout) buttonTextLayout.getChildAt(1));
 				((TextView) drinkAmountLayout.getChildAt(1)).setText(" " + getString(R.string.drinks));
 				((ImageView) eventButton.findViewById(R.id.drink_amount_image)).setImageResource(mAmountImages[event.getPlannedDrinks()]);
+				
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 				} else {

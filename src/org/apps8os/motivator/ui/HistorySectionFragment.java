@@ -19,26 +19,17 @@ package org.apps8os.motivator.ui;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.Sprint;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 /**
  * Represents the history section in the UI.
- * TODO: Rewrite to do correct behavior
  */
 public class HistorySectionFragment extends Fragment {
 	
@@ -52,7 +43,6 @@ public class HistorySectionFragment extends Fragment {
 		
 		View rootView = inflater.inflate(
 				R.layout.fragment_main_activity_history_section, container, false);
-		LinearLayout buttonLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_fragmenet_layout);
 		
 		LinearLayout moodButton = (LinearLayout) rootView.findViewById(R.id.main_activity_mood_history_button);
 		moodButton.setOnClickListener(new OnClickListener() {

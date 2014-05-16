@@ -18,12 +18,11 @@ package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Sprint;
 
 import android.animation.Animator;
@@ -33,7 +32,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +52,7 @@ import com.echo.holographlibrary.LinePoint;
 public class MoodHistoryWeekFragment extends Fragment {
 	
 	private Resources mRes;
-	private DayDataHandler mDataHandler;
+	private DayDataHandler mDayDataHandler;
 	private View mRootView;
 	private LayoutInflater mInflater;
 	private ArrayList<DayInHistory> mDays;
@@ -70,7 +68,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mRes = getActivity().getResources();
 		mSprintStartDate = b.getLong(Sprint.CURRENT_SPRINT_STARTDATE);
 		mPosition = b.getInt(MoodHistoryActivity.FRAGMENT_POSITION);
-		mDataHandler = new DayDataHandler(getActivity());
+		mDayDataHandler = new DayDataHandler(getActivity());
 		
 		// Loading the days on a different thread.
 		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition);
@@ -96,7 +94,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 	 * @return
 	 */
 	public String getDay(DayInHistory day) {
-		Calendar date = new GregorianCalendar();
+		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(day.getDateInMillis());
 		switch (date.get(Calendar.DAY_OF_WEEK)) {
 		case Calendar.MONDAY:
@@ -141,7 +139,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 			ArrayList<DayInHistory> result = new ArrayList<DayInHistory>();
 			
 			// Get the first week in the sprint.
-			Calendar calendar = new GregorianCalendar();
+			Calendar calendar = Calendar.getInstance();
 			calendar.setFirstDayOfWeek(Calendar.MONDAY);
 			calendar.setTimeInMillis(mSprintStartDateInMillis);
 			calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -149,12 +147,12 @@ public class MoodHistoryWeekFragment extends Fragment {
 			calendar.add(Calendar.DATE, mPosition * 7);
 			// Add days until sunday.
 			while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-				DayInHistory date = mDataHandler.getDayInHistory(calendar.getTimeInMillis());
+				DayInHistory date = mDayDataHandler.getDayInHistory(calendar.getTimeInMillis());
 				result.add(date);
 				calendar.add(Calendar.DATE, 1);
 			}
 			// Add the sunday.
-			DayInHistory date = mDataHandler.getDayInHistory(calendar.getTimeInMillis());
+			DayInHistory date = mDayDataHandler.getDayInHistory(calendar.getTimeInMillis());
 			result.add(date);
 			return result;
 		}
@@ -194,7 +192,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 				dayLayout.addView(dayView);
 				if (mSelectedAttribute == DayInHistory.AMOUNT_OF_DRINKS) {
 					p.setX(i);
-					int drinks = mDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 					if (drinks > 4) {
 						drinks = 4;
 					}
@@ -299,7 +297,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 				for (int i = 0; i < daysSize; i++) {
 					day = mDays.get(i);
 					p.setX(i);
-					int drinks = mDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 					if (drinks > 4) {
 						drinks = 4;
 					}

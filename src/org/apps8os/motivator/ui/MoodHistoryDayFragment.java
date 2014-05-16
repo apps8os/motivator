@@ -92,7 +92,7 @@ public class MoodHistoryDayFragment extends Fragment {
 			title.setText(getString(R.string.your_mood) + ", " + firstMoodOfTheDay.getTimeAsString(getActivity()));
 			energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + firstMoodOfTheDay.getEnergy(), "drawable", getActivity().getPackageName())));
 			moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + firstMoodOfTheDay.getMood(), "drawable", getActivity().getPackageName())));
-			String comment = firstMoodOfTheDay.getComment();
+			final String comment = firstMoodOfTheDay.getComment();
 			commentView.setText(comment);
 		}
 		
@@ -108,15 +108,15 @@ public class MoodHistoryDayFragment extends Fragment {
 	private void loadMoods(LinearLayout rootLayout) {
 		ArrayList<Mood> moods = mDay.getMoods();
 		if (moods.size() > 1) {
-			for (int i = 1; i < moods.size(); i++) {
+			for (Mood mood : moods) {
 				LinearLayout moodView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_moodlist_mood, rootLayout, false);
-				((TextView) moodView.findViewById(R.id.moodlist_mood_time)).setText(moods.get(i).getTimeAsString(getActivity()));
-				((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setText(moods.get(i).getComment());
+				((TextView) moodView.findViewById(R.id.moodlist_mood_time)).setText(mood.getTimeAsString(getActivity()));
+				((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setText(mood.getComment());
 				LinearLayout moodImageRoot = (LinearLayout) moodView.findViewById(R.id.mood_image_root);
 				ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
-				energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + moods.get(i).getEnergy(), "drawable", getActivity().getPackageName())));
+				energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + mood.getEnergy(), "drawable", getActivity().getPackageName())));
 				ImageView moodImage = (ImageView) moodImageRoot.getChildAt(1);
-				moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + moods.get(i).getMood(), "drawable", getActivity().getPackageName())));
+				moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + mood.getMood(), "drawable", getActivity().getPackageName())));
 
 				rootLayout.addView(moodView);
 			}

@@ -26,17 +26,12 @@ import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -95,36 +90,45 @@ public class EventHistoryActivity extends Activity {
 		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
 			
-			int resultSize = result.size();
+			final int resultSize = result.size();
 			LayoutInflater inflater = getLayoutInflater();
-			MotivatorEvent event;
 			if (resultSize == 0) {
 				LinearLayout noEventsText = (LinearLayout) inflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
 			}
 			// Create buttons for the result set.
-			for (int i = 0; i < resultSize; i ++) {
-				event = result.get(i);
+			for (MotivatorEvent event : result) {
 				event.setEventDateAsText(getString(R.string.today));
 				final LinearLayout eventButton = (LinearLayout) inflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
-				String eventName = event.getName();
+				final String eventName = event.getName();
 				long eventStartTime = event.getStartTime();
-				String eventDate = UtilityMethods.getDateAsString(eventStartTime, mContext);
-				((TextView) buttonTextLayout.getChildAt(0)).setText(eventDate);
+				((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
+						.setText(UtilityMethods.getDateAsString(eventStartTime, mContext));
+				
 				MotivatorEvent checked = mEventDataHandler.getCheckedEvent(event.getId());
+				
 				if (checked != null) {
 					Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
-					((TextView) buttonTextLayout.getChildAt(0)).setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
+							.setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
 				}
+				
 				if (eventName.length() > 0) {
-					((TextView) buttonTextLayout.getChildAt(1)).setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+							.setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				} else {
-					((TextView) buttonTextLayout.getChildAt(1)).setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+							.setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				}
-				((TextView) buttonTextLayout.getChildAt(0)).setTextColor(mRes.getColor(R.color.actionbar_orange));
-				((TextView) buttonTextLayout.getChildAt(1)).setTextColor(mRes.getColor(R.color.medium_gray));
-				((ImageView) eventButton.getChildAt(2)).setImageResource(R.drawable.calendar_past_icon);
+				
+				((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
+						.setTextColor(mRes.getColor(R.color.actionbar_orange));
+				((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+						.setTextColor(mRes.getColor(R.color.medium_gray));
+				((ImageView) eventButton.findViewById(R.id.card_button_right_image))
+						.setImageResource(R.drawable.calendar_past_icon);
+				
 				eventButton.setOnClickListener(new OpenEventDetailViewOnClickListener(event, mContext, MotivatorEvent.HISTORY));
 				mEventLayout.addView(eventButton);
 			}

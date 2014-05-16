@@ -26,7 +26,7 @@
        android:layout_weight="1"
        android:gravity="left|center" >
     <TextView 
-        android:id="@+id/card_button_middle_text"
+        android:id="@+id/card_button_top_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
@@ -44,7 +44,7 @@
     </LinearLayout>
     <include layout="@layout/element_card_inner_separator_vertical"/>
         <ImageView
-        android:id="@+id/card_button_left_image"
+        android:id="@+id/card_button_right_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"

@@ -23,10 +23,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.R.array;
 import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.ui.MainActivity;
 import org.apps8os.motivator.utils.UtilityMethods;
@@ -91,7 +89,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			KEY_TIMESTAMP + " INTEGER);";
 	
 	private static final String TABLE_NAME = TABLE_NAME_EVENTS;
-	private GregorianCalendar mCalendarCache;					// Caching the calendar for all answers belonging to the same instance.
 	private SparseArray<Question> mQuestions;
 	private Context mContext;
 	
@@ -167,7 +164,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		values.put(KEY_EVENT_ID, innerEventId);
 		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
 		
-		if (startTimeAnswer > 0) {
+		if (startTimeAnswer > 0 && checked == EVENT_NOT_CHECKED) {
 			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 			// Set the notification to repeat over the given time at notificationTime
 			Intent notificationIntent = new Intent(mContext, NotificationService.class);
@@ -218,44 +215,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	
 	public void insertCheckedEvent(int eventId, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
 		insertEvent(eventId, 1, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 1);
-	}
-	
-	/**
-	 * Inserting event to the database. In events, the specific content field is the midnight of the day
-	 * when the event should be. This is used to determine whether it belongs to plan section or
-	 * today section.
-	 * @param answer
-	 * @param questionId
-	 * @param answersId
-	 */
-	public void insertAnswer(int answer, int questionId, int answersId) {
-		open();
-		// Check if the question is the one asking when the event will be.
-		if (questionId == QUESTION_ID_WHEN) {
-			// Initialize the cache calendar for today/now
-			mCalendarCache = new GregorianCalendar();
-			UtilityMethods.setToDayStart(mCalendarCache);
-			switch (answer) {
-				// Answer today, no need to do anything
-				case 0: {
-					break;
-				}
-				// Tomorrow, set the calendar to tomorrow midnight.
-				case 1: {
-					mCalendarCache.add(Calendar.DAY_OF_MONTH, 1);
-					break;
-				}
-				// Next weekend, set the calendar to next friday at midnight.
-				case 2: {
-					int daysUntilNextFriday = (Calendar.FRIDAY - mCalendarCache.get(Calendar.DAY_OF_WEEK));
-					mCalendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
-					break;
-				}
-			}
-		}
-		// Insert the answer with the calendar timestamp
-		super.insertAnswer(answer, questionId, answersId, mCalendarCache.getTimeInMillis(), TABLE_NAME);
-		close();
 	}
 	
 	/**
@@ -358,7 +317,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 * @param dayInMillis
 	 * @return The events as an ArrayList
 	 */
-	public ArrayList<MotivatorEvent> getEventsForDay(long dayInMillis) {
+	public ArrayList<MotivatorEvent> getUncheckedEventsForDay(long dayInMillis) {
 		open();
 		GregorianCalendar calendar = new GregorianCalendar();
 		calendar.setTimeInMillis(dayInMillis);
@@ -367,7 +326,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		calendar.add(Calendar.DATE, 1);
 		long dayEndInMillis = calendar.getTimeInMillis();
 		
-		String selection = KEY_START_TIME + " >= " + dayStartInMillis + " AND " + KEY_START_TIME + " < " + dayEndInMillis;
+		String selection = KEY_START_TIME + " >= " + dayStartInMillis + " AND " + KEY_START_TIME + " < " + dayEndInMillis + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_NOT_CHECKED;
 		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
 		
@@ -416,18 +375,6 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	
 	public int getAmountOfQuestions() {
 		return mQuestions.size();
-	}
-	
-	public void deleteLastRow() {
-		open();
-    	super.deleteLastRow(TABLE_NAME);
-    	close();
-	}
-	
-	public void deleteRowsWithAnsweringId(int answerId) {
-		open();
-		super.deleteRowsWithAnsweringId(TABLE_NAME, answerId);
-		close();
 	}
 	
 	public Question getQuestion(int id) {

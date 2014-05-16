@@ -16,15 +16,11 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.services.NotificationService;
-import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
 import android.app.NotificationManager;
@@ -52,7 +48,7 @@ import android.widget.Toast;
 
 public class MoodQuestionActivity extends Activity {
 	
-	private DayDataHandler mDataHandler;					// Database access object
+	private DayDataHandler mDayDataHandler;					// Database access object
 	private ViewPager mCardsViewPagerEnergy;				// Upper half of the carousel
 	private ViewPager mCardsViewPagerMood;				// Lower half of the carousel
 	private TextView mEnergyLevelText;
@@ -92,7 +88,7 @@ public class MoodQuestionActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mood_question);
-		mDataHandler = new DayDataHandler(this);
+		mDayDataHandler = new DayDataHandler(this);
 
 		mCardsViewPagerEnergy = (ViewPager) findViewById(R.id.mood_question_viewpager_cards);
         mCardsViewPagerEnergy.setAdapter(new ImagesPagerAdapter(mImages1, mTitles1, this));
@@ -116,8 +112,10 @@ public class MoodQuestionActivity extends Activity {
         
         // Set an OnPageChangeListener to the ViewPager, change the text when a page is selected
         mCardsViewPagerMood.setOnPageChangeListener(new ViewPageChangeListener(mCardsViewPagerMood, mMoodLevelText));
-        LayoutInflater inflater = getLayoutInflater();
+        final LayoutInflater inflater = getLayoutInflater();
         LinearLayout buttons = (LinearLayout) findViewById(R.id.mood_question_buttons);
+        
+        // Change the OK button to next button which opens the checking events activity if there are events to check.
         final Bundle extras = getIntent().getExtras();
         if (extras != null && extras.getBoolean(EventDataHandler.EVENTS_TO_CHECK, false)) {
             Button nextButton = (Button) inflater.inflate(R.layout.element_ok_button, buttons, false);
@@ -151,7 +149,6 @@ public class MoodQuestionActivity extends Activity {
 					} else {
 						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
 					}
-					LayoutInflater inflater = getLayoutInflater();
 					View toastLayout = (View) inflater.inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
 					toastText.setText(toastMsg);
@@ -181,7 +178,7 @@ public class MoodQuestionActivity extends Activity {
 		
 		// Convert the margin from dp to px
         final float scale = getResources().getDisplayMetrics().density;
-        int margin = (int) (MARGIN_DP * scale + 0.5f);
+        final int margin = (int) (MARGIN_DP * scale + 0.5f);
         // Set the page margin to negative to show pages next to the selected on the screen
         viewPager.setPageMargin(-margin);
         viewPager.setOffscreenPageLimit(3);
@@ -194,9 +191,9 @@ public class MoodQuestionActivity extends Activity {
 		int mood = mCardsViewPagerMood.getCurrentItem() + 1;
 		EditText commentText = (EditText) findViewById(R.id.mood_comment_edit_text);
 		if (commentText.getText().length() != 0) {
-			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, commentText.getText().toString());
+			mDayDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, commentText.getText().toString());
 		} else {
-			mDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, DayDataHandler.NO_COMMENT);
+			mDayDataHandler.insertMood(mCardsViewPagerEnergy.getCurrentItem() + 1, mood, DayDataHandler.NO_COMMENT);
 		}
 	}
 	

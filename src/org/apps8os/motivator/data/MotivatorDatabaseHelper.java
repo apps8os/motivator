@@ -20,7 +20,6 @@ package org.apps8os.motivator.data;
 
 
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -129,23 +128,5 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected void deleteRowsWithAnsweringId(String tableName, int answerId) {
 		mDb.delete(tableName, KEY_ID_ANSWERS + " = " + answerId, null);
 	}
-    
-    /**
-     * Inserts the answer to the database. Call this from subclass.
-     * @param answer		 answer in integer form, determined from the possible answers for the question
-     * @param questionId	 represents the question id, used to determine for which question the answer belongs to
-     * @param answersId		 represents one answering instance
-     * @param tableName		 the table to insert the answer to, use static names from this class
-     */
-    
-    protected void insertAnswer(int answer, int questionId, int answersId, long content, String tableName) {
-    	ContentValues values = new ContentValues();
-    	values.put(KEY_ANSWER, answer);
-    	values.put(KEY_ID_QUESTION, questionId);
-    	values.put(KEY_ID_ANSWERS, answersId);
-    	values.put(KEY_TIMESTAMP, System.currentTimeMillis());
-    	values.put(KEY_CONTENT, content);
-    	mDb.insert(tableName, null, values);
-    }
 
 }

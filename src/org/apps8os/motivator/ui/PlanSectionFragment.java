@@ -22,8 +22,6 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -39,8 +37,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,7 +50,7 @@ import android.widget.Toast;
  */
 public class PlanSectionFragment extends Fragment {
 
-	private EventDataHandler mDataHandler;
+	private EventDataHandler mEventDataHandler;
 	private LinearLayout mEventLayout;
 	private LayoutInflater mInflater;
 	
@@ -81,7 +77,7 @@ public class PlanSectionFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		/**
+		/** Commented out for now
 		LinearLayout addGoalButton = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_add_goal_button);
 		addGoalButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -124,7 +120,7 @@ public class PlanSectionFragment extends Fragment {
 			mRes = getResources();
 			
 			// Open the database connection
-			mDataHandler = new EventDataHandler(getActivity());
+			mEventDataHandler = new EventDataHandler(getActivity());
 		}
 
 		/**
@@ -132,7 +128,7 @@ public class PlanSectionFragment extends Fragment {
 		 */
 		@Override
 		protected ArrayList<MotivatorEvent> doInBackground(Void... arg0) {		
-			return mDataHandler.getEventsAfterToday();
+			return mEventDataHandler.getEventsAfterToday();
 		}
 		
 		/**
@@ -141,16 +137,13 @@ public class PlanSectionFragment extends Fragment {
 		@Override
 		protected void onPostExecute(ArrayList<MotivatorEvent> result) {
 			mEventLayout.removeAllViews();
-			
-			int resultSize = result.size();
-			MotivatorEvent event;
-			if (resultSize == 0) {
+
+			if (result.size() == 0) {
 				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
 			}
 			// Create buttons for the result set.
-			for (int i = 0; i < resultSize; i ++) {
-				event = result.get(i);
+			for (MotivatorEvent event : result) {
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
@@ -183,11 +176,13 @@ public class PlanSectionFragment extends Fragment {
 					@Override
 					public boolean onLongClick(View v) {
 						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-						builder.setTitle(getString(R.string.cancel_event) + "?").setMessage(getString(R.string.event_will_be_deleted)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+						builder.setTitle(getString(R.string.cancel_event) + "?")
+							.setMessage(getString(R.string.event_will_be_deleted))
+							.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								mDataHandler.deleteEvent(eventId);
+								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
 								if (mEventLayout.getChildCount() == 0) {
 									LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);

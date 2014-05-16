@@ -45,6 +45,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -67,7 +68,7 @@ public class MoodHistoryActivity extends Activity {
 	
 	public static final String FRAGMENT_POSITION = "fragment_position";
 	
-	private DayDataHandler mMoodDataHandler;
+	private DayDataHandler mDayDataHandler;
 	private ViewPager mViewPager;
 	private FragmentDatePagerAdapter mPagerAdapterDay;
 	private FragmentWeekPagerAdapter mPagerAdapterWeek;
@@ -76,8 +77,6 @@ public class MoodHistoryActivity extends Activity {
 	private SimpleDateFormat mDateFormat;
 	
 	private static long mSprintStartDateInMillis = 1393632000000L;
-	private static long mSprintEndDateInMillis;
-	private static Calendar mSprintStartDate;
 	private static int mDaysInSprint = 200;
 	private int mNumberOfTodayInSprint;
 	private int mNumberOfWeeksInSprint;
@@ -86,9 +85,10 @@ public class MoodHistoryActivity extends Activity {
 	private String[] mDayPageTitles;
 	private String[] mWeekPageTitles;
 	private Menu mMenu;
+	private Resources mRes;
 
 	private TitlePageIndicator titleIndicator;
-	private static Calendar mStartDate;
+	private Calendar mStartDate;
 	private int mSelectedAttribute = DayInHistory.AMOUNT_OF_DRINKS;
 
 
@@ -97,18 +97,16 @@ public class MoodHistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_mood_history);
-	    mMoodDataHandler = new DayDataHandler(this);
+	    mDayDataHandler = new DayDataHandler(this);
 	    
 	    mCurrentSprint = getIntent().getExtras().getParcelable(Sprint.CURRENT_SPRINT);
-	    
+	    mRes = getResources();
 	    mSprintStartDateInMillis = mCurrentSprint.getStartTime();
-	    mSprintStartDate = new GregorianCalendar();
-	    mSprintStartDate.setTimeInMillis(mCurrentSprint.getStartTime());
 	    
 	    mDaysInSprint = mCurrentSprint.getDaysInSprint();
 	    ActionBar actionBar = getActionBar();
 
-		Calendar mToday = new GregorianCalendar();
+		Calendar mToday = Calendar.getInstance();
 		UtilityMethods.setToDayStart(mToday);
 		mToday.setFirstDayOfWeek(Calendar.MONDAY);
 		
@@ -120,9 +118,9 @@ public class MoodHistoryActivity extends Activity {
 		}
 		actionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 	    actionBar.setTitle(mNumberOfTodayInSprint + " " + getString(R.string.days));
-	    actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
+	    actionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_orange));
 	    
-		mStartDate = new GregorianCalendar();
+		mStartDate = Calendar.getInstance();
 		mStartDate.setFirstDayOfWeek(Calendar.MONDAY);
 		mStartDate.setTimeInMillis(mSprintStartDateInMillis);
 		
@@ -153,9 +151,9 @@ public class MoodHistoryActivity extends Activity {
 
 			@Override
 			public void onPageSelected(int arg0) {
-				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+				if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			    	mSelectedDay = arg0;
-			    } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			    } else if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			    	mSelectedWeek = arg0;
 			    	MoodHistoryWeekFragment fragment = mPagerAdapterWeek.getWeekFragment(arg0);
 			    	if (fragment != null) {
@@ -168,9 +166,9 @@ public class MoodHistoryActivity extends Activity {
 	    setPageTitles();
 	    
 	    // Load correct layout and functionality based on orientation
-	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+	    if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 	    	loadPortraitView();
-	    } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+	    } else if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 	    	loadLandscapeView();
 	    }
 	    
@@ -203,7 +201,7 @@ public class MoodHistoryActivity extends Activity {
 	    getMenuInflater().inflate(R.menu.mood_history, menu);
 		mMenu = menu;
 	    MenuItem selectAttribute = mMenu.findItem(R.id.mood_history_select_attribute);
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+		if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			selectAttribute.setVisible(false);
 		} else {
 			selectAttribute.setVisible(true);
@@ -239,15 +237,17 @@ public class MoodHistoryActivity extends Activity {
 			// Spawn a dialog where the user can select the sprint depicted in this history.
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			final Sprint[] sprints = new SprintDataHandler(this).getSprints();
+			
 			// Get the string representations of the sprints.
 			String[] sprintsAsString = new String[sprints.length];
 			for (int i = 0; i < sprints.length; i++) {
 				sprintsAsString[i] = sprints[i].getSprintTitle() + " " + sprints[i].getStartTimeInString(this);
 			}
-			builder.setTitle("Select sprint").setSingleChoiceItems(sprintsAsString, sprints.length-1, null);
+			builder.setTitle(getString(R.string.select_sprint))
+					.setSingleChoiceItems(sprintsAsString, sprints.length-1, null);
 			final AlertDialog alertDialog = builder.create();
 			final Activity thisActivity = this;
-			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -300,7 +300,7 @@ public class MoodHistoryActivity extends Activity {
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
-			Calendar date = new GregorianCalendar();
+			final Calendar date = Calendar.getInstance();
 			date.set(Calendar.YEAR, year);
 			date.set(Calendar.MONTH, monthOfYear);
 			date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -328,7 +328,7 @@ public class MoodHistoryActivity extends Activity {
 	public void setSelectedDay(long dayInMillis) {
 		// Calculate the selected day position in the viewpager
 		mSelectedDay = (int) TimeUnit.DAYS.convert(dayInMillis - mSprintStartDateInMillis, TimeUnit.MILLISECONDS);
-		Calendar selectedDayAsCalendar = new GregorianCalendar();
+		Calendar selectedDayAsCalendar = Calendar.getInstance();
 		selectedDayAsCalendar.setFirstDayOfWeek(Calendar.MONDAY);
 		selectedDayAsCalendar.setTimeInMillis(dayInMillis);
 		// Calculate the selected day position as week in the viewpager
@@ -339,9 +339,9 @@ public class MoodHistoryActivity extends Activity {
 		} else {
 		}
 		// Set the day or week depending on orientation.
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+		if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
 			mViewPager.setCurrentItem(mSelectedDay);
-		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		} else if (mRes.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			mViewPager.setCurrentItem(mSelectedWeek);
 		}
 	}
@@ -352,7 +352,7 @@ public class MoodHistoryActivity extends Activity {
 	 */
 	public void setPageTitles() {
 		mDayPageTitles = new String[mNumberOfTodayInSprint];
-		mLocale = getResources().getConfiguration().locale;
+		mLocale = mRes.getConfiguration().locale;
 		mDateFormat = new SimpleDateFormat("dd.MM.yyyy", mLocale);
     	Calendar date = (Calendar) mStartDate.clone();
 	    for (int i = 0; i < mDayPageTitles.length;i++) {
@@ -361,7 +361,8 @@ public class MoodHistoryActivity extends Activity {
 	    }
 
 	    mWeekPageTitles = new String[mNumberOfWeeksInSprint];
-	    for (int i = 0; i < mWeekPageTitles.length;i++) {
+	    int size = mWeekPageTitles.length;
+	    for (int i = 0; i < size;i++) {
 	    	long dateInMillis = mSprintStartDateInMillis + (TimeUnit.MILLISECONDS.convert(i, TimeUnit.DAYS) * 7);
 			date.setTimeInMillis(dateInMillis);
 			date.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -428,7 +429,7 @@ public class MoodHistoryActivity extends Activity {
 		public MoodHistoryDayFragment getItem(int position) {
 			MoodHistoryDayFragment fragment;
 			// Get a DayInHistory for the date represented by this position. Calculated from the start date.
-			DayInHistory date = mMoodDataHandler.getDayInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
+			DayInHistory date = mDayDataHandler.getDayInHistory(mSprintStartDateInMillis + TimeUnit.MILLISECONDS.convert(position, TimeUnit.DAYS));
 			fragment = new MoodHistoryDayFragment();
 			Bundle b = new Bundle();
 			// Send the DayInHistory for the fragment as parcelable.
@@ -448,12 +449,10 @@ public class MoodHistoryActivity extends Activity {
 	 */
 	private class FragmentWeekPagerAdapter extends FragmentPagerAdapter {
 
-		private Context mContext;
 		private SparseArray<MoodHistoryWeekFragment> mWeekFragments = new SparseArray<MoodHistoryWeekFragment>();
 
 		public FragmentWeekPagerAdapter(FragmentManager fm, Context context) {
 			super(fm);
-			mContext = context;
 		}
 
 		@Override

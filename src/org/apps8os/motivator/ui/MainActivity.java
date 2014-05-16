@@ -19,7 +19,6 @@ package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -31,8 +30,6 @@ import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.services.NotificationService;
-
-import com.viewpagerindicator.TitlePageIndicator;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -51,10 +48,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -67,7 +62,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.viewpagerindicator.TitlePageIndicator;
 
 
 /**
@@ -82,10 +78,10 @@ public class MainActivity extends Activity {
 	private static final String SEEN_HELP = "seen_help";
 	
 	SectionsPagerAdapter mSectionsPagerAdapter;
-	private String mTimeToNotify;					// Hours after midnight when to notify the user
 	private Sprint mCurrentSprint;
 	private SprintDataHandler mSprintDataHandler;
 	private Resources mRes;
+	private SharedPreferences mPrefs;
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -135,19 +131,16 @@ public class MainActivity extends Activity {
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
 					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_blue));
-					//titleIndicator.setBackgroundResource(R.drawable.action_bar_blue);
 				} else if (arg0 == 1) {
 					mActionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_green));
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
 					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_green));
-					//titleIndicator.setBackgroundResource(R.drawable.action_bar_green);
 				} else if (arg0 == 0) {
 					mActionBar.setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_orange));
 					mActionBar.setDisplayShowTitleEnabled(false);
 					mActionBar.setDisplayShowTitleEnabled(true);
 					titleIndicator.setFooterColor(mRes.getColor(R.color.actionbar_orange));
-					//titleIndicator.setBackgroundResource(R.drawable.action_bar_orange);
 				}
 			}
 		};
@@ -164,20 +157,20 @@ public class MainActivity extends Activity {
 			Log.e("notification", "version number not found");
 		}
 		
-		SharedPreferences motivatorPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
-		if( versionNumber != motivatorPrefs.getInt(APP_VERSION, -1)) {
+		mPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
+		if( versionNumber != mPrefs.getInt(APP_VERSION, -1)) {
 			setNotifications();
-			SharedPreferences.Editor editor = motivatorPrefs.edit();
+			SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putInt(APP_VERSION, versionNumber);
 			editor.commit();
 		}
 		
-		if (!motivatorPrefs.getBoolean(Sprint.FIRST_SPRINT_SET, false)) {	
+		if (!mPrefs.getBoolean(Sprint.FIRST_SPRINT_SET, false)) {	
 			Intent intent = new Intent(this, StartingSprintActivity.class);
 			finish();
 			startActivity(intent);
 		}
-		if (!motivatorPrefs.getBoolean(SEEN_HELP, false)) {
+		if (!mPrefs.getBoolean(SEEN_HELP, false)) {
 			showHelp();
 		}
 	}
@@ -191,19 +184,19 @@ public class MainActivity extends Activity {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
-			mActionBar.setTitle(getString(R.string.day) + " " + mCurrentSprint.getCurrentDayOfTheSprint() + "/" + mCurrentSprint.getDaysInSprint());
+			mActionBar.setTitle(getString(R.string.day) + " " 
+					+ mCurrentSprint.getCurrentDayOfTheSprint() + "/" + mCurrentSprint.getDaysInSprint());
 		}
 		
-		SharedPreferences motivatorPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
-		int eventAdded = motivatorPrefs.getInt(AddEventActivity.EVENT_ADDED, -1);
+		final int eventAdded = mPrefs.getInt(AddEventActivity.EVENT_ADDED, -1);
 		if (eventAdded == MotivatorEvent.TODAY) {
 			mViewPager.setCurrentItem(1);
-			Editor editor = motivatorPrefs.edit();
+			Editor editor = mPrefs.edit();
 			editor.putInt(AddEventActivity.EVENT_ADDED, -1);
 			editor.commit();
 		} else if (eventAdded == MotivatorEvent.PLAN){
 			mViewPager.setCurrentItem(2);
-			Editor editor = motivatorPrefs.edit();
+			Editor editor = mPrefs.edit();
 			editor.putInt(AddEventActivity.EVENT_ADDED, -1);
 			editor.commit();
 		}
@@ -211,11 +204,12 @@ public class MainActivity extends Activity {
 		DayInHistory yesterday = dataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 	    yesterday.setEvents();
 	    final Context context = this;
-	    final ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents();
+	    final ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents(this);
 	    if (!yesterdayEvents.isEmpty()) {
 	    	
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(getString(R.string.you_had_an_event_yesterday)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+			builder.setTitle(getString(R.string.you_had_an_event_yesterday))
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,
 						int which) {
@@ -275,7 +269,8 @@ public class MainActivity extends Activity {
 			helpText.setText(getString(R.string.today_section_help));
 			final LinearLayout helpBackground = (LinearLayout) contentRoot.findViewById(R.id.help_text_background);
 			helpBackground.setBackgroundResource(R.color.actionbar_green);
-			((Button) contentRoot.findViewById(R.id.help_overlay_button)).setOnClickListener(new OnClickListener() {
+			((Button) contentRoot.findViewById(R.id.help_overlay_button))
+				.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (mViewPager.getCurrentItem() == 0) {
@@ -294,8 +289,7 @@ public class MainActivity extends Activity {
 							});
 						mViewPager.setCurrentItem(1);
 						
-						SharedPreferences motivatorPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
-						SharedPreferences.Editor editor = motivatorPrefs.edit();
+						SharedPreferences.Editor editor = mPrefs.edit();
 						editor.putBoolean(SEEN_HELP, true);
 						editor.commit();
 						mHelpIsVisible = false;
@@ -320,10 +314,9 @@ public class MainActivity extends Activity {
 	 * Set the notifications for the first time. After this, the notifications are controlled from the settings activity.
 	 */
 	public void setNotifications() {
-		mTimeToNotify = PreferenceManager.getDefaultSharedPreferences(this).getString(SettingsActivity.KEY_NOTIFICATION_INTERVAL, getResources().getString(R.string.in_the_morning_value));
 		// Set up notifying user to answer to the mood question
 		// The time to notify the user
-		GregorianCalendar notificationTime = new GregorianCalendar();
+		Calendar notificationTime = Calendar.getInstance();
 		notificationTime.set(Calendar.MINUTE, 0);
 		notificationTime.set(Calendar.SECOND, 0);	
 		// An alarm manager for scheduling notifications
@@ -338,7 +331,8 @@ public class MainActivity extends Activity {
 		}
 		notificationTime.set(Calendar.HOUR_OF_DAY, 10);
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
-		/**
+		
+		/** Commented out for now, setting different times for the notifications.
 		if (mTimeToNotify == getString(R.string.in_the_morning_value)) {
 			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 				notificationTime.add(Calendar.DATE, 1);

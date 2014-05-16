@@ -20,17 +20,13 @@ import java.util.ArrayList;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.GoalDataHandler;
-import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.Question;
-
-import com.viewpagerindicator.LinePageIndicator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -40,22 +36,22 @@ import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.viewpagerindicator.LinePageIndicator;
+
 public class AddGoalActivity extends Activity implements QuestionnaireActivityInterface {
 	
 	private ViewPager mViewPager;
-	private GoalDataHandler mDataHandler;
+	private GoalDataHandler mGoalDataHandler;
 	private int mNumberOfQuestions;
 	private String mName = "";
-	private int mQuestionId;
-	private int mAnswersId;
 	private int mRequiredIds[] = {3000, 3001};
 	private ArrayList<Integer> mCheckedIds = new ArrayList<Integer>();
 	private Button mCompleteButton;
@@ -69,9 +65,8 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_questions);
 	    
-	    mDataHandler = new GoalDataHandler(this);
-	    mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
-		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
+	    mGoalDataHandler = new GoalDataHandler(this);
+	    mNumberOfQuestions = mGoalDataHandler.getAmountOfQuestions();
 		
 		getActionBar().setTitle(getString(R.string.add_goal));
 		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
@@ -82,7 +77,6 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 	    mViewPager.setAdapter(mQuestionsPagerAdapter);
 	    mViewPager.setOffscreenPageLimit(10);
 	    
-	    mAnswersId = incrementAnswersId();
 	    
 	    titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
@@ -176,7 +170,7 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 					questionnaireDone.show();
 					
 				} else {
-					mDataHandler.insertGoal(System.currentTimeMillis(), answers[1], answers[0], amountAnswer);
+					mGoalDataHandler.insertGoal(System.currentTimeMillis(), answers[1], answers[0], amountAnswer);
 					
 					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
@@ -235,20 +229,6 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 	}
 	
 	/**
-	 * Incrementing the running id for an answering instance.
-	 * @return
-	 */
-	private int incrementAnswersId() {
-		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
-		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorDatabaseHelper.ANSWER_ID_INCREMENT_PREFS, 0);
-		int answerId = answerIdIncrement.getInt(MotivatorDatabaseHelper.ANSWER_ID, 1);
-		SharedPreferences.Editor editor = answerIdIncrement.edit();
-		editor.putInt(MotivatorDatabaseHelper.ANSWER_ID, answerId + 1);
-		editor.commit();
-		return answerId;
-	}
-	
-	/**
 	 * Represents a pager adapter for the questions. The fragments are saved in a SparseArray so that we can
 	 * reference the specific fragments.
 	 * @author Toni Järvinen
@@ -268,7 +248,7 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 		public Fragment getItem(int arg0) {
 			Fragment questionFragment = new QuestionFragment();
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(Question.QUESTION, mDataHandler.getQuestion(3000 + arg0));
+			bundle.putParcelable(Question.QUESTION, mGoalDataHandler.getQuestion(3000 + arg0));
 			questionFragment.setArguments(bundle);
 			return questionFragment;
 		}

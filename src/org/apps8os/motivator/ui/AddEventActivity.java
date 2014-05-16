@@ -20,29 +20,16 @@ import java.util.ArrayList;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
-import org.apps8os.motivator.data.DayDataHandler;
-import org.apps8os.motivator.data.MotivatorDatabaseHelper;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Question;
-import org.apps8os.motivator.services.NotificationService;
-
-import com.viewpagerindicator.IconPageIndicator;
-import com.viewpagerindicator.IconPagerAdapter;
-import com.viewpagerindicator.LinePageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -59,7 +46,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.LinearLayout.LayoutParams;
+
+import com.viewpagerindicator.LinePageIndicator;
 
 /**
  * An activity for adding an event. The questions are implemented as QuestionFragments.
@@ -69,12 +57,11 @@ import android.widget.LinearLayout.LayoutParams;
 public class AddEventActivity extends Activity implements QuestionnaireActivityInterface {
 	
 	public static final String EVENT_ADDED = "event_added";
+	
 	private ViewPager mViewPager;
-	private EventDataHandler mDataHandler;
+	private EventDataHandler mEventDataHandler;
 	private int mNumberOfQuestions;
 	private String mName = "";
-	private int mQuestionId;
-	private int mAnswersId;
 	private int mRequiredIds[] = {1000, 1001};
 	private ArrayList<Integer> mCheckedIds = new ArrayList<Integer>();
 	private Button mCompleteButton;
@@ -88,9 +75,8 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_questions);
 	    
-	    mDataHandler = new EventDataHandler(this);
-	    mNumberOfQuestions = mDataHandler.getAmountOfQuestions();
-		mQuestionId = mDataHandler.getFirstQuestionId() - 1;
+	    mEventDataHandler = new EventDataHandler(this);
+	    mNumberOfQuestions = mEventDataHandler.getAmountOfQuestions();
 		
 		getActionBar().setTitle(getString(R.string.add_event));
 		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
@@ -101,13 +87,10 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	    mViewPager.setAdapter(mQuestionsPagerAdapter);
 	    mViewPager.setOffscreenPageLimit(10);
 	    
-	    mAnswersId = incrementAnswersId();
-	    
 	    titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
 		
 		setButtons();
-	    
 	}
 	
 	/**
@@ -124,6 +107,8 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		// Adding the name for the event/plan
 		if (item.getItemId() == R.id.questions_add_comment) {
 			AlertDialog.Builder alert = new AlertDialog.Builder(this);
 			alert.setTitle(getString(R.string.name_the_event));
@@ -179,7 +164,7 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 				for (int i = 0; i < mNumberOfQuestions; i++) {
 					answers[i] = mQuestionsPagerAdapter.getFragment(i).getAnswer();
 				}
-				mDataHandler.insertEvent(answers[0], answers[1], answers[2], answers[3], answers[4], mName);
+				mEventDataHandler.insertEvent(answers[0], answers[1], answers[2], answers[3], answers[4], mName);
 				
 				View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
@@ -190,6 +175,8 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
 				questionnaireDone.setView(toastLayout);
 				questionnaireDone.show();
+				
+				//Add a flag for which section the event was added to.
 				SharedPreferences motivatorPrefs = getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
 				Editor editor = motivatorPrefs.edit();
 				if (answers[0] == 1) {
@@ -229,6 +216,9 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 		});
 	}
 	
+	/**
+	 * Method for the fragments to inform that the user has selected something on question with the given id.
+	 */
 	@Override
 	public void setChecked(int id) {
 		mCheckedIds.add(id);
@@ -241,20 +231,6 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 		if (allRequiredChecked) {
 			mCompleteButton.setEnabled(true);
 		}
-	}
-	
-	/**
-	 * Incrementing the running id for an answering instance.
-	 * @return
-	 */
-	private int incrementAnswersId() {
-		// Use SharedPreferences to store the answers id so that it can be incremented even if the app is killed
-		SharedPreferences answerIdIncrement = getSharedPreferences(MotivatorDatabaseHelper.ANSWER_ID_INCREMENT_PREFS, 0);
-		int answerId = answerIdIncrement.getInt(MotivatorDatabaseHelper.ANSWER_ID, 1);
-		SharedPreferences.Editor editor = answerIdIncrement.edit();
-		editor.putInt(MotivatorDatabaseHelper.ANSWER_ID, answerId + 1);
-		editor.commit();
-		return answerId;
 	}
 	
 	/**
@@ -273,15 +249,20 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 			mQuestions = numberOfQuestions;
 		}
 
+		/**
+		 * Instantiates the item at the given position.
+		 */
 		@Override
 		public Fragment getItem(int arg0) {
 			Fragment questionFragment = new QuestionFragment();
 			Bundle bundle = new Bundle();
-			bundle.putParcelable(Question.QUESTION, mDataHandler.getQuestion(1000 + arg0));
+			bundle.putParcelable(Question.QUESTION, mEventDataHandler.getQuestion(1000 + arg0));
 			questionFragment.setArguments(bundle);
 			return questionFragment;
 		}
-		
+		/**
+		 * Instantiates the question and adds it to the SparseArray.
+		 */
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			QuestionFragment fragment = (QuestionFragment) super.instantiateItem(container, position);

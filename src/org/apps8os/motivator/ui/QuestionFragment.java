@@ -21,12 +21,9 @@ import org.apps8os.motivator.data.GoalDataHandler;
 import org.apps8os.motivator.data.Question;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,9 +33,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 /**
@@ -95,7 +90,8 @@ public class QuestionFragment extends Fragment {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					final LinearLayout xAmountLayout = (LinearLayout) layoutInflater.inflate(R.layout.element_number_entry, null);
 					builder.setView(xAmountLayout);
-					builder.setTitle(mQuestion.getAnswer(checkedId)).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+					builder.setTitle(mQuestion.getAnswer(checkedId))
+						.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {

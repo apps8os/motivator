@@ -18,7 +18,6 @@ package org.apps8os.motivator.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import android.content.Context;
 
@@ -69,14 +68,14 @@ public final class UtilityMethods {
 	
 	public static String getDateAsString(long timestamp, Context context) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
-		Calendar date = new GregorianCalendar();
+		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(timestamp);
 		return sdf.format(date.getTime());
 	}
 	
 	public static String getTimeAsString(long timestamp, Context context) {
 		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm", context.getResources().getConfiguration().locale);
-		Calendar date = new GregorianCalendar();
+		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(timestamp);
 		return sdf.format(date.getTime());
 	}

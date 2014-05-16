@@ -37,7 +37,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
@@ -48,14 +47,13 @@ import android.widget.Toast;
 
 /**
  * Represents a details activity for an event.
- * TODO: Only a dummy version, needs to be redesigned
  * @author Toni Järvinen
  *
  */
 public class EventDetailsActivity extends Activity {
 	
 	private MotivatorEvent mEvent;
-	private EventDataHandler mDataHandler;
+	private EventDataHandler mEventDataHandler;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -65,8 +63,8 @@ public class EventDetailsActivity extends Activity {
 	    Bundle extras = getIntent().getExtras();
 	    // is represented as answers id in the database
 	    mEvent = extras.getParcelable(MotivatorEvent.EVENT);
-	    int section = extras.getInt(MotivatorEvent.SECTION);
-	    mDataHandler = new EventDataHandler(this);
+	    final int section = extras.getInt(MotivatorEvent.SECTION);
+	    mEventDataHandler = new EventDataHandler(this);
 	    
 	    final Context context = this;
 	    
@@ -83,7 +81,7 @@ public class EventDetailsActivity extends Activity {
 	    }
 	    
 	    if (section == MotivatorEvent.HISTORY) {
-	    	checkedEvent = mDataHandler.getCheckedEvent(mEvent.getId());
+	    	checkedEvent = mEventDataHandler.getCheckedEvent(mEvent.getId());
 		    
 	    	title = UtilityMethods.getDateAsString(mEvent.getStartTime(), this);
 	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
@@ -105,11 +103,13 @@ public class EventDetailsActivity extends Activity {
 				@Override
 				public void onClick(View arg0) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(context);
-					builder.setTitle(getString(R.string.cancel_event) + "?").setMessage(getString(R.string.event_will_be_deleted)).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+					builder.setTitle(getString(R.string.cancel_event) + "?")
+							.setMessage(getString(R.string.event_will_be_deleted))
+							.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog,
 								int which) {
-							mDataHandler.deleteEvent(eventId);
+							mEventDataHandler.deleteEvent(eventId);
 							
 							View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, null);
 							TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
@@ -133,7 +133,7 @@ public class EventDetailsActivity extends Activity {
 		    	
 		    });
 	    }
-	    String eventName = mEvent.getName();
+	    final String eventName = mEvent.getName();
 	    if (eventName.length() > 0) {
 	    	titleView.setText(Html.fromHtml(title + "<br><small>" + eventName));
 	    } else {
@@ -177,10 +177,14 @@ public class EventDetailsActivity extends Activity {
 	    	
 	    } else {
 	    }
+	    
 	    DayDataHandler dataHandler = new DayDataHandler(this);
 	    DayInHistory day = dataHandler.getDayInHistory(mEvent.getStartTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 	    Mood firstMood = day.getFirstMoodOfTheDay();
+	    
+	    // Setting a mood image for the first mood of the following day
 	    if (firstMood.getEnergy() > 0) {
+	    	// Scale for using density independent pixels
 	    	final float scale = getResources().getDisplayMetrics().density;
 	    	textView = new TextView(this);
 	    	textView.setText(getString(R.string.first_mood_of_the_next_day));
@@ -193,8 +197,10 @@ public class EventDetailsActivity extends Activity {
 	    	textView.setTextColor(getResources().getColor(R.color.medium_gray));
 	    	LinearLayout rootLayout = (LinearLayout) findViewById(R.id.event_info_layout);
 	    	LinearLayout moodImage = (LinearLayout) getLayoutInflater().inflate(R.layout.element_mood_image, rootLayout, false);
-	    	((ImageView) moodImage.getChildAt(0)).setImageResource(getResources().getIdentifier("energy" + firstMood.getEnergy(), "drawable", getPackageName()));
-	    	((ImageView) moodImage.getChildAt(1)).setImageResource(getResources().getIdentifier("mood" + firstMood.getMood(), "drawable", getPackageName()));
+	    	((ImageView) moodImage.getChildAt(0))
+	    			.setImageResource(getResources().getIdentifier("energy" + firstMood.getEnergy(), "drawable", getPackageName()));
+	    	((ImageView) moodImage.getChildAt(1))
+	    			.setImageResource(getResources().getIdentifier("mood" + firstMood.getMood(), "drawable", getPackageName()));
 	    	
 	    	
 	    	params = new LinearLayout.LayoutParams((int) (105 * scale), (int) (100 * scale));
@@ -204,5 +210,4 @@ public class EventDetailsActivity extends Activity {
 	    	rootLayout.addView(moodImage);
 	    }
 	}
-
 }

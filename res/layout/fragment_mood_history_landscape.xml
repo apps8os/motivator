@@ -51,8 +51,8 @@
 		    style="@style/LoadingBackground"
 		    android:id="@+id/mood_history_loading_panel"
 	    >
-	    <ProgressBar
-	        style="@style/LoadingIndicator"/>
+		    <ProgressBar
+		        style="@style/LoadingIndicator"/>
 		</RelativeLayout>
 	    
 	    <FrameLayout

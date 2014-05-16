@@ -22,13 +22,9 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
-import com.viewpagerindicator.LinePageIndicator;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -36,15 +32,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.viewpagerindicator.LinePageIndicator;
+
 public class CheckEventsActivity extends Activity {
 
-	private EventDataHandler mDataHandler;
+	private EventDataHandler mEventDataHandler;
 	private ViewPager mViewPager;
 	private EventsPagerAdapter mEventsPagerAdapter;
 	private ArrayList<MotivatorEvent> mEvents;
@@ -57,7 +55,7 @@ public class CheckEventsActivity extends Activity {
 	    setContentView(R.layout.activity_questions);
 	    
 	    mEvents = getIntent().getExtras().getParcelableArrayList(MotivatorEvent.YESTERDAYS_EVENTS);
-	    mDataHandler = new EventDataHandler(this);
+	    mEventDataHandler = new EventDataHandler(this);
 		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
 		
 	    mViewPager = (ViewPager) findViewById(R.id.question_activity_pager);
@@ -91,9 +89,10 @@ public class CheckEventsActivity extends Activity {
 		mCompleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				for (int i = 0; i < mEventsPagerAdapter.getCount(); i++) {
+				final int count = mEventsPagerAdapter.getCount();
+				for (int i = 0; i < count; i++) {
 					int[] answers = mEventsPagerAdapter.getFragment(i).getAnswers();
-					mDataHandler.insertCheckedEvent(mEvents.get(i).getId(), answers[0] - 1, answers[1], answers[2], answers[3], mEvents.get(i).getName());
+					mEventDataHandler.insertCheckedEvent(mEvents.get(i).getId(), answers[0] - 1, answers[1], answers[2], answers[3], mEvents.get(i).getName());
 				}
 				View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);

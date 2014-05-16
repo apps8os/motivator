@@ -26,6 +26,13 @@
         style="@style/LinearBackground"
         android:orientation="vertical"
         android:id="@+id/events_layout" >
+        <RelativeLayout
+		    style="@style/LoadingBackground"
+		    android:id="@+id/mood_history_loading_panel"
+		    android:layout_marginTop="20dp">
+		    <ProgressBar
+		        style="@style/LoadingIndicator"/>
+		</RelativeLayout>
     </LinearLayout>
 </FrameLayout>
 </ScrollView>
