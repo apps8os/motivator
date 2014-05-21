@@ -109,11 +109,13 @@
     <string name="name_of_the_sprint">Jakson nimi</string>
     <string name="start_the_sprint">Aloita</string>
     <string name="you_drank">Joit</string>
-    <string name="drinks_yesterday_in_total">juomaa eilen.</string>
+    <string name="drinks_yesterday_in_total">juomaa eilen yhteensä.</string>
+    <string name="drinks_in_total">juomaa.</string>
     <string name="how_did_the_event_go">Miten meni?</string>
     <string name="you_had_an_event_yesterday">Sinulla oli suunnitelma eilen. Miten meni?</string>
     <string name="drinks">juomaa</string>
     <string name="you_did_not_drink_yesterday">Et juonut eilen!</string>
+    <string name="you_did_not_drink">Et juonut yhtään!</string>
     <string name="today_section">Tänään osio</string>
     <string name="today_section_help">Tässä voit katsoa tämänpäivän suunnitelmiasi ja vastata fiiliskyselyyn. Voit myös lisätä ottamasi juomat laskuriin.</string>
     <string name="plan_section">Suunnittele osio</string>
@@ -151,5 +153,9 @@
 	<string name="your_average_mood">Keskimääräinen fiiliksesi</string>
 	<string name="not_defined">Ei määritelty</string>
 	<string name="first_mood_of_the_next_day">Ensimmäinen fiilis seuraavana päivänä</string>
+	<string name="you_have_an_event_starting">Suunnitelmasi on alkamassa</string>
+	<string name="check_the_event">Tarkista suunnitelma?</string>
+	<string name="planned">Suunniteltu</string>
+	<string name="actual">Toteutunut</string>
 	
 </resources>

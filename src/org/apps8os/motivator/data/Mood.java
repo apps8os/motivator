@@ -40,7 +40,7 @@ public class Mood implements Parcelable {
 		mMood = mood;
 		mEnergy = energy;
 		mTimestamp = timestamp;
-		mComment = "\"" + comment + "\"";
+		mComment = comment;
 	}
 	
 	private Mood(Parcel source) {

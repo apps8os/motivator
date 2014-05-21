@@ -19,7 +19,7 @@
     <string name="event_question_1">When?</string>
     <string name="event_question_1_answer_1">Today</string>
     <string name="event_question_1_answer_2">Tomorrow</string>
-    <string name="event_question_1_answer_3">Next weekend</string>
+    <string name="event_question_1_answer_3">Choose a date&#8230;</string>
     
     <string name="event_question_2">How much do you plan on drinking?</string>
     <string name="event_question_2_answer_1">Nothing</string>

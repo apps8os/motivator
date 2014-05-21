@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 
 import android.animation.Animator;
@@ -53,6 +54,9 @@ public class MoodHistoryWeekFragment extends Fragment {
 	
 	private Resources mRes;
 	private DayDataHandler mDayDataHandler;
+	private LinearLayout mDayLayout;
+	private RelativeLayout mLoadingView;
+	private LineGraph mLineGraph;
 	private View mRootView;
 	private LayoutInflater mInflater;
 	private ArrayList<DayInHistory> mDays;
@@ -69,6 +73,9 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mSprintStartDate = b.getLong(Sprint.CURRENT_SPRINT_STARTDATE);
 		mPosition = b.getInt(MoodHistoryActivity.FRAGMENT_POSITION);
 		mDayDataHandler = new DayDataHandler(getActivity());
+		mDayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
+		mLoadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
+		mLineGraph = (LineGraph) mRootView.findViewById(R.id.graph);
 		
 		// Loading the days on a different thread.
 		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition);
@@ -162,20 +169,13 @@ public class MoodHistoryWeekFragment extends Fragment {
 		 */
 		@Override
 		public void onPostExecute(ArrayList<DayInHistory> result) {
-			LinearLayout dayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
-			dayLayout.setVisibility(View.GONE);
-			// add the line graph.
-			Line l = new Line();
-			Line l2 = new Line();
-			LinePoint p = new LinePoint();
-			LinePoint p2 = new LinePoint();
 			DayInHistory day;
 			int resultSize = result.size();
 			mDays = result;
 			// Add the lower half with day views.
 			for (int i = 0; i < resultSize; i++) {
 				day = result.get(i);
-				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, dayLayout, false);
+				LinearLayout dayView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_week_view_day, mDayLayout, false);
 				TextView dayText = (TextView) ((LinearLayout) dayView.getChildAt(0)).getChildAt(0);
 				dayText.setText(getDay(day));
 				LinearLayout moodImageRoot = (LinearLayout) dayView.findViewById(R.id.mood_image_root);
@@ -189,26 +189,86 @@ public class MoodHistoryWeekFragment extends Fragment {
 					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + day.getAvgMoodLevel(), "drawable", getActivity().getPackageName())));
 
 				}
-				dayLayout.addView(dayView);
-				if (mSelectedAttribute == DayInHistory.AMOUNT_OF_DRINKS) {
+				mDayLayout.addView(dayView);
+			}
+			updateSelectedAttribute(mSelectedAttribute, true);
+			
+		}
+		
+	}
+
+	/**
+	 * Updating the selected attribute for the linegraph. Boolean FirstAttribute used to determine when
+	 * the view is created. Should be false when called from the activity.
+	 * @param selector
+	 * @param firstAttribute
+	 */
+	public void updateSelectedAttribute(int selector, boolean firstAttribute) {
+		if (selector != mSelectedAttribute || firstAttribute) {
+			mLoadingView.setVisibility(View.VISIBLE);
+			Line l = new Line();
+			LinePoint p = new LinePoint();
+			Line l2 = new Line();
+			LinePoint p2 = new LinePoint();
+			int daysSize;
+			DayInHistory day;
+			switch (selector) {
+			case DayInHistory.AMOUNT_OF_DRINKS:
+				daysSize = mDays.size();
+				mLineGraph.removeAllLines();
+				for (int i = 0; i < daysSize; i++) {
+					day = mDays.get(i);
+					day.setEvents();
 					p.setX(i);
-					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+					p2.setX(i);
+					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis());
+					int plannedDrinks = 0;
+					int checkedDrinks = 0;
+					ArrayList<MotivatorEvent> events = day.getPlannedEvents(getActivity());
+					ArrayList<MotivatorEvent> checkedEvents = day.getCheckedEvents(getActivity());
+					for (MotivatorEvent event: events) {
+						plannedDrinks += event.getPlannedDrinks();
+					}
+					for (MotivatorEvent event: checkedEvents) {
+						checkedDrinks += event.getPlannedDrinks();
+					}
+					if (checkedDrinks > drinks) {
+						drinks = checkedDrinks;
+					}
 					if (drinks > 4) {
 						drinks = 4;
 					}
+					if (plannedDrinks > 4) {
+						plannedDrinks = 4;
+					}
+					p2.setY(plannedDrinks);
 					p.setY(drinks);
 					l.addPoint(p);
+					l2.addPoint(p2);
 					p = new LinePoint();
-				} else if (mSelectedAttribute == DayInHistory.MOODS) {
+					p2 = new LinePoint();
+				}
+				l.setColor(Color.parseColor("#FFBB33"));
+				l2.setColor(Color.parseColor("#99cc00"));
+				mLineGraph.addLine(l);
+				mLineGraph.addLine(l2);
+				mLineGraph.setRangeY(0, 4);
+				mLineGraph.setLineToFill(0);
+				mLineGraph.setUsingDips(true);
+				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.drink_icon);
+				break;
+			case DayInHistory.MOODS:
+				daysSize = mDays.size();
+				mLineGraph.removeAllLines();
+				for (int i = 0; i < daysSize; i++) {
+					day = mDays.get(i);
 					p.setX(i);
 					p2.setX(i);
-					int energy = day.getAvgEnergyLevel() - 1;
-					int mood = day.getAvgMoodLevel() - 1;
-					if (energy == -1) {
+					int energy = day.getAvgEnergyLevel();
+					int mood = day.getAvgMoodLevel();
+					if (energy == 0) {
 						p.setColor("#777777");
 						p2.setColor("#777777");
-						energy = 0;
-						mood = 0;
 					}
 					p.setY(energy);
 					p2.setY(mood);
@@ -217,51 +277,23 @@ public class MoodHistoryWeekFragment extends Fragment {
 					p = new LinePoint();
 					p2 = new LinePoint();
 				}
-			}
-			LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
-			if (mSelectedAttribute == DayInHistory.AMOUNT_OF_DRINKS) {
-				l.setColor(Color.parseColor("#FFBB33"));
-				
-				li.addLine(l);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
-			} else if (mSelectedAttribute == DayInHistory.MOODS) {
 				l.setColor(Color.parseColor("#99cc00"));
-				li.addLine(l);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
+				mLineGraph.addLine(l);
+				mLineGraph.setRangeY(0, 5);
+				mLineGraph.setLineToFill(0);
+				mLineGraph.setUsingDips(true);
 				
 				l2.setColor(Color.parseColor("#FBBE45"));
-				li.addLine(l2);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
+				mLineGraph.addLine(l2);
+				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.energy_mood_image);
+				break;
 			}
-			
-			final RelativeLayout loadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
-			
-			
+			mSelectedAttribute = selector;
 			// Animate the switch from the loading view to the week view.
 			int animationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 			
-			dayLayout.setAlpha(0f);
-			dayLayout.setVisibility(View.VISIBLE);
-			li.setAlpha(0f);
-			
-			dayLayout.animate()
-	            .alpha(1f)
-	            .setDuration(animationDuration)
-	            .setListener(null);
-			
-			li.animate()
-            .alpha(1f)
-            .setDuration(animationDuration)
-            .setListener(null);
-			
 			// Animate the fading out of the loading view.
-			loadingView.animate()
+			mLoadingView.animate()
 					.alpha(0f)
 					.setDuration(animationDuration)
 					.setListener(new AnimatorListenerAdapter() {
@@ -269,84 +301,9 @@ public class MoodHistoryWeekFragment extends Fragment {
 						// Set the visibility to gone when animation has ended.
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							loadingView.setVisibility(View.GONE);
+							mLoadingView.setVisibility(View.GONE);
 						}
 					});
-			
-		}
-		
-	}
-
-	/**
-	 * Changing what is pictured in the LineGraph
-	 * @param selector
-	 */
-	public void updateSelectedAttribute(int selector) {
-		if (selector != mSelectedAttribute) {
-			Line l = new Line();
-			LinePoint p = new LinePoint();
-			Line l2 = new Line();
-			LinePoint p2 = new LinePoint();
-			LineGraph li = (LineGraph) mRootView.findViewById(R.id.graph);
-			int daysSize;
-			DayInHistory day;
-			switch (selector) {
-			case DayInHistory.AMOUNT_OF_DRINKS:
-				daysSize = mDays.size();
-				li.removeAllLines();
-				for (int i = 0; i < daysSize; i++) {
-					day = mDays.get(i);
-					p.setX(i);
-					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-					if (drinks > 4) {
-						drinks = 4;
-					}
-					p.setY(drinks);
-					l.addPoint(p);
-					p = new LinePoint();
-				}
-				l.setColor(Color.parseColor("#FFBB33"));
-				li.addLine(l);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
-				break;
-			case DayInHistory.MOODS:
-				daysSize = mDays.size();
-				li.removeAllLines();
-				for (int i = 0; i < daysSize; i++) {
-					day = mDays.get(i);
-					p.setX(i);
-					p2.setX(i);
-					int energy = day.getAvgEnergyLevel() - 1;
-					int mood = day.getAvgMoodLevel() - 1;
-					if (energy == -1) {
-						p.setColor("#777777");
-						p2.setColor("#777777");
-						energy = 0;
-						mood = 0;
-					}
-					p.setY(energy);
-					p2.setY(mood);
-					l.addPoint(p);
-					l2.addPoint(p2);
-					p = new LinePoint();
-					p2 = new LinePoint();
-				}
-				l.setColor(Color.parseColor("#99cc00"));
-				li.addLine(l);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
-				
-				l2.setColor(Color.parseColor("#FBBE45"));
-				li.addLine(l2);
-				li.setRangeY(0, 4);
-				li.setLineToFill(0);
-				li.setUsingDips(true);
-				break;
-			}
-			mSelectedAttribute = selector;
 		}
 	}
 }

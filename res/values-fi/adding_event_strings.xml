@@ -19,7 +19,7 @@
     <string name="event_question_1">Minä päivänä?</string>
     <string name="event_question_1_answer_1">Tänään</string>
     <string name="event_question_1_answer_2">Huomenna</string>
-    <string name="event_question_1_answer_3">Ensi viikonloppuna</string>
+    <string name="event_question_1_answer_3">Valitse päivä&#8230;</string>
     
     <string name="event_question_2">Paljon aiot juoda?</string>
     <string name="event_question_2_answer_1">En yhtään</string>

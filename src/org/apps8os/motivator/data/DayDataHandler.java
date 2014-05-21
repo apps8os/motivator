@@ -54,12 +54,15 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 		// Inserting the questions to the SpareArrays.
 		String[] moodQuestionIds =  res.getStringArray(R.array.mood_question_ids);
 		String[] requiredQuestionIds = res.getStringArray(R.array.mood_required_ids);
+		boolean required;
+		String[] questionAndAnswers;
+		int id;
 		for (int i = 0; i < moodQuestionIds.length; i++) {
-			boolean required = Arrays.asList(requiredQuestionIds).contains(moodQuestionIds[i]);
+			required = Arrays.asList(requiredQuestionIds).contains(moodQuestionIds[i]);
 			// String array of questions
-			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(moodQuestionIds[i], "array", context.getPackageName()));
+			questionAndAnswers = res.getStringArray(res.getIdentifier(moodQuestionIds[i], "array", context.getPackageName()));
 			// discard the "id" part of the question id
-			int id = Integer.parseInt(moodQuestionIds[i].substring(2));
+			id = Integer.parseInt(moodQuestionIds[i].substring(2));
 			// Creation of new Question object and inserting it to the array.
 			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
 			mQuestions.put(id, question);
@@ -186,7 +189,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     
     public int getDrinksForDay(long dayInMillis) {
     	open();
-    	Calendar calendar = new GregorianCalendar();
+    	Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(dayInMillis);
     	Cursor query = null;
     	long[] boundaries = UtilityMethods.getDayInMillis(calendar);
@@ -225,7 +228,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
      */
     public DayInHistory[] getDaysAfter(long fromInMillis, int amountOfDays) {
     	DayInHistory[] days = new DayInHistory[amountOfDays];
-    	GregorianCalendar calendar = new GregorianCalendar();
+    	Calendar calendar = Calendar.getInstance();
     	calendar.setTimeInMillis(fromInMillis);
     	for (int i = 0; i < amountOfDays; i++) {
     		days[i] = getDayInHistory(calendar.getTimeInMillis());
@@ -236,7 +239,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     
     public ArrayList<DayInHistory> getDaysWithMoodsAfter(long fromInMillis, int amountOfDays) {
     	ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
-    	GregorianCalendar calendar = new GregorianCalendar();
+    	Calendar calendar = Calendar.getInstance();
     	DayInHistory day;
     	calendar.setTimeInMillis(fromInMillis);
     	for (int i = 0; i < amountOfDays; i++) {
@@ -250,7 +253,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     }
     
 	/**
-	 * Adds a drink to the event with given id.
+	 * Adds a drink with the current time.
 	 * @param answerId
 	 */
 	public void addDrink() {
@@ -262,11 +265,24 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	/**
+	 * Adds a drink with the given timestamp.
+	 * @param answerId
+	 */
+	public void addDrink(long timestamp) {
+		open();
+		ContentValues values = new ContentValues();
+		values.put(KEY_TIMESTAMP, timestamp);
+		mDb.insert(TABLE_NAME_DRINKS, null, values);
+		close();
+	}
+	
+	/**
 	 * Adds a drink to the event with given id.
 	 * @param answerId
 	 */
 	public void removeDrink() {
 		open();
+		
 		super.deleteLastRow(TABLE_NAME_DRINKS);
 		close();
 	}

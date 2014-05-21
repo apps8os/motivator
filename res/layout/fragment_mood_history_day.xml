@@ -94,7 +94,7 @@
 			            android:layout_width="0dp"
 			            android:layout_height="match_parent"
 			            android:layout_weight="4"
-			            android:text="@string/you_did_not_drink_yesterday"
+			            android:text="@string/you_did_not_drink"
 			            android:gravity="center"
 			            android:layout_margin="4dp"
 			            android:textAppearance="?android:attr/textAppearanceMedium"/>

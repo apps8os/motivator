@@ -61,6 +61,10 @@ public class HistorySectionFragment extends Fragment {
 				Intent intent = new Intent(getActivity(), MoodRelationHistoryActivity.class);
 				intent.putExtra(Sprint.CURRENT_SPRINT, currentSprint);
 				startActivity(intent);
+				/**
+				Intent intent = new Intent(getActivity(), StartGuideActivity.class);
+				startActivity(intent);
+				**/
 			}
 			
 		});

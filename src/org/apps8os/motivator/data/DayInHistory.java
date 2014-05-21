@@ -18,6 +18,8 @@ package org.apps8os.motivator.data;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.utils.UtilityMethods;
@@ -54,7 +56,7 @@ public class DayInHistory implements Parcelable{
 	 * @param dayInMillis
 	 */
 	public DayInHistory(long dayInMillis, Context context) {
-		Calendar mDate = new GregorianCalendar();
+		Calendar mDate = Calendar.getInstance();
 		mDate.setTimeInMillis(dayInMillis);
 		mDate = UtilityMethods.setToDayStart(mDate);
 		mDateInMillis = mDate.getTimeInMillis();
@@ -94,6 +96,21 @@ public class DayInHistory implements Parcelable{
 	
 	public void addMood(Mood mood) {
 		mMoods.add(mood);
+		
+		Collections.sort(mMoods, new Comparator<Mood>() {
+			@Override
+			public int compare(Mood case1, Mood case2) {
+				long case1Sorter = case1.getTimestamp();
+				long case2Sorter = case2.getTimestamp();
+				if (case1Sorter > case2Sorter) {
+					return 1;
+				} else if (case1Sorter == case2Sorter) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+		});
 	}
 
 	/*
@@ -191,10 +208,34 @@ public class DayInHistory implements Parcelable{
 	public ArrayList<MotivatorEvent> getUncheckedEvents(Context context) {
 		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
 		EventDataHandler eventData = new EventDataHandler(mContext);
+		MotivatorEvent checkedEvent;
 		for (MotivatorEvent event : mEvents) {
-			MotivatorEvent checkedEvent = eventData.getCheckedEvent(event.getId());
+			checkedEvent = eventData.getCheckedEvent(event.getId());
 			if (checkedEvent == null) {
 				result.add(event);
+			}
+		}		
+		return result;
+	}
+	
+	public ArrayList<MotivatorEvent> getPlannedEvents(Context context) {
+		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
+		for (MotivatorEvent event : mEvents) {
+			if (!event.hasBeenChecked()) {
+				result.add(event);
+			}
+		}		
+		return result;
+	}
+	
+	public ArrayList<MotivatorEvent> getCheckedEvents(Context context) {
+		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
+		EventDataHandler eventData = new EventDataHandler(mContext);
+		MotivatorEvent checkedEvent;
+		for (MotivatorEvent event : mEvents) {
+			checkedEvent = eventData.getCheckedEvent(event.getId());
+			if (checkedEvent != null) {
+				result.add(checkedEvent);
 			}
 		}		
 		return result;

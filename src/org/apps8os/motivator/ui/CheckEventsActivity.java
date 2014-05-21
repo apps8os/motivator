@@ -17,10 +17,14 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -85,6 +89,11 @@ public class CheckEventsActivity extends Activity {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			}
 		});
+		if (mEventsPagerAdapter.getCount() == 1) {
+			nextButton.setEnabled(false);
+			nextButton.setVisibility(View.GONE);
+			previousButton.setVisibility(View.GONE);
+		}
 		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);
 		mCompleteButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -98,6 +107,7 @@ public class CheckEventsActivity extends Activity {
 				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
 				toastText.setText(getString(R.string.event_added));
 				toastText.setTextColor(Color.WHITE);
+				
 				
 				Toast questionnaireDone = new Toast(getApplicationContext());
 				questionnaireDone.setDuration(Toast.LENGTH_SHORT);

@@ -1,0 +1,75 @@
+<!--
+  Copyright (c) 2014 Helsingin Diakonissalaitos and the authors
+   
+  The MIT License (MIT)
+   
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+  to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+   
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
+  THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:background="@color/light_gray"
+    android:layout_height="fill_parent" xmlns:tools="http://schemas.android.com/tools">
+
+   <com.viewpagerindicator.LinePageIndicator
+       android:id="@+id/indicator"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:padding="10dip"
+       app:lineWidth="24dp"
+       app:selectedColor="@color/actionbar_green"
+       app:strokeWidth="8dp"
+       tools:ignore="MissingRegistered" />
+
+	<android.support.v4.view.ViewPager 
+		xmlns:tools="http://schemas.android.com/tools"
+	    android:id="@+id/question_activity_pager"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="8"
+	    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+	    android:layout_marginRight="@dimen/activity_horizontal_margin"
+	    android:layout_marginBottom="@dimen/activity_vertical_margin"
+	    tools:context=".MainActivity" >
+	</android.support.v4.view.ViewPager>
+	
+	<include layout="@layout/element_main_activity_button_separator"></include>
+	<LinearLayout 
+       	android:orientation="horizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dp"
+	    android:layout_weight="1"
+	    style="?android:attr/buttonBarStyle" >
+	    	<Button
+			    android:id="@+id/guide_previous_button"
+			    android:layout_width="0dp"
+			    android:layout_weight="1"
+			    android:layout_height="match_parent"
+			    android:text="@string/previous"
+			    android:textColor="@color/gray_button_text_colors"
+			    android:fontFamily="sans-serif-condensed"
+			    style="?android:attr/borderlessButtonStyle" />
+       	     <Button
+			    android:id="@+id/guide_next_button"
+			    android:layout_width="0dp"
+			    android:layout_weight="1"
+			    android:layout_height="match_parent"
+			    android:text="@string/next"
+			    android:textColor="@color/gray_button_text_colors"
+			    android:fontFamily="sans-serif-condensed"
+			    style="?android:attr/borderlessButtonStyle" />
+	 </LinearLayout>
+	
+</LinearLayout>
+

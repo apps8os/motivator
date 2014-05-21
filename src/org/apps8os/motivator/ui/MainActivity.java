@@ -50,6 +50,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -63,8 +64,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.viewpagerindicator.TitlePageIndicator;
-
 
 /**
  * Represents the main activity where the user can choose different parts of the application
@@ -158,7 +160,7 @@ public class MainActivity extends Activity {
 		}
 		
 		mPrefs = getSharedPreferences(MOTIVATOR_PREFS, 0);
-		if( versionNumber != mPrefs.getInt(APP_VERSION, -1)) {
+		if( versionNumber != mPrefs.getInt(APP_VERSION, -1) && PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_SEND_NOTIFICATIONS, true)) {
 			setNotifications();
 			SharedPreferences.Editor editor = mPrefs.edit();
 			editor.putInt(APP_VERSION, versionNumber);
@@ -223,7 +225,8 @@ public class MainActivity extends Activity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 				}
-			});
+			})
+			.setMessage(getString(R.string.check_the_event));
 			Dialog dialog = builder.create();
 			dialog.show();
 	    }
@@ -253,6 +256,15 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (mViewPager.getCurrentItem() != 1) {
+			mViewPager.setCurrentItem(1);
+		} else {
+			super.onBackPressed();
+		}
 	}
 	
 	public void showHelp() {

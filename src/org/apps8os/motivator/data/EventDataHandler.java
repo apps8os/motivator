@@ -60,6 +60,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public static final int EVENT_CHECKED = 1;
 	
 	public static final String EVENT_ID = "event_id";
+	public static final String EVENT_NAME = "event_name";
 	public static final String EVENTS_TO_CHECK = "events_to_check";
 	
 	public static final String KEY_START_TIME = "start_time";
@@ -100,8 +101,9 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		// Inserting the questions to the SpareArrays.
 		String[] eventQuestionIds =  res.getStringArray(R.array.event_question_ids);
 		String[] requiredQuestionIds = res.getStringArray(R.array.event_required_ids);
+		boolean required;
 		for (int i = 0; i < eventQuestionIds.length; i++) {
-			boolean required = Arrays.asList(requiredQuestionIds).contains(eventQuestionIds[i]);
+			required = Arrays.asList(requiredQuestionIds).contains(eventQuestionIds[i]);
 			// String array of questions
 			String[] questionAndAnswers = res.getStringArray(res.getIdentifier(eventQuestionIds[i], "array", context.getPackageName()));
 			// discard the "id" part of the question id
@@ -112,7 +114,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
-	private void insertEvent(int eventId, int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment, int checked) {
+	private void insertEvent(int eventId, int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String name, long date, int checked) {
 		// Use SharedPreferences to store the event id so that it can be incremented even if the app is killed
 		SharedPreferences eventIdIncrement = mContext.getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
 		int innerEventId;
@@ -128,7 +130,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		SQLiteDatabase db = super.open();
 		ContentValues values = new ContentValues();
 		// Initialize the cache calendar for today/now
-		GregorianCalendar calendarCache = new GregorianCalendar();
+		Calendar calendarCache = Calendar.getInstance();
 		if (checked == EVENT_CHECKED) {
 			calendarCache.add(Calendar.DATE, -1);
 		}
@@ -143,10 +145,8 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				calendarCache.add(Calendar.DATE, 1);
 				break;
 			}
-			// Next weekend, set the calendar to next friday at midnight.
 			case 3: {
-				int daysUntilNextFriday = (Calendar.FRIDAY - calendarCache.get(Calendar.DAY_OF_WEEK));
-				calendarCache.add(Calendar.DAY_OF_MONTH, daysUntilNextFriday);
+				calendarCache.setTimeInMillis(date);
 				break;
 			}
 		}
@@ -169,8 +169,9 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			// Set the notification to repeat over the given time at notificationTime
 			Intent notificationIntent = new Intent(mContext, NotificationService.class);
 			notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_START);
-			notificationIntent.putExtra(EVENT_ID, eventId);
-			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, eventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			notificationIntent.putExtra(EVENT_ID, innerEventId);
+			notificationIntent.putExtra(EVENT_NAME, name);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, innerEventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, calendarCache.getTimeInMillis(), pendingNotificationIntent);
 		}
 		
@@ -202,19 +203,19 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		if (withWho != 0) {
 			values.put(KEY_WITH_WHO, withWho);
 		}
-		if (comment != null) {
-			values.put(KEY_COMMENT, comment);
+		if (name != null) {
+			values.put(KEY_COMMENT, name);
 		}
 		db.insert(TABLE_NAME_EVENTS, null, values);
 		db.close();
 	}
 	
-	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
-		insertEvent(-1, dayAnswer, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 0);
+	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment, long date) {
+		insertEvent(-1, dayAnswer, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, date, 0);
 	}
 	
 	public void insertCheckedEvent(int eventId, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
-		insertEvent(eventId, 1, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 1);
+		insertEvent(eventId, 1, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 0L, 1);
 	}
 	
 	/**
@@ -224,7 +225,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public ArrayList<MotivatorEvent> getEventsAfterToday() {
 		open();
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
-		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
+		Calendar tomorrowMidnight = Calendar.getInstance();
 		tomorrowMidnight.setFirstDayOfWeek(Calendar.MONDAY);
 		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
@@ -295,10 +296,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public ArrayList<MotivatorEvent> getEventsToday() {
 		open();
 		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
-		GregorianCalendar todayMidnight = new GregorianCalendar();
+		Calendar todayMidnight = Calendar.getInstance();
 		UtilityMethods.setToDayStart(todayMidnight);
 		
-		GregorianCalendar tomorrowMidnight = new GregorianCalendar();
+		Calendar tomorrowMidnight = Calendar.getInstance();
 		UtilityMethods.setToDayStart(tomorrowMidnight);
 		tomorrowMidnight.add(Calendar.DAY_OF_MONTH, 1);
 		
@@ -319,7 +320,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	 */
 	public ArrayList<MotivatorEvent> getUncheckedEventsForDay(long dayInMillis) {
 		open();
-		GregorianCalendar calendar = new GregorianCalendar();
+		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(dayInMillis);
 		UtilityMethods.setToDayStart(calendar);
 		long dayStartInMillis = calendar.getTimeInMillis();
@@ -338,7 +339,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	
 	public ArrayList<MotivatorEvent> getUncheckedEventsBetween(long startDayInMillis, long endDayInMillis) {
 		open();
-		GregorianCalendar calendar = new GregorianCalendar();
+		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(startDayInMillis);
 		UtilityMethods.setToDayStart(calendar);
 		long startTimestamp = calendar.getTimeInMillis();
@@ -355,6 +356,22 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		query.close();
 		close();
 		return events;
+	}
+	
+	public MotivatorEvent getEvent(int uncheckedEventId) {
+		open();
+		String selection = KEY_EVENT_ID + " = " + uncheckedEventId + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_NOT_CHECKED;
+		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
+		ArrayList<MotivatorEvent> events = new ArrayList<MotivatorEvent>();
+		
+		addEvents(events, query);
+		query.close();
+		close();
+		if (events.size() > 0) {
+			return events.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	public MotivatorEvent getCheckedEvent(int uncheckedEventId) {

@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="6dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_marginTop="6dp"
@@ -33,7 +33,7 @@
          	android:id="@+id/event_title"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-            android:gravity="left|center"
+            android:gravity="left|bottom"
             android:fontFamily="sans-serif-light"
             android:textColor="@color/dark_blue"
             android:text="@string/how_did_the_event_go"
@@ -42,31 +42,36 @@
 	<ScrollView 
 	    android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="6">
 		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:orientation="vertical" >
 		    <TextView
-		        android:id="@+id/amount_of_drinks_yesterday"
-		        android:text=""
-		        android:layout_width="match_parent"
-		   		android:layout_height="wrap_content"
-		        android:gravity="center"/>
-		    
-		    <TextView
 		        android:id="@+id/name"
 		        android:text=""
 		        android:layout_width="match_parent"
 		   		android:layout_height="wrap_content"
-		        android:gravity="center"
+		        android:gravity="left|top"
 		        style="?android:attr/textAppearanceMedium"
-		        android:layout_marginBottom="10dp"/>
+		        android:textColor="@color/dark_blue"
+		        android:layout_marginLeft="30dp"
+		        android:layout_marginBottom="8dp"/>
+		    
+		    <TextView
+		        android:id="@+id/amount_of_drinks_yesterday"
+		        android:text=""
+		        android:layout_width="match_parent"
+		   		android:layout_height="wrap_content"
+		   		android:textStyle="bold"
+		        android:gravity="center"
+		        android:layout_marginBottom="12dp"/>
 		    
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
+			    android:orientation="horizontal"
+			    android:layout_marginBottom="8dp">
 		        <TextView
 			        android:text="@string/amount_of_drinks"
 			        android:layout_width="0dp"
@@ -74,6 +79,7 @@
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
+			        android:fontFamily="sans-serif-condensed"
 			        android:textColor="@color/medium_gray"
 			        android:layout_marginRight="10dp"/>
 
@@ -86,7 +92,8 @@
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
+			    android:orientation="horizontal"
+			    android:layout_marginBottom="8dp">
 		        <TextView
 			        android:text="@string/when_to_go"
 			        android:layout_width="0dp"
@@ -94,6 +101,7 @@
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
+			        android:fontFamily="sans-serif-condensed"
 			        android:textColor="@color/medium_gray"
 			        android:layout_marginRight="10dp"/>
 
@@ -106,7 +114,8 @@
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
+			    android:orientation="horizontal"
+			    android:layout_marginBottom="8dp">
 		        <TextView
 			        android:text="@string/end_time"
 			        android:layout_width="0dp"
@@ -114,6 +123,7 @@
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
+			        android:fontFamily="sans-serif-condensed"
 			        android:textColor="@color/medium_gray"
 			        android:layout_marginRight="10dp"/>
 
@@ -126,7 +136,8 @@
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
+			    android:orientation="horizontal"
+			    android:layout_marginBottom="8dp">
 		        <TextView
 			        android:text="@string/with_who"
 			        android:layout_width="0dp"
@@ -134,6 +145,7 @@
 			   		android:layout_weight="1"
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
+			        android:fontFamily="sans-serif-condensed"
 			        android:textColor="@color/medium_gray"
 			        android:layout_marginRight="10dp"/>
 

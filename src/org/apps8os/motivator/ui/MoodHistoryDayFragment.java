@@ -22,7 +22,9 @@ import java.util.concurrent.TimeUnit;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Mood;
+import org.apps8os.motivator.data.MotivatorEvent;
 
 import android.app.Fragment;
 import android.content.res.Resources;
@@ -55,14 +57,23 @@ public class MoodHistoryDayFragment extends Fragment {
 		View rootView = mInflater.inflate(
 				R.layout.fragment_mood_history_day, viewGroup, false);
 		mRes = getActivity().getResources();
-		
+		mDay.setEvents();
 		DayDataHandler dayDataHandler = new DayDataHandler(getActivity());
-		int yesterdaysDrinks = dayDataHandler.getDrinksForDay(mDay.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+		int todaysDrinks = dayDataHandler.getDrinksForDay(mDay.getDateInMillis());
+		ArrayList<MotivatorEvent> checkedEvents = mDay.getCheckedEvents(getActivity());
+		int checkedDrinks = 0;
+		for (MotivatorEvent event: checkedEvents) {
+			checkedDrinks += event.getPlannedDrinks();
+		}
+		if (checkedDrinks > todaysDrinks) {
+			todaysDrinks = checkedDrinks;
+		}
+		
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);
 		TextView commentView = (TextView)  rootView.findViewById(R.id.mood_history_fragment_comment);
-		if (yesterdaysDrinks > 0) {
+		if (todaysDrinks > 0) {
 			((TextView) rootView.findViewById(R.id.mood_history_fragment_drink_text)).setText(getString(R.string.you_drank) + " " +
-					yesterdaysDrinks + " " + getString(R.string.drinks_yesterday_in_total));
+					todaysDrinks + " " + getString(R.string.drinks_in_total));
 			((ImageView) rootView.findViewById(R.id.mood_history_fragment_drink_image)).setImageResource(R.drawable.drink_icon);
 		}
 		final LinearLayout mainMoodImage = (LinearLayout) rootView.findViewById(R.id.mood_history_fragment_mood_image);
@@ -93,7 +104,7 @@ public class MoodHistoryDayFragment extends Fragment {
 			energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + firstMoodOfTheDay.getEnergy(), "drawable", getActivity().getPackageName())));
 			moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + firstMoodOfTheDay.getMood(), "drawable", getActivity().getPackageName())));
 			final String comment = firstMoodOfTheDay.getComment();
-			commentView.setText(comment);
+			commentView.setText("\"" + comment + "\"");
 		}
 		
 		loadMoods((LinearLayout) rootView.findViewById(R.id.mood_history_day_moodlist));
@@ -107,11 +118,18 @@ public class MoodHistoryDayFragment extends Fragment {
 	 */
 	private void loadMoods(LinearLayout rootLayout) {
 		ArrayList<Mood> moods = mDay.getMoods();
-		if (moods.size() > 1) {
+		if (moods.size() > 0) {
+			moods.remove(0);
+		}
+		if (moods.size() > 0) {
 			for (Mood mood : moods) {
 				LinearLayout moodView = (LinearLayout) mInflater.inflate(R.layout.element_mood_history_moodlist_mood, rootLayout, false);
 				((TextView) moodView.findViewById(R.id.moodlist_mood_time)).setText(mood.getTimeAsString(getActivity()));
-				((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setText(mood.getComment());
+				if (mood.getComment().length() < 1) {
+					((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setVisibility(View.GONE);
+				} else {
+					((TextView) moodView.findViewById(R.id.moodlist_mood_comment)).setText("\"" + mood.getComment() + "\"");
+				}
 				LinearLayout moodImageRoot = (LinearLayout) moodView.findViewById(R.id.mood_image_root);
 				ImageView energyImage = (ImageView) moodImageRoot.getChildAt(0);
 				energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + mood.getEnergy(), "drawable", getActivity().getPackageName())));

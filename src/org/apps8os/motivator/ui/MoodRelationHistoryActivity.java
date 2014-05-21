@@ -27,6 +27,10 @@ import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
@@ -93,6 +97,14 @@ public class MoodRelationHistoryActivity extends Activity {
 	    mCaseSelector = ALL;
 	    mDayDataHandler = new DayDataHandler(this);
 	    mSprintDataHandler = new SprintDataHandler(this);
+	    
+	    new ShowcaseView.Builder(this, true)
+	    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.SPINNER))
+	    .setContentTitle("Valitse aikajakso")
+	    .setContentText("Täältä voit valita aikajakson, jonka keskimääräisen fiiliksen haluat nähdä.")
+	    .hideOnTouchOutside()
+	    .setStyle(R.style.ShowcaseView)
+	    .build();
 	    
 	    mContext = this;
 	    bar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);

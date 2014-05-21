@@ -86,7 +86,7 @@ public class Sprint implements Parcelable {
 	
 	public String getStartTimeInString(Context context) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", context.getResources().getConfiguration().locale);
-		Calendar date = new GregorianCalendar();
+		Calendar date = Calendar.getInstance();
 		date.setTimeInMillis(mStartTime);
 		return sdf.format(date.getTime());
 	}

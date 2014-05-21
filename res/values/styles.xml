@@ -102,5 +102,43 @@
 	    <item name="android:textSize">14sp</item>
 	    <item name="android:textStyle">bold</item>
 	</style>
+	
+	<style name="ShowcaseView">
+        <item name="sv_titleTextAppearance">@style/TextAppearance.ShowcaseView.Title</item>
+        <item name="sv_detailTextAppearance">@style/TextAppearance.ShowcaseView.Detail.Light</item>
+        <item name="sv_backgroundColor">#e6ecfaff</item>
+        <item name="sv_buttonText">@string/ok</item>
+    </style>
+    
+	<style name="TextAppearance.ShowcaseView.Title" parent="android:style/TextAppearance.Large">
+        <item name="android:textColor">#33B5E5</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+	<style name="EventTextView">
+	    <item name="android:textColor">@color/medium_gray</item>
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:gravity">center</item>
+	</style>
+	
+	<style name="EventTitleView" parent="EventTextView">
+	    <item name="android:textSize">20sp</item>
+	    <item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="EventEntryTextView" parent="EventTextView">
+	    <item name="android:textSize">16sp</item>
+	</style>
+	
+	<style name="EventQuestionLayout">
+	    <item name="android:layout_width">match_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:layout_marginTop">14dp</item>
+	    <item name="android:layout_marginBottom">8dp</item>
+	    <item name="android:layout_marginLeft">8dp</item>
+	    <item name="android:layout_marginRight">8dp</item>
+	    <item name="android:orientation">vertical</item>
+	</style>
 
 </resources>

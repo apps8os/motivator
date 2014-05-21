@@ -16,11 +16,16 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.Calendar;
+
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.GoalDataHandler;
 import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -29,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -49,6 +55,7 @@ public class QuestionFragment extends Fragment {
 	private TextView mRequiredTextView;
 	private int mXAmount = 0;
 	private String mPreviousX = "X";
+	private Calendar mCalendar;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +70,7 @@ public class QuestionFragment extends Fragment {
 		mAnswerGroupView = (RadioGroup) rootView.findViewById(R.id.questionnaire_answers_group);
 		mQuestionTextView = (TextView) rootView.findViewById(R.id.questionnaire_question);
 		mRequiredTextView = (TextView) rootView.findViewById(R.id.questionnaire_required);
+		mCalendar = Calendar.getInstance();
 		
 		if (mQuestion.isRequired()) {
 			mRequiredTextView.setText("*");
@@ -123,6 +131,20 @@ public class QuestionFragment extends Fragment {
 						}
 					});
 					helpDialog.show();
+				} else if (mQuestion.getId() == EventDataHandler.QUESTION_ID_WHEN && checkedId == 2) {
+					DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+						@Override
+						public void onDateSet(DatePicker view, int year, int monthOfYear,
+								int dayOfMonth) {
+							mCalendar.set(Calendar.YEAR, year);
+							mCalendar.set(Calendar.MONTH, monthOfYear);
+							mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+							RadioButton radioButton = (RadioButton) group.getChildAt(checkedId);
+							radioButton.setText(UtilityMethods.getDateAsString(mCalendar.getTimeInMillis(), getActivity()));
+							
+						}
+					}, mCalendar.get(Calendar.YEAR),mCalendar.get(Calendar.MONTH),mCalendar.get(Calendar.DAY_OF_MONTH));
+					dialog.show();
 				}
 			}
 			
@@ -135,8 +157,12 @@ public class QuestionFragment extends Fragment {
 	 * Get the selected answer in this fragment.
 	 * @return
 	 */
-	public int getAnswer() {
+	public int getSelectedAnswer() {
 		return mAnswerGroupView.getCheckedRadioButtonId() + 1;
+	}
+	
+	public long getSelectedDate() {
+		return mCalendar.getTimeInMillis();
 	}
 	
 	/**
@@ -148,7 +174,7 @@ public class QuestionFragment extends Fragment {
 	}
 	
 	public int getXAmount() {
-		if (mQuestion.getId() == GoalDataHandler.QUESTION_ID_WHAT_TO_ACHIEVE &&  getAnswer() < 2 && getAnswer() > -1) {
+		if (mQuestion.getId() == GoalDataHandler.QUESTION_ID_WHAT_TO_ACHIEVE &&  getSelectedAnswer() < 2 && getSelectedAnswer() > -1) {
 			return mXAmount;
 		} else {
 			return -1;

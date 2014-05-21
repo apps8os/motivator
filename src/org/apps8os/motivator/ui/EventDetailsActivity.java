@@ -16,6 +16,7 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
@@ -61,10 +62,18 @@ public class EventDetailsActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_event_details);
 	    Bundle extras = getIntent().getExtras();
-	    // is represented as answers id in the database
-	    mEvent = extras.getParcelable(MotivatorEvent.EVENT);
-	    final int section = extras.getInt(MotivatorEvent.SECTION);
 	    mEventDataHandler = new EventDataHandler(this);
+
+	    mEvent = extras.getParcelable(MotivatorEvent.EVENT);
+	    int section = extras.getInt(MotivatorEvent.SECTION);
+	    if (mEvent == null) {
+	    	int eventId = extras.getInt(EventDataHandler.EVENT_ID);
+	    	if (eventId != 0) {
+	    		mEvent = mEventDataHandler.getEvent(eventId);
+	    		section = MotivatorEvent.TODAY;
+	    	} else {
+	    	}
+	    }
 	    
 	    final Context context = this;
 	    
@@ -91,13 +100,20 @@ public class EventDetailsActivity extends Activity {
 		    okButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					// Delete the answers with the event/answers id
 					parentActivity.finish();
 				}
 		    	
 		    });
 	    } else {
-	    	title = mEvent.getEventDateAsText();
+	    	Calendar calendar = Calendar.getInstance();
+	    	UtilityMethods.setToDayStart(calendar);
+	    	if (mEvent.getStartTime() - calendar.getTimeInMillis() < TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
+	    		title = getString(R.string.today);
+	    	} else if (mEvent.getStartTime() - calendar.getTimeInMillis() < TimeUnit.MILLISECONDS.convert(2, TimeUnit.DAYS)) {
+	    		title = getString(R.string.tomorrow);
+	    	} else {
+	    		title = UtilityMethods.getDateAsString(mEvent.getStartTime(), this);
+	    	}
 	    	Button cancelButton = (Button) findViewById(R.id.event_detail_cancel_button);
 		    cancelButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -144,7 +160,6 @@ public class EventDetailsActivity extends Activity {
 	    if (textToAdd.length() > 0) {
 	    	textView.setText(Html.fromHtml(textToAdd));
 	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
-	    	textView.setTypeface(null, Typeface.BOLD);
 	    }
 	    
 	    textView = (TextView) findViewById(R.id.event_end_time_entry);
@@ -152,7 +167,6 @@ public class EventDetailsActivity extends Activity {
 	    if (textToAdd.length() > 0) {
 	    	textView.setText(Html.fromHtml(textToAdd));
 	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
-	    	textView.setTypeface(null, Typeface.BOLD);
 	    }
 	    
 	    textView = (TextView) findViewById(R.id.event_with_who_entry);
@@ -160,22 +174,25 @@ public class EventDetailsActivity extends Activity {
 	    if (textToAdd.length() > 0) {
 	    	textView.setText(Html.fromHtml(textToAdd));
 	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
-	    	textView.setTypeface(null, Typeface.BOLD);
 	    }
 	    
 	    textToAdd = "" + mEvent.getPlannedDrinks();
 	    if (textToAdd.length() > 0) {
 		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText(textToAdd);
 		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setTextColor(getResources().getColor(R.color.dark_gray));
-		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setTypeface(null, Typeface.BOLD);
 	    }
 	    if (checkedEvent != null) {
-	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText("" + checkedEvent.getPlannedDrinks());
-	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setText(checkedEvent.getStartTimeAsText());
-	    	((TextView) findViewById(R.id.event_end_time_actual)).setText(checkedEvent.getEndTimeAsText());
-	    	((TextView) findViewById(R.id.event_with_who_actual)).setText(checkedEvent.getWithWho());
+	    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getPlannedDrinks());
+	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getStartTimeAsText());
+	    	((TextView) findViewById(R.id.event_end_time_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getEndTimeAsText());
+	    	((TextView) findViewById(R.id.event_with_who_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getWithWho());
 	    	
 	    } else {
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_end_time_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_with_who_actual)).setVisibility(View.GONE);
 	    }
 	    
 	    DayDataHandler dataHandler = new DayDataHandler(this);

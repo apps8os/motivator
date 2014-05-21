@@ -31,6 +31,10 @@ import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.utils.UtilityMethods;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.ActionBar;
@@ -157,7 +161,7 @@ public class MoodHistoryActivity extends Activity {
 			    	mSelectedWeek = arg0;
 			    	MoodHistoryWeekFragment fragment = mPagerAdapterWeek.getWeekFragment(arg0);
 			    	if (fragment != null) {
-			    		fragment.updateSelectedAttribute(mSelectedAttribute);
+			    		fragment.updateSelectedAttribute(mSelectedAttribute, false);
 			    	}
 			    }
 			}
@@ -189,6 +193,14 @@ public class MoodHistoryActivity extends Activity {
 			} else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 				loadLandscapeView();
 				selectAttribute.setVisible(true);
+				
+				new ShowcaseView.Builder(this, true)
+				    .setTarget(new ActionItemTarget(this, R.id.mood_history_select_attribute))
+				    .setContentTitle("Valitse mitä näytetään")
+				    .setContentText("Täältä voit valita mitä kuvaajassa näytetään.")
+				    .hideOnTouchOutside()
+				    .setStyle(R.style.ShowcaseView)
+				    .build();
 			}
 		}
 	}
@@ -226,12 +238,12 @@ public class MoodHistoryActivity extends Activity {
 			// Setting the selected attribute in landscape view.
 			mSelectedAttribute = DayInHistory.AMOUNT_OF_DRINKS;
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
-			weekFragment.updateSelectedAttribute(DayInHistory.AMOUNT_OF_DRINKS);
+			weekFragment.updateSelectedAttribute(DayInHistory.AMOUNT_OF_DRINKS, false);
 			return true;
 		case R.id.mood_history_attribute_moods:
 			mSelectedAttribute = DayInHistory.MOODS;
 			weekFragment = mPagerAdapterWeek.getWeekFragment(mViewPager.getCurrentItem());
-			weekFragment.updateSelectedAttribute(DayInHistory.MOODS);
+			weekFragment.updateSelectedAttribute(DayInHistory.MOODS, false);
 			return true;
 		case R.id.mood_history_change_sprint:
 			// Spawn a dialog where the user can select the sprint depicted in this history.
@@ -381,6 +393,7 @@ public class MoodHistoryActivity extends Activity {
 		titleIndicator.setViewPager(mViewPager);
 		mViewPager.setCurrentItem(mSelectedWeek);
 		mViewPager.setOffscreenPageLimit(1);
+		
 	}
 	
 	/**
@@ -393,6 +406,14 @@ public class MoodHistoryActivity extends Activity {
 		titleIndicator.setViewPager(mViewPager);
 	    mViewPager.setCurrentItem(mSelectedDay);
 	    mViewPager.setOffscreenPageLimit(5);
+	    
+	    new ShowcaseView.Builder(this, true)
+	    .setTarget(new ViewTarget(titleIndicator))
+	    .setContentTitle("Tässä on aikajana tämänhetkisestä jaksostasi")
+	    .setContentText("Käännä puhelin vaaktasoon nähdäksesi viikkonäkymän.")
+	    .hideOnTouchOutside()
+	    .setStyle(R.style.ShowcaseView)
+	    .build();
 	}
 	
 	

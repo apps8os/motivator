@@ -161,10 +161,16 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 			@Override
 			public void onClick(View v) {
 				int answers[]  = new int[mNumberOfQuestions];
+				long date = 0L;
 				for (int i = 0; i < mNumberOfQuestions; i++) {
-					answers[i] = mQuestionsPagerAdapter.getFragment(i).getAnswer();
+					answers[i] = mQuestionsPagerAdapter.getFragment(i).getSelectedAnswer();
+					if (i == 0) {
+						if (answers[i] == 3) {
+							date = mQuestionsPagerAdapter.getFragment(i).getSelectedDate();
+						}
+					}
 				}
-				mEventDataHandler.insertEvent(answers[0], answers[1], answers[2], answers[3], answers[4], mName);
+				mEventDataHandler.insertEvent(answers[0], answers[1], answers[2], answers[3], answers[4], mName, date);
 				
 				View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);

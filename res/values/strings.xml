@@ -110,10 +110,12 @@
    
     <string name="you_drank">You drank</string>
     <string name="drinks_yesterday_in_total">drinks yesterday in total.</string>
+    <string name="drinks_in_total">drinks in total.</string>
     <string name="how_did_the_event_go">How did it go?</string>
     <string name="you_had_an_event_yesterday">You had an event yesterday. How did it go?</string>
     <string name="drinks">drinks</string>
     <string name="you_did_not_drink_yesterday">You did not drink yesterday!</string>
+    <string name="you_did_not_drink">You did not drink!</string>
     <string name="today_section">Today section</string>
     <string name="today_section_help">Here you can see your events for the day and record your mood. You can also record the drinks you\'ve drunk with the clicker.</string>
     <string name="plan_section">Plan section</string>
@@ -151,5 +153,9 @@
 	<string name="your_average_mood">Your average mood</string>
 	<string name="not_defined">Not defined</string>
 	<string name="first_mood_of_the_next_day">First mood on the next day</string>
+	<string name="you_have_an_event_starting">You have an event starting</string>
+	<string name="check_the_event">Check the event?</string>
+	<string name="planned">Planned</string>
+	<string name="actual">Actual</string>
 	
 </resources>

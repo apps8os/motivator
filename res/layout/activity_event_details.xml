@@ -29,8 +29,7 @@
         android:id="@+id/event_info_layout"
         android:layout_width="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/card_background"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -39,7 +38,7 @@
         android:layout_marginBottom="10dp" >
 	    <TextView
 	        android:id="@+id/event_detail_title"
-	        android:layout_width="wrap_content"
+	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_margin="12dp"
 	        android:layout_gravity="center"
@@ -52,169 +51,99 @@
 	    <include layout="@layout/element_card_inner_separator_horizontal"/>
 	    
 	    <LinearLayout 
-	        android:layout_height="wrap_content"
-	        android:layout_width="match_parent"
-	        android:orientation="horizontal"
-	        android:layout_marginLeft="8dp"
-	        android:layout_marginRight="8dp"
-	        android:layout_marginBottom="8dp"
-	        android:layout_marginTop="14dp">
-	        
+	        style="@style/EventQuestionLayout">
 	        <TextView
 	        android:id="@+id/event_time_to_go"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:gravity="right"
-	        android:layout_weight="1"
 	        android:text="@string/when_to_go"
-	        android:textColor="@color/medium_gray"
 	        android:fontFamily="sans-serif-condensed"
-	        android:layout_marginRight="8dp"
-	        android:textSize="16sp" />
-	        <LinearLayout
-	            android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="2"
-		        android:layout_marginLeft="8dp"
-		        android:orientation="vertical" >
-		        <TextView
-			        android:id="@+id/event_time_to_go_entry"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
-			        android:text="@string/not_defined"
-			        android:textColor="@color/medium_gray"
-			        android:textSize="16sp" />
+	        style="@style/EventTitleView" />
+	            <TextView
+	                android:id="@+id/event_time_to_go_entry"
+	                style="@style/EventEntryTextView"
+	                android:text="@string/not_defined" />
+
 		        <TextView
 			        android:id="@+id/event_time_to_go_actual"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
+			        style="@style/EventEntryTextView"
 			        android:text=""
-			        android:textColor="@color/actionbar_orange"
-			        android:textSize="16sp" />
-	        </LinearLayout>
+			        android:textColor="@color/orange"
+			         />
 	    </LinearLayout>
 	    
-	    <LinearLayout 
-	        android:layout_height="wrap_content"
+	    <include layout="@layout/element_card_inner_separator_horizontal"
 	        android:layout_width="match_parent"
-	        android:orientation="horizontal"
-	        android:layout_margin="8dp">
+	        android:layout_height="1dp"
+	        android:layout_marginLeft="24dp"
+	        android:layout_marginRight="24dp"/>
+	    
+	    <LinearLayout 
+	        style="@style/EventQuestionLayout">
 	        
 	        <TextView
 	        android:id="@+id/event_amount_of_drinks"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:gravity="right"
-	        android:layout_weight="1"
-	        android:layout_marginRight="8dp"
-	        android:textColor="@color/medium_gray"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/amount_of_drinks"
-	        android:textSize="16sp" />
-	        
-	        <LinearLayout
-	            android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="2"
-		        android:layout_marginLeft="8dp"
-		        android:orientation="vertical" >
+	        style="@style/EventTitleView" />
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_entry"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
 			        android:text="@string/not_defined"
-			        android:textColor="@color/medium_gray"
-			        android:textSize="16sp" />
+			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_actual"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
+			        style="@style/EventEntryTextView"
 			        android:text=""
-			        android:textColor="@color/actionbar_orange"
-			        android:textSize="16sp" />
-	        </LinearLayout>
+			        android:textColor="@color/orange" />
 	    </LinearLayout>
 	    
-	    <LinearLayout 
-	        android:layout_height="wrap_content"
+	     <include layout="@layout/element_card_inner_separator_horizontal"
 	        android:layout_width="match_parent"
-	        android:orientation="horizontal"
-	        android:layout_margin="8dp">
+	        android:layout_height="1dp"
+	        android:layout_marginLeft="24dp"
+	        android:layout_marginRight="24dp"/>
+	     
+	    <LinearLayout 
+	        style="@style/EventQuestionLayout">
 	        
 	        <TextView
 	        android:id="@+id/event_end_time"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:gravity="right"
-	        android:layout_weight="1"
-	        android:layout_marginRight="8dp"
-	        android:textColor="@color/medium_gray"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/end_time"
-	        android:textSize="16sp" />
-	        
-	        <LinearLayout
-	            android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="2"
-		        android:layout_marginLeft="8dp"
-		        android:orientation="vertical" >
+	        style="@style/EventTitleView" />
 		        <TextView
 			        android:id="@+id/event_end_time_entry"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
 			        android:text="@string/not_defined"
-			        android:textColor="@color/medium_gray"
-			        android:textSize="16sp" />
+			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_end_time_actual"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
 			        android:text=""
-			        android:textColor="@color/actionbar_orange"
-			        android:textSize="16sp" />
-	        </LinearLayout>
+			        android:textColor="@color/orange"
+			        style="@style/EventEntryTextView" />
 	    </LinearLayout>
 	    
-	    <LinearLayout 
-	        android:layout_height="wrap_content"
+	    <include layout="@layout/element_card_inner_separator_horizontal"
 	        android:layout_width="match_parent"
-	        android:orientation="horizontal"
-	        android:layout_margin="8dp">
+	        android:layout_height="1dp"
+	        android:layout_marginLeft="24dp"
+	        android:layout_marginRight="24dp"/>
+	    
+	    <LinearLayout 
+	        style="@style/EventQuestionLayout">
 	        
 	        <TextView
 	        android:id="@+id/event_with_who"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:gravity="right"
-	        android:layout_weight="1"
-	        android:layout_marginRight="8dp"
-	        android:textColor="@color/medium_gray"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/with_who"
-	        android:textSize="16sp" />
+	        style="@style/EventTitleView" />
 	        
-	       <LinearLayout
-	            android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="2"
-		        android:layout_marginLeft="8dp"
-		        android:orientation="vertical" >
 		        <TextView
 			        android:id="@+id/event_with_who_entry"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
 			        android:text="@string/not_defined"
-			        android:textColor="@color/medium_gray"
-			        android:textSize="16sp" />
+			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_with_who_actual"
-			        android:layout_width="match_parent"
-			        android:layout_height="wrap_content"
 			        android:text=""
-			        android:textColor="@color/actionbar_orange"
-			        android:textSize="16sp" />
-	        </LinearLayout>
+			        android:textColor="@color/orange"
+			        style="@style/EventEntryTextView" />
 	    </LinearLayout>
     
     </LinearLayout>

@@ -26,6 +26,7 @@
 	    android:layout_height="match_parent"
 	    android:layout_weight="1">
 	    <ImageView
+	        android:id="@+id/attribute_image"
 	        android:layout_width="match_parent"
 	        android:layout_height="150dp"
 	        android:src="@drawable/drink_icon"
@@ -68,8 +69,8 @@
 	        <com.echo.holographlibrary.LineGraph
 		        android:layout_width="match_parent"
 		        android:layout_height="match_parent"
-		        android:layout_marginLeft="8dp"
-		        android:layout_marginRight="48dp"
+		        android:layout_marginLeft="24dp"
+		        android:layout_marginRight="24dp"
 		        android:layout_marginTop="8dp"
 		        android:id="@+id/graph"/>
 		        

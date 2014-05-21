@@ -17,10 +17,13 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -142,21 +145,29 @@ public class PlanSectionFragment extends Fragment {
 				LinearLayout noEventsText = (LinearLayout) mInflater.inflate(R.layout.element_no_events, mEventLayout, false);
 				mEventLayout.addView(noEventsText);
 			}
+			Calendar calendar = Calendar.getInstance();
+			UtilityMethods.setToDayStart(calendar);
 			// Create buttons for the result set.
 			for (MotivatorEvent event : result) {
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
 				String startTimeAsText = event.getStartTimeAsText();
+				String eventDateAsText;
+				if ((event.getStartTime() - calendar.getTimeInMillis()) < TimeUnit.MILLISECONDS.convert(2, TimeUnit.DAYS)) {
+					eventDateAsText = getString(R.string.tomorrow);
+				} else {
+					eventDateAsText = UtilityMethods.getDateAsString(event.getStartTime(), getActivity());
+				}
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
 					if (startTimeAsText.length() > 0) {
-						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText() + " \u25A0 " + startTimeAsText);
+						((TextView) buttonTextLayout.getChildAt(1)).setText(eventDateAsText + " \u25A0 " + startTimeAsText);
 					} else {
-						((TextView) buttonTextLayout.getChildAt(1)).setText(event.getEventDateAsText());
+						((TextView) buttonTextLayout.getChildAt(1)).setText(eventDateAsText);
 					}
 				} else {
-					((TextView) buttonTextLayout.getChildAt(0)).setText(event.getEventDateAsText());
+					((TextView) buttonTextLayout.getChildAt(0)).setText(eventDateAsText);
 					if (startTimeAsText.length() > 0) {
 						((TextView) buttonTextLayout.getChildAt(1)).setText(startTimeAsText);
 					} else {

@@ -153,7 +153,7 @@ public class AddGoalActivity extends Activity implements QuestionnaireActivityIn
 				int answers[]  = new int[mNumberOfQuestions];
 				int amountAnswer = -2;
 				for (int i = 0; i < mNumberOfQuestions; i++) {
-					answers[i] = mQuestionsPagerAdapter.getFragment(i).getAnswer();
+					answers[i] = mQuestionsPagerAdapter.getFragment(i).getSelectedAnswer();
 					if (i == 0) {
 						amountAnswer = mQuestionsPagerAdapter.getFragment(i).getXAmount();
 					}

@@ -47,7 +47,8 @@
 		        android:gravity="center"
 		        android:text=""
 		        android:textAppearance="?android:attr/textAppearanceMedium"
-		        android:fontFamily="sans-serif-condensed" />
+		        android:fontFamily="sans-serif-condensed"
+		        android:textStyle="bold" />
 		    
 		     <TextView
 		        android:id="@+id/moodlist_mood_comment"
