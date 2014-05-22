@@ -248,14 +248,17 @@ public class MoodHistoryWeekFragment extends Fragment {
 					p = new LinePoint();
 					p2 = new LinePoint();
 				}
-				l.setColor(Color.parseColor("#FFBB33"));
-				l2.setColor(Color.parseColor("#99cc00"));
+				l.setColor(mRes.getColor(R.color.purple));
+				l2.setColor(mRes.getColor(R.color.orange));
 				mLineGraph.addLine(l);
 				mLineGraph.addLine(l2);
 				mLineGraph.setRangeY(0, 4);
 				mLineGraph.setLineToFill(0);
 				mLineGraph.setUsingDips(true);
 				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.drink_icon);
+				((TextView) mRootView.findViewById(R.id.attribute_top_text)).setText(getString(R.string.planned_hyphen));
+				((TextView) mRootView.findViewById(R.id.attribute_bottom_text)).setText(getString(R.string.actual_hyphen));
+				
 				break;
 			case DayInHistory.MOODS:
 				daysSize = mDays.size();
@@ -277,15 +280,17 @@ public class MoodHistoryWeekFragment extends Fragment {
 					p = new LinePoint();
 					p2 = new LinePoint();
 				}
-				l.setColor(Color.parseColor("#99cc00"));
+				l2.setColor(mRes.getColor(R.color.purple));
 				mLineGraph.addLine(l);
 				mLineGraph.setRangeY(0, 5);
 				mLineGraph.setLineToFill(0);
 				mLineGraph.setUsingDips(true);
 				
-				l2.setColor(Color.parseColor("#FBBE45"));
+				l.setColor(mRes.getColor(R.color.orange));
 				mLineGraph.addLine(l2);
-				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.energy_mood_image);
+				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.mood_question_icon);
+				((TextView) mRootView.findViewById(R.id.attribute_top_text)).setText(getString(R.string.energy));
+				((TextView) mRootView.findViewById(R.id.attribute_bottom_text)).setText(getString(R.string.mood));
 				break;
 			}
 			mSelectedAttribute = selector;

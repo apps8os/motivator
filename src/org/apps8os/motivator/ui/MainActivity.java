@@ -168,7 +168,7 @@ public class MainActivity extends Activity {
 		}
 		
 		if (!mPrefs.getBoolean(Sprint.FIRST_SPRINT_SET, false)) {	
-			Intent intent = new Intent(this, StartingSprintActivity.class);
+			Intent intent = new Intent(this, StartGuideActivity.class);
 			finish();
 			startActivity(intent);
 		}

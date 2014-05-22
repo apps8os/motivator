@@ -71,6 +71,9 @@ import android.widget.DatePicker;
 public class MoodHistoryActivity extends Activity {
 	
 	public static final String FRAGMENT_POSITION = "fragment_position";
+
+	private static final long SELECT_ATTRIBUTE_HELP_ID = 10001;
+	private static final long TIMELINE_HELP_ID = 10002;
 	
 	private DayDataHandler mDayDataHandler;
 	private ViewPager mViewPager;
@@ -200,6 +203,7 @@ public class MoodHistoryActivity extends Activity {
 				    .setContentText("Täältä voit valita mitä kuvaajassa näytetään.")
 				    .hideOnTouchOutside()
 				    .setStyle(R.style.ShowcaseView)
+				    .singleShot(SELECT_ATTRIBUTE_HELP_ID)
 				    .build();
 			}
 		}
@@ -413,6 +417,7 @@ public class MoodHistoryActivity extends Activity {
 	    .setContentText("Käännä puhelin vaaktasoon nähdäksesi viikkonäkymän.")
 	    .hideOnTouchOutside()
 	    .setStyle(R.style.ShowcaseView)
+	    .singleShot(TIMELINE_HELP_ID)
 	    .build();
 	}
 	

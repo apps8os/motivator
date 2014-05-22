@@ -157,5 +157,8 @@
 	<string name="check_the_event">Check the event?</string>
 	<string name="planned">Planned</string>
 	<string name="actual">Actual</string>
-	
+	<string name="you_marked">You marked</string>
+	<string name="plan_checked">Plan checked</string>
+	<string name="planned_hyphen">Plan-ned</string>
+	<string name="actual_hyphen">Actu-al</string>
 </resources>

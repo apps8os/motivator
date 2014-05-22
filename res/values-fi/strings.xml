@@ -157,5 +157,9 @@
 	<string name="check_the_event">Tarkista suunnitelma?</string>
 	<string name="planned">Suunniteltu</string>
 	<string name="actual">Toteutunut</string>
+	<string name="you_marked">Merkitsit</string>
+	<string name="plan_checked">Suunnitelma tarkistettu</string>
+	<string name="planned_hyphen">Suunni-teltu</string>
+	<string name="actual_hyphen">Toteu-tunut</string>
 	
 </resources>

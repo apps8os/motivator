@@ -25,13 +25,35 @@
 	    android:layout_width="0dp"
 	    android:layout_height="match_parent"
 	    android:layout_weight="1">
+	    <TextView 
+	        android:id="@+id/attribute_top_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="37dp"
+	        android:textSize="12sp"
+	        android:gravity="center|bottom"
+	        android:textStyle="bold"
+	        android:ellipsize="end"
+	        android:textAllCaps="true"
+	        android:textColor="@color/orange"
+	        android:text="@string/planned_hyphen"/>
 	    <ImageView
 	        android:id="@+id/attribute_image"
 	        android:layout_width="match_parent"
-	        android:layout_height="150dp"
+	        android:layout_height="76dp"
 	        android:src="@drawable/drink_icon"
 	        android:layout_marginTop="4dp"
-	        ></ImageView>
+	        />
+	    <TextView 
+	        android:id="@+id/attribute_bottom_text"
+	        android:layout_width="match_parent"
+	        android:layout_height="37dp"
+	        android:textSize="12sp"
+	        android:gravity="center|top"
+	        android:textStyle="bold"
+	        android:ellipsize="end"
+	        android:textAllCaps="true"
+	        android:textColor="@color/purple"
+	        android:text="@string/actual_hyphen"/>
 	    <include layout="@layout/element_main_activity_button_separator"/>
 	    <TextView 
 	        android:layout_width="match_parent"

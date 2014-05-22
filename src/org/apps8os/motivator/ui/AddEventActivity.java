@@ -47,6 +47,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.viewpagerindicator.LinePageIndicator;
 
 /**
@@ -57,6 +60,7 @@ import com.viewpagerindicator.LinePageIndicator;
 public class AddEventActivity extends Activity implements QuestionnaireActivityInterface {
 	
 	public static final String EVENT_ADDED = "event_added";
+	public static final long ADD_NAME_HELP_ID = 10000;
 	
 	private ViewPager mViewPager;
 	private EventDataHandler mEventDataHandler;
@@ -89,7 +93,6 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	    
 	    titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
 		titleIndicator.setViewPager(mViewPager);
-		
 		setButtons();
 	}
 	
@@ -99,6 +102,14 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    getMenuInflater().inflate(R.menu.questions, menu);
+	    new ShowcaseView.Builder(this, true)
+	    .setTarget(new ActionItemTarget(this, R.id.questions_add_comment))
+	    .setContentTitle("Lisää suunnitelmalle nimi")
+	    .setContentText("Täältä voit lisätä suunnitelmallesi nimen, josta tunnistat sen.")
+	    .hideOnTouchOutside()
+	    .setStyle(R.style.ShowcaseView)
+	    .singleShot(ADD_NAME_HELP_ID)
+	    .build();
 		return super.onCreateOptionsMenu(menu);
 	}
 	

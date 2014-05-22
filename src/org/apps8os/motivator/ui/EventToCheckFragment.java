@@ -88,7 +88,7 @@ public class EventToCheckFragment extends Fragment {
 		mWithWhoSpinner.setSelection(eventHandler.getRawFieldUnchecked(mEvent.getId(), EventDataHandler.KEY_WITH_WHO));
 		
 		DayDataHandler dayHandler = new DayDataHandler(getActivity());
-		((TextView) rootView.findViewById(R.id.amount_of_drinks_yesterday)).setText(getString(R.string.you_drank) + " " + 
+		((TextView) rootView.findViewById(R.id.amount_of_drinks_yesterday)).setText(getString(R.string.you_marked) + " " + 
 				dayHandler.getDrinksForDay(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) + " " + 
 				getString(R.string.drinks_yesterday_in_total));
 		

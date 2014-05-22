@@ -85,6 +85,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	
 	private static final int AMOUNT_OF_DRINKS = 1;
 	private static final int ALL = 0;
+	private static final long SELECT_TIMEFRAME_HELP_ID = 10002;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -104,6 +105,7 @@ public class MoodRelationHistoryActivity extends Activity {
 	    .setContentText("Täältä voit valita aikajakson, jonka keskimääräisen fiiliksen haluat nähdä.")
 	    .hideOnTouchOutside()
 	    .setStyle(R.style.ShowcaseView)
+	    .singleShot(SELECT_TIMEFRAME_HELP_ID)
 	    .build();
 	    
 	    mContext = this;

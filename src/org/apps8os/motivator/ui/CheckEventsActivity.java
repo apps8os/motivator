@@ -105,7 +105,7 @@ public class CheckEventsActivity extends Activity {
 				}
 				View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
 				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
-				toastText.setText(getString(R.string.event_added));
+				toastText.setText(getString(R.string.plan_checked));
 				toastText.setTextColor(Color.WHITE);
 				
 				
