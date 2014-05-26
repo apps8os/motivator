@@ -12,6 +12,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+/**
+ * BootReceiver for starting the mood notifications on boot.
+ * @author Toni Järvinen
+ *
+ */
 public class BootReceiver extends BroadcastReceiver {
 
 	@Override

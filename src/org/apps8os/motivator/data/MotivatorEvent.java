@@ -19,6 +19,11 @@ package org.apps8os.motivator.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Represents an event in the application. The event can be a checked, unchecked or planned event.
+ * @author Toni Järvinen
+ *
+ */
 public class MotivatorEvent implements Parcelable {
 	
 	public static final String EVENT = "event";
@@ -185,6 +190,10 @@ public class MotivatorEvent implements Parcelable {
 		this.mName = mName;
 	}
 
+	/**
+	 * Checks if this instance is an checked event instance.
+	 * @return
+	 */
 	public boolean hasBeenChecked() {
 		return (mChecked == 1);
 	}

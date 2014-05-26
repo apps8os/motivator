@@ -69,7 +69,7 @@ public class EventDetailsActivity extends Activity {
 	    if (mEvent == null) {
 	    	int eventId = extras.getInt(EventDataHandler.EVENT_ID);
 	    	if (eventId != 0) {
-	    		mEvent = mEventDataHandler.getEvent(eventId);
+	    		mEvent = mEventDataHandler.getUncheckedEvent(eventId);
 	    		section = MotivatorEvent.TODAY;
 	    	} else {
 	    	}
@@ -184,9 +184,15 @@ public class EventDetailsActivity extends Activity {
 	    if (checkedEvent != null) {
 	    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
 	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getPlannedDrinks());
-	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getStartTimeAsText());
-	    	((TextView) findViewById(R.id.event_end_time_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getEndTimeAsText());
-	    	((TextView) findViewById(R.id.event_with_who_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getWithWho());
+	    	if (checkedEvent.getStartTimeAsText().length() > 0) {
+	    		((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getStartTimeAsText());
+	    	}
+	    	if (checkedEvent.getEndTimeAsText().length() > 0) {
+	    		((TextView) findViewById(R.id.event_end_time_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getEndTimeAsText());
+	    	}
+	    	if (checkedEvent.getWithWho().length() > 0) {
+	    		((TextView) findViewById(R.id.event_with_who_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getWithWho());
+	    	}
 	    	
 	    } else {
 	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setVisibility(View.GONE);

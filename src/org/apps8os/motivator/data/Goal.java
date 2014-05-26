@@ -21,6 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 
+/**
+ * Represents a Goal. Not yet implemented in the application.
+ * @author Toni Järvinen
+ *
+ */
 public class Goal {
 	
 	private long mStartTime = 0;

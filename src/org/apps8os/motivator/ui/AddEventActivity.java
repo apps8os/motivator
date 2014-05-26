@@ -156,7 +156,11 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+				if (mViewPager.getCurrentItem() == 1 && mQuestionsPagerAdapter.getFragment(1).getSelectedAnswer() == 1) {
+					mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 3);
+				} else {
+					mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+				}
 			}
 		});
 		
@@ -164,7 +168,11 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 		previousButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+				if (mViewPager.getCurrentItem() == 4 && mQuestionsPagerAdapter.getFragment(1).getSelectedAnswer() == 1) {
+					mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 3);
+				} else {
+					mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+				}
 			}
 		});
 		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);

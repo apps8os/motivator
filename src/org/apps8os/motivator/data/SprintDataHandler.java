@@ -22,12 +22,24 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+
+/**
+ * Handles the sprint data in the application
+ * @author Toni Järvinen
+ *
+ */
 public class SprintDataHandler extends MotivatorDatabaseHelper {
 
 	public SprintDataHandler(Context context) {
 		super(context);
 	}
 	
+	/**
+	 * Inserting a sprint to the database
+	 * @param startTime
+	 * @param days
+	 * @param sprintTitle
+	 */
 	public void insertSprint(long startTime, int days, String sprintTitle) {
 		open();
 		endCurrentSprint();
@@ -41,6 +53,9 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		close();
 	}
 	
+	/**
+	 * Ending the current sprint.
+	 */
 	private void endCurrentSprint() {
 		Sprint current = getCurrentSprintPrivate();
 		if (current != null) {
@@ -70,6 +85,10 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		return null;
 	}
 	
+	/**
+	 * Gets all sprints.
+	 * @return
+	 */
 	public Sprint[] getSprints() {
 		open();
 		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};
@@ -115,6 +134,10 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		return current;
 	}
 	
+	/**
+	 * Gets the current sprint.
+	 * @return
+	 */
 	public Sprint getCurrentSprint() {
 		open();
 		Sprint current = getCurrentSprintInner();
@@ -127,6 +150,10 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		return current;
 	}
 	
+	/**
+	 * Gets the latest sprint that has ended.
+	 * @return
+	 */
 	public Sprint getLatestEndedSprint() {
 		open();
 		String selection = KEY_SPRINT_END + " < " + System.currentTimeMillis();
@@ -147,6 +174,10 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		return null;
 	}
 	
+	/**
+	 * Gets the start time of the first sprint.
+	 * @return
+	 */
 	public long getFirstSprintStart() {
 		open();
 		String selection = "SELECT MIN(" + KEY_SPRINT_START + ") FROM " + TABLE_NAME_SPRINTS;

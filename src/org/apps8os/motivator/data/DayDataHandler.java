@@ -31,7 +31,7 @@ import android.database.Cursor;
 import android.util.SparseArray;
 
 /**
- * Handles the access for event data. The specific content in mood database is...
+ * Handles the access for event data.
  * open() before using and close() after done
  * @author Toni Järvinen
  *
@@ -85,7 +85,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     }
     
     /**
-     * Inserting a mood to the database
+     * Inserting a mood to the database with a comment
      * @param energyLevel
      * @param moodLevel
      */
@@ -136,7 +136,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	    columns = new String[1];
 	    columns[0] = KEY_TIMESTAMP;
 	    query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, null);
-	    result.addAlcoholDrink(query.getCount());
+	    result.setAlcoholDrinks(query.getCount());
 	    close();
 	    query.close();
 	    return result;
@@ -178,7 +178,7 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	    columns = new String[1];
 	    columns[0] = KEY_TIMESTAMP;
 	    query = mDb.query(TABLE_NAME_DRINKS, columns, selection, null, null, null, null);
-	    result.addAlcoholDrink(query.getCount());
+	    result.setAlcoholDrinks(query.getCount());
 	    close();
 	    query.close();
 	    if (result.getMoods().size() == 0) {
@@ -187,6 +187,12 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	    return result;
     }
     
+    
+    /**
+     * Gets the amount of drinks for the day given in millis from the drink table.
+     * @param dayInMillis
+     * @return
+     */
     public int getDrinksForDay(long dayInMillis) {
     	open();
     	Calendar calendar = Calendar.getInstance();
@@ -202,6 +208,12 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
  	    return result;
     }
     
+    /**
+     * Gets the timestamps for the drinks between a given timeframe
+     * @param fromMillis
+     * @param toMillis
+     * @return
+     */
     public long[] getTimestampsForDrinksBetween(long fromMillis, long toMillis) {
     	open();
     	String selection = KEY_TIMESTAMP + " >= " + fromMillis + " AND " + KEY_TIMESTAMP + " < " + toMillis;
@@ -237,6 +249,12 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     	return days;
     }
     
+    /**
+     * Gets the given amount of days from the given timestamp.
+     * @param fromInMillis
+     * @param amountOfDays
+     * @return
+     */
     public ArrayList<DayInHistory> getDaysWithMoodsAfter(long fromInMillis, int amountOfDays) {
     	ArrayList<DayInHistory> days = new ArrayList<DayInHistory>();
     	Calendar calendar = Calendar.getInstance();

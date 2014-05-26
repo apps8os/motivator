@@ -44,8 +44,8 @@
     <string name="every_hour_value">HOURLY</string>
 
     <string-array name="time_frames">
-        <item>Last week</item>
-        <item>Last two weeks</item>
+        <item>Last 7 days</item>
+        <item>Last 14 days</item>
         <item>Last 30 days</item>
         <item>Current sprint</item>
         <item>Specific timeframe</item>

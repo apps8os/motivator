@@ -90,10 +90,18 @@ public class DayInHistory implements Parcelable{
 		}
 	};
 	
-	public void addAlcoholDrink(int amount) {
+	/**
+	 * Sets alcohol drinks.
+	 * @param amount
+	 */
+	public void setAlcoholDrinks(int amount) {
 		mAlcoholDrinks = amount;
 	}
 	
+	/**
+	 * Adds a mood the the day and sorts the list according to the timestamps.
+	 * @param mood
+	 */
 	public void addMood(Mood mood) {
 		mMoods.add(mood);
 		
@@ -158,7 +166,12 @@ public class DayInHistory implements Parcelable{
 		return dataHandler.getDrinksForDay(mDateInMillis);
 	}
 	
-	public int getPlannedAlcoholDrinks(Context context) {
+	/**
+	 * Gets the planned alcohol drinks for the day.
+	 * @param context
+	 * @return
+	 */
+	public int getPlannedAlcoholDrinks() {
 		int events = mEvents.size();
 		int totalPlannedDrinks = 0;
 		for (int i = 0; i < events; i++) {
@@ -205,6 +218,11 @@ public class DayInHistory implements Parcelable{
 		return mEvents;
 	}
 	
+	/**
+	 * Gets the events that have not been checked.
+	 * @param context
+	 * @return
+	 */
 	public ArrayList<MotivatorEvent> getUncheckedEvents(Context context) {
 		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
 		EventDataHandler eventData = new EventDataHandler(mContext);
@@ -218,6 +236,11 @@ public class DayInHistory implements Parcelable{
 		return result;
 	}
 	
+	/**
+	 * Gets the MotivatorEvent instances representing the plans.
+	 * @param context
+	 * @return
+	 */
 	public ArrayList<MotivatorEvent> getPlannedEvents(Context context) {
 		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
 		for (MotivatorEvent event : mEvents) {
@@ -228,6 +251,11 @@ public class DayInHistory implements Parcelable{
 		return result;
 	}
 	
+	/**
+	 * Gets the MotivatorEvent instances representing events that were checked/realized.
+	 * @param context
+	 * @return
+	 */
 	public ArrayList<MotivatorEvent> getCheckedEvents(Context context) {
 		ArrayList<MotivatorEvent> result = new ArrayList<MotivatorEvent>();
 		EventDataHandler eventData = new EventDataHandler(mContext);

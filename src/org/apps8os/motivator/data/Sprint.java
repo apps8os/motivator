@@ -25,6 +25,11 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Represents a sprint in the application
+ * @author Toni Järvinen
+ *
+ */
 public class Sprint implements Parcelable {
 	
 	public static final String CURRENT_SPRINT = "current_sprint";

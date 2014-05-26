@@ -31,7 +31,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 /**
- * Handles the access for goal data. The specific content in goal database is...
+ * Handles the access for goal data. 
  * open() before using and close() after done
  * @author Toni Järvinen
  *

@@ -42,8 +42,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 /**
- * Handles the access for event data. The specific content in event database is the
- * timestamp on midnight of the day when the event is supposed to be.
+ * Handles the access for event data.
  * open() before using and close() after done
  * @author Toni Järvinen
  *
@@ -114,6 +113,19 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
+	/**
+	 * Inserting an event to the database. This handles the calculation of the answers to timestamps.
+	 * Also adds alarms for notification on the event start.
+	 * @param eventId
+	 * @param dayAnswer
+	 * @param plannedDrinks
+	 * @param startTimeAnswer
+	 * @param endTimeAnswer
+	 * @param withWho
+	 * @param name
+	 * @param date
+	 * @param checked
+	 */
 	private void insertEvent(int eventId, int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String name, long date, int checked) {
 		// Use SharedPreferences to store the event id so that it can be incremented even if the app is killed
 		SharedPreferences eventIdIncrement = mContext.getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
@@ -164,6 +176,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		values.put(KEY_EVENT_ID, innerEventId);
 		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
 		
+		// Schedule an alarm for notification when the event is starting.
 		if (startTimeAnswer > 0 && checked == EVENT_NOT_CHECKED) {
 			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 			// Set the notification to repeat over the given time at notificationTime
@@ -210,10 +223,29 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		db.close();
 	}
 	
+	/**
+	 * Inserting event with a specific date as long
+	 * @param dayAnswer
+	 * @param plannedDrinks
+	 * @param startTimeAnswer
+	 * @param endTimeAnswer
+	 * @param withWho
+	 * @param comment
+	 * @param date
+	 */
 	public void insertEvent(int dayAnswer, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment, long date) {
 		insertEvent(-1, dayAnswer, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, date, 0);
 	}
 	
+	/**
+	 * Inserting checked event to the database.
+	 * @param eventId
+	 * @param plannedDrinks
+	 * @param startTimeAnswer
+	 * @param endTimeAnswer
+	 * @param withWho
+	 * @param comment
+	 */
 	public void insertCheckedEvent(int eventId, int plannedDrinks, int startTimeAnswer, int endTimeAnswer, int withWho, String comment) {
 		insertEvent(eventId, 1, plannedDrinks, startTimeAnswer, endTimeAnswer, withWho, comment, 0L, 1);
 	}
@@ -240,7 +272,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return events;
 	}
 	
-	public void addEvents(ArrayList<MotivatorEvent> events, Cursor query) {
+	/**
+	 * Adds event from the cursor to the ArrayList.
+	 * @param events
+	 * @param query
+	 */
+	private void addEvents(ArrayList<MotivatorEvent> events, Cursor query) {
 		query.moveToFirst();
 		for (int i = 0; i < query.getCount(); i ++) {
 			MotivatorEvent event = new MotivatorEvent(query.getInt(1));
@@ -337,6 +374,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return events;
 	}
 	
+	/**
+	 * Gets the unchecked events between the timestamps
+	 * @param startDayInMillis
+	 * @param endDayInMillis
+	 * @return
+	 */
 	public ArrayList<MotivatorEvent> getUncheckedEventsBetween(long startDayInMillis, long endDayInMillis) {
 		open();
 		Calendar calendar = Calendar.getInstance();
@@ -358,7 +401,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return events;
 	}
 	
-	public MotivatorEvent getEvent(int uncheckedEventId) {
+	/**
+	 * Gets the unchecked event with given id.
+	 * @param uncheckedEventId
+	 * @return
+	 */
+	public MotivatorEvent getUncheckedEvent(int uncheckedEventId) {
 		open();
 		String selection = KEY_EVENT_ID + " = " + uncheckedEventId + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_NOT_CHECKED;
 		Cursor query = mDb.query(TABLE_NAME_EVENTS, null, selection, null, null, null, null);
@@ -402,6 +450,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		return mQuestions.keyAt(0);
 	}
 
+	/**
+	 * Deletes the event with given id from the database. Also removes any alarms scheduled for the event.
+	 * @param eventId
+	 */
 	public void deleteEvent(int eventId) {
 		open();
 		String selection = KEY_EVENT_ID + " = " + eventId;
@@ -419,6 +471,13 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		close();
 	}
 	
+	/**
+	 * Gets an raw int from the database. Valid fields are
+	 * {KEY_PLANNED_AMOUNT_OF_DRINKS, KEY_WITH_WHO, KEY_START_TIME_ANSWER, KEY_END_TIME_ANSWER, KEY_DAY_ANSWER}
+	 * @param eventId
+	 * @param field
+	 * @return
+	 */
 	public int getRawFieldUnchecked(int eventId, String field) {
 		boolean validField = false;
 		String fields[] = {KEY_PLANNED_AMOUNT_OF_DRINKS, KEY_WITH_WHO, KEY_START_TIME_ANSWER, KEY_END_TIME_ANSWER, KEY_DAY_ANSWER};

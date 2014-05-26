@@ -274,8 +274,7 @@ public class MoodRelationHistoryActivity extends Activity {
 			Calendar calendar = Calendar.getInstance();
 			
 			if (itemPosition == 0) {
-				calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-				calendar.add(Calendar.DATE, -7);
+				calendar.add(Calendar.DATE, -6);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 7;
 				mDays = mDayDataHandler.getDaysWithMoodsAfter(mFromTimeInMillis, mAmountOfDays);
@@ -283,8 +282,7 @@ public class MoodRelationHistoryActivity extends Activity {
 			} 
 			
 			else if (itemPosition == 1) {
-				calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-				calendar.add(Calendar.DATE, -14);
+				calendar.add(Calendar.DATE, -13);
 				mFromTimeInMillis = calendar.getTimeInMillis();
 				mAmountOfDays = 14;
 				mDays = mDayDataHandler.getDaysWithMoodsAfter(mFromTimeInMillis, mAmountOfDays);
