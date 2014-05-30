@@ -47,8 +47,8 @@
 		
 		        <LinearLayout
 		            android:id="@+id/mood_history_fragment_mood_image"
-		            android:layout_width="220dp"
-		            android:layout_height="210dp"
+		            android:layout_width="180dp"
+		            android:layout_height="174dp"
 		            android:layout_gravity="center"
 		            android:orientation="vertical">
 			        <ImageView

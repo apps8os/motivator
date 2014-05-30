@@ -33,7 +33,7 @@
 	    android:layout_width="fill_parent"
 	    android:background="@drawable/action_bar_green"
 	    android:textColor="@color/gray"
-	    app:footerColor="@color/green"
+	    app:footerColor="@color/actionbar_green"
 	    app:footerLineHeight="1dp"
 	    app:footerIndicatorHeight="5dp"
 	    app:footerIndicatorStyle="underline"

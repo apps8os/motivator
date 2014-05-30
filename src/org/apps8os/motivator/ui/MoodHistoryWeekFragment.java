@@ -185,8 +185,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 					energyImage.setImageDrawable(mRes.getDrawable(R.drawable.energy_no_data));
 					moodImage.setImageDrawable(mRes.getDrawable(R.drawable.mood_no_data));
 				} else {
-					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + day.getAvgEnergyLevel(), "drawable", getActivity().getPackageName())));
-					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + day.getAvgMoodLevel(), "drawable", getActivity().getPackageName())));
+					energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + day.getAvgEnergyLevel() + "_small", "drawable", getActivity().getPackageName())));
+					moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + day.getAvgMoodLevel() + "_small", "drawable", getActivity().getPackageName())));
 
 				}
 				mDayLayout.addView(dayView);

@@ -112,14 +112,22 @@ public class EventHistoryActivity extends Activity {
 					Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
 					((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
 							.setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
-				}
-				
-				if (eventName.length() > 0) {
-					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-							.setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					if (eventName.length() > 0) {
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+								.setText(eventName + " \u25A0 " + checked.getPlannedDrinks() + " " + getString(R.string.drinks));
+					} else {
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+								.setText(checked.getPlannedDrinks() + " " + getString(R.string.drinks));
+					}
 				} else {
-					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-							.setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
+				
+					if (eventName.length() > 0) {
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+								.setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					} else {
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+								.setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
+					}
 				}
 				
 				((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))

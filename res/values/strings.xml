@@ -91,8 +91,10 @@
     <string name="complete">Complete</string>
     <string name="planned_events">Planned events</string>
     <string name="todays_events">Today\'s events</string>
-    <string name="energy">Energy:</string>
-    <string name="mood">Mood:</string>
+    <string name="energy_dots">Energy:</string>
+    <string name="mood_dots">Mood:</string>
+    <string name="energy">Energy</string>
+    <string name="mood">Mood</string>
     <string name="comment">Comment</string>
     <string name="cancel">Cancel</string>
     <string name="drinks_today">drinks today</string>
@@ -159,6 +161,6 @@
 	<string name="actual">Actual</string>
 	<string name="you_marked">You marked</string>
 	<string name="plan_checked">Plan checked</string>
-	<string name="planned_hyphen">Plan-ned</string>
-	<string name="actual_hyphen">Actu-al</string>
+	<string name="planned_hyphen">Planned</string>
+	<string name="actual_hyphen">Actual</string>
 </resources>

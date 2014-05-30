@@ -91,8 +91,10 @@
     <string name="complete">Valmis</string>
     <string name="planned_events">Tulevat suunnitelmat</string>
     <string name="todays_events">Päivän suunnitelmat</string>
-    <string name="energy">Energia:</string>
-    <string name="mood">Fiilis:</string>
+    <string name="energy_dots">Energia:</string>
+    <string name="mood_dots">Fiilis:</string>
+    <string name="energy">Energia</string>
+    <string name="mood">Fiilis</string>
     <string name="comment">Kommentti</string>
     <string name="cancel">Peruuta</string>
     <string name="drinks_today">juotu tänään</string>

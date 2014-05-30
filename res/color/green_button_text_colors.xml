@@ -16,6 +16,6 @@
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_enabled="true" android:color="@color/dark_green" />
+    <item android:state_enabled="true" android:color="@color/actionbar_green" />
     <item android:color="@color/gray" />
 </selector>

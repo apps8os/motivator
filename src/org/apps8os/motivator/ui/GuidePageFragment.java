@@ -23,12 +23,12 @@ public class GuidePageFragment extends Fragment{
 		switch (guidePage) {
 		case 0:
 			((TextView) rootView.findViewById(R.id.title)).setText("Tervetuloa!");
-			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("Motivaattori on tarkoitettu <b>Sinulle</b>."));
+			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> ja seurata omien <b>suunnitelmiesi</b> toteutumista. " +
+						"Suunnittele itse, mitä aiot tehdä, sovellus auttaa Sinua pitäytymään suunnitelmassasi!"));
 			break;
 		case 1:
-			((TextView) rootView.findViewById(R.id.title)).setText("Jaksot");
-			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("Motivaattorissa pääset seuraamaan <b>fiilistäsi</b> ja suunnittelemaan" +
-					" juomistasi jaksoittain."));
+			((TextView) rootView.findViewById(R.id.title)).setText("Motivaattori");
+			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("Motivaattorissa voit seurata <b>fiiliksiäsi</b> ja sitä, miten suunnitelmasi ovat toteutuneet. Suunnitelmat ja niiden toteutuminen on vain Sinun tiedossasi."));
 			break;
 		case 2:
 			((TextView) rootView.findViewById(R.id.title)).setText("Motivaattori");
