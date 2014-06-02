@@ -42,10 +42,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +61,7 @@ public class TodaySectionFragment extends Fragment {
 	// private GoalDataHandler mGoalDataHandler;
 	private LinearLayout mEventLayout;
 	private LinearLayout mDrinkButton;
+	private LinearLayout mMoodButton;
 	private TextView mDrinkCounterTextView;
 	private TextView mPlannedDrinksTextView;
 	private Resources mRes;
@@ -88,8 +91,8 @@ public class TodaySectionFragment extends Fragment {
 		mEventDataHandler = new EventDataHandler(getActivity());
 		
 		// two buttons that are always present
-		LinearLayout moodQuestion = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_mood_button);
-		moodQuestion.setOnClickListener(new OnClickListener() {
+		mMoodButton = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_mood_button);
+		mMoodButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				DayInHistory yesterday = mDayDataHandler.getDayInHistory(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
@@ -120,6 +123,9 @@ public class TodaySectionFragment extends Fragment {
 		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
 		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "/" + currentSprint.getDaysInSprint()));
 		
+		if (currentSprint.isOver()) {
+			mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+		}
 		new LoadPlansTask(getActivity()).execute();
 		// new LoadGoalsTask().execute();
 
@@ -145,13 +151,17 @@ public class TodaySectionFragment extends Fragment {
 				mDayDataHandler.addDrink();
 				mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
 				
-				// Opening prompts depending on the amount of drinks drunk and planned amounts
 				
+				// Set the color of the drinks button to red if drinks go over the planned amount.
 				if (mDrinkCounter > mPlannedDrinks) {
 					mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));
 					mDrinkButton.setBackgroundResource(R.drawable.card_background_red);
 				}
+				
+				// Opening prompts depending on the amount of drinks drunk and planned amounts
 				if (mPlannedDrinks == 0 && mDrinkCounter == 1) {
+					
+					// Set up a prompt for adding a plan if there are no plans and the user adds a drink.
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle(getString(R.string.you_have_no_plans))
 						.setMessage(getString(R.string.do_you_want_to_add_event))
@@ -171,6 +181,9 @@ public class TodaySectionFragment extends Fragment {
 					dialog.show();
 					
 				} else if (mPlannedDrinks > 0 && mPlannedDrinks < 4 && mDrinkCounter == mPlannedDrinks + 1) {
+					
+					// Set up a prompt asking whether everything is ok if the drink amount goes over the planned.
+					// If user has planned to drink over 4, dont ask this.
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					builder.setTitle(getString(R.string.you_went_over_planned_drinks))
 						.setMessage(getString(R.string.is_everything_ok))
@@ -191,6 +204,8 @@ public class TodaySectionFragment extends Fragment {
 					}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+							
+							// Set up a dialog with info on where to get help if user answers everything is not ok
 							AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 							LinearLayout helpDialogLayout = (LinearLayout) mInflater.inflate(R.layout.element_alcohol_help_dialog, null);
 							builder.setView(helpDialogLayout);
@@ -379,7 +394,7 @@ public class TodaySectionFragment extends Fragment {
 		}
 	}
 	
-	/**
+	/** Commented out for now
 	private class LoadGoalsTask extends AsyncTask<Void, Void, ArrayList<Goal>> {
 
 		@Override

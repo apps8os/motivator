@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.AlertDialog;
@@ -40,6 +41,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,6 +58,7 @@ public class PlanSectionFragment extends Fragment {
 	private EventDataHandler mEventDataHandler;
 	private LinearLayout mEventLayout;
 	private LayoutInflater mInflater;
+	private View mRootView;
 	
 	public PlanSectionFragment() {
 	}
@@ -64,15 +67,15 @@ public class PlanSectionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mInflater = inflater;
-		View rootView = mInflater.inflate(
+		mRootView = mInflater.inflate(
 				R.layout.fragment_main_activity_plan_section, container, false);
 		
 		// The layout which has dynamic amount of future events/buttons.
-		mEventLayout = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_dynamic_buttons);
+		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.main_activity_plan_dynamic_buttons);
 		
 		// two buttons that are always present
 		
-		LinearLayout addEventButton = (LinearLayout) rootView.findViewById(R.id.main_activity_plan_add_event_button);
+		LinearLayout addEventButton = (LinearLayout) mRootView.findViewById(R.id.main_activity_plan_add_event_button);
 		addEventButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -90,7 +93,7 @@ public class PlanSectionFragment extends Fragment {
 			}
 		});
 		**/
-		return rootView;
+		return mRootView;
 	}
 	
 	@Override
@@ -105,6 +108,10 @@ public class PlanSectionFragment extends Fragment {
 	@Override
 	public void onResume() {
 		new LoadPlansTask(getActivity()).execute();
+		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
+		if (currentSprint.isOver()) {
+			mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+		}
 		super.onResume();
 	}
 	

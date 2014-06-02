@@ -163,5 +163,7 @@
 	<string name="plan_checked">Suunnitelma tarkistettu</string>
 	<string name="planned_hyphen">Suunni-teltu</string>
 	<string name="actual_hyphen">Toteu-tunut</string>
-	
+	<string name="no_active_sprint">Jaksosi on päättynyt</string>
+	<string name="start_a_new_sprint">Aloita uusi jakso?</string>
+	<string name="current_sprint_will_end">Nykyinen jakso lopetetaan.</string>
 </resources>

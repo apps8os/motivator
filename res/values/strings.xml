@@ -163,4 +163,7 @@
 	<string name="plan_checked">Plan checked</string>
 	<string name="planned_hyphen">Planned</string>
 	<string name="actual_hyphen">Actual</string>
+	<string name="no_active_sprint">Your sprint has ended</string>
+	<string name="start_a_new_sprint">Start a new sprint?</string>
+	<string name="current_sprint_will_end">Current sprint will be ended</string>
 </resources>

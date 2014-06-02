@@ -16,14 +16,19 @@
  ******************************************************************************/
 package org.apps8os.motivator.ui;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
+import org.apps8os.motivator.services.NotificationService;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -63,6 +68,23 @@ public class StartingSprintActivity extends Activity {
 				
 				Intent intent = new Intent(activity, MainActivity.class);
 				startActivity(intent);
+				
+				Calendar notificationTime = Calendar.getInstance();
+				notificationTime.set(Calendar.MINUTE, 0);
+				notificationTime.set(Calendar.SECOND, 0);	
+				Context context = StartingSprintActivity.super;
+				// An alarm manager for scheduling notifications
+				AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+				// Set the notification to repeat over the given time at notificationTime
+				Intent notificationIntent = new Intent(context, NotificationService.class);
+				notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_MOOD);
+				PendingIntent pendingNotificationIntent = PendingIntent.getService(context,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				alarmManager.cancel(pendingNotificationIntent);
+				if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
+					notificationTime.add(Calendar.DATE, 1);
+				}
+				notificationTime.set(Calendar.HOUR_OF_DAY, 10);
+				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
 				activity.finish();
 			}
 			

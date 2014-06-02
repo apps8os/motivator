@@ -104,7 +104,13 @@ public class NotificationService extends IntentService {
 				    } else {
 				    	// No events to check.
 				    	resultIntent.putExtra(EventDataHandler.EVENTS_TO_CHECK, false);
-				    	builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
+				    	EventDataHandler eventHandler = new EventDataHandler(this);
+				    	long lastAddedEventTimestamp = eventHandler.getLatestAddedEventTimestamp();
+				    	if (lastAddedEventTimestamp != 0L && System.currentTimeMillis() - lastAddedEventTimestamp > TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)) {
+				    		builder.setContentText("Muistatko, että voit suunnitella tapahtumiasi?");
+				    	} else {
+				    		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
+				    	}
 				    }
 					// Preserve the normal navigation of the app by adding the parent stack of the result activity
 					TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

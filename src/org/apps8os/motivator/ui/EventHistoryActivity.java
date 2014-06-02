@@ -19,19 +19,33 @@ package org.apps8os.motivator.ui;
 import java.util.ArrayList;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.data.SprintDataHandler;
+import org.apps8os.motivator.ui.MoodHistoryActivity.DatePickerFragment;
 import org.apps8os.motivator.utils.UtilityMethods;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +56,8 @@ public class EventHistoryActivity extends Activity {
 	private Sprint mSelectedSprint;
 	private LinearLayout mEventLayout;
 	private Resources mRes;
+	
+	public static final int CHANGE_SPRINT_HELP = 10010;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -56,6 +72,64 @@ public class EventHistoryActivity extends Activity {
 	    actionBar.setTitle(getString(R.string.event_history));
 	    
 	    new LoadPlansTask(this).execute();
+	}
+	
+	/**
+	 * Loading the action bar menu
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    getMenuInflater().inflate(R.menu.event_history, menu);
+	    new ShowcaseView.Builder(this, true)
+	    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.OVERFLOW))
+	    .setContentTitle("Vaihda jaksoa")
+	    .setContentText("Täältä voit vaihtaa jakson jonka suunnitelmat näytetään.")
+	    .hideOnTouchOutside()
+	    .setStyle(R.style.ShowcaseView)
+	    .singleShot(CHANGE_SPRINT_HELP)
+	    .build();
+	    
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	/**
+	 * Actions for the menu items.
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.event_history_change_sprint:
+			// Spawn a dialog where the user can select the sprint depicted in this history.
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			final Sprint[] sprints = new SprintDataHandler(this).getSprints();
+			
+			// Get the string representations of the sprints.
+			String[] sprintsAsString = new String[sprints.length];
+			for (int i = 0; i < sprints.length; i++) {
+				sprintsAsString[i] = sprints[i].getSprintTitle() + " " + sprints[i].getStartTimeInString(this);
+			}
+			builder.setTitle(getString(R.string.select_sprint))
+					.setSingleChoiceItems(sprintsAsString, sprints.length-1, null);
+			final AlertDialog alertDialog = builder.create();
+			final Activity thisActivity = this;
+			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// Start this activity again with the selected sprint as the passed Parcelable Sprint.
+					// This is done so that the activity can update itself to the selected sprint.
+					mSelectedSprint = sprints[alertDialog.getListView().getCheckedItemPosition()];
+					Intent intent = new Intent (thisActivity, EventHistoryActivity.class);
+					intent.putExtra(Sprint.CURRENT_SPRINT, mSelectedSprint);
+					startActivity(intent);
+					alertDialog.dismiss();
+					thisActivity.finish();
+				}
+			});
+			alertDialog.show();
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
 	/**

@@ -72,6 +72,7 @@
 			    android:layout_height="100dp"
 			     >
 			    <TextView 
+			        android:id="@+id/mood_button_text"
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
 			        android:layout_weight="1"

@@ -184,6 +184,24 @@ public class MainActivity extends Activity {
 		
 		if (mCurrentSprint == null) {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.no_active_sprint))
+				.setMessage(getString(R.string.start_a_new_sprint))
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
+					Intent intent = new Intent(MainActivity.super, StartingSprintActivity.class);
+					startActivity(intent);
+				}
+			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+			Dialog dialog = builder.create();
+			dialog.show();
+			
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
 			mActionBar.setTitle(getString(R.string.day) + " " 
@@ -247,9 +265,23 @@ public class MainActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.action_start_sprint:
-			intent = new Intent(this, StartingSprintActivity.class);
-			startActivity(intent);
-			finish();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(getString(R.string.start_a_new_sprint))
+				.setMessage(getString(R.string.current_sprint_will_end))
+				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
+					Intent intent = new Intent(MainActivity.super, StartingSprintActivity.class);
+					startActivity(intent);
+				}
+			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+			});
+			Dialog dialog = builder.create();
+			dialog.show();
 			return true;
 		case R.id.action_show_help:
 			showHelp();
@@ -402,7 +434,10 @@ public class MainActivity extends Activity {
 				fragment = new TodaySectionFragment();
 				fragment.setArguments(mBundle);
 			} else if(position == 2) {
+				mBundle.clear();
+				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
 				fragment = new PlanSectionFragment();
+				fragment.setArguments(mBundle);
 			} else if (position == 0) {
 				mBundle.clear();
 				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
