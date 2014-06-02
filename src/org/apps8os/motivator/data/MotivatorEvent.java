@@ -16,6 +16,7 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -40,9 +41,9 @@ public class MotivatorEvent implements Parcelable {
 	private int mPlannedDrinks;
 	private int mId;
 	private String mEventDateAsText = "";
-	private String mStartTimeAsText = "";
-	private String mEndTimeAsText = "";
-	private String mWithWho = "";
+	private int mStartTimeAnswer = 0;
+	private int mEndTimeAnswer = 0;
+	private int mWithWhoAnswer = 0;
 	private String mName = "";
 	private int mChecked = 0;
 
@@ -56,9 +57,9 @@ public class MotivatorEvent implements Parcelable {
 		mPlannedDrinks = source.readInt();
 		mId = source.readInt();
 		mEventDateAsText = source.readString();
-		mStartTimeAsText = source.readString();
-		mEndTimeAsText = source.readString();
-		mWithWho = source.readString();
+		mStartTimeAnswer = source.readInt();
+		mEndTimeAnswer = source.readInt();
+		mWithWhoAnswer = source.readInt();
 		mName = source.readString();
 		mChecked = source.readInt();
 	}
@@ -80,15 +81,23 @@ public class MotivatorEvent implements Parcelable {
 	/**
 	 * @return the mWithWho
 	 */
-	public String getWithWho() {
-		return mWithWho;
+	public String getWithWho(Context context) {
+		if (mWithWhoAnswer == 0) {
+			return "";
+		}
+		EventDataHandler dataHandler = new EventDataHandler(context);
+		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_WITH_WHO).getAnswer(mWithWhoAnswer);
 	}
-
+	
 	/**
 	 * @param mWithWho the mWithWho to set
 	 */
-	public void setWithWho(String withWho) {
-		this.mWithWho = withWho;
+	public void setWithWhoAnswer(int answer) {
+		mWithWhoAnswer = answer;
+	}
+	
+	public int getWithWhoAnswer() {
+		return mWithWhoAnswer;
 	}
 	
 	/**
@@ -118,6 +127,7 @@ public class MotivatorEvent implements Parcelable {
 	public void setEventDateAsText(String mEventAsText) {
 		this.mEventDateAsText = mEventAsText;
 	}
+	
 
 	/**
 	 * @return the mStartTime
@@ -138,6 +148,11 @@ public class MotivatorEvent implements Parcelable {
 	 */
 	public int getPlannedDrinks() {
 		return mPlannedDrinks;
+	}
+	
+	public String getPlannedDrinksAsText(Context context) {
+		EventDataHandler dataHandler = new EventDataHandler(context);
+		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
 	}
 
 
@@ -167,19 +182,27 @@ public class MotivatorEvent implements Parcelable {
 		dest.writeInt(mPlannedDrinks);
 		dest.writeInt(mId);
 		dest.writeString(mEventDateAsText);
-		dest.writeString(mStartTimeAsText);
-		dest.writeString(mEndTimeAsText);
-		dest.writeString(mWithWho);
+		dest.writeInt(mStartTimeAnswer);
+		dest.writeInt(mEndTimeAnswer);
+		dest.writeInt(mWithWhoAnswer);
 		dest.writeString(mName);
 		dest.writeInt(mChecked);
 	}
 
-	public String getStartTimeAsText() {
-		return mStartTimeAsText;
+	public String getStartTimeAsText(Context context) {
+		if (mStartTimeAnswer == 0) {
+			return "";
+		}
+		EventDataHandler dataHandler = new EventDataHandler(context);
+		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_GO).getAnswer(mStartTimeAnswer);
 	}
-
-	public void setStartTimeAsText(String mStartTimeAsText) {
-		this.mStartTimeAsText = mStartTimeAsText;
+	
+	public void setStartTimeAnswer(int answer) {
+		mStartTimeAnswer = answer;
+	}
+	
+	public int getStartTimeAnswer() {
+		return mStartTimeAnswer;
 	}
 
 	public String getName() {
@@ -201,13 +224,27 @@ public class MotivatorEvent implements Parcelable {
 	public void setChecked() {
 		mChecked = 1;
 	}
-
-	public void setEndTimeAsText(String endTimeAsText) {
-		mEndTimeAsText = endTimeAsText;
+	
+	public void setEndTimeAnswer(int answer) {
+		mEndTimeAnswer = answer;
 	}
 	
-	public String getEndTimeAsText() {
-		return mEndTimeAsText;
+	public int getEndTimeAnswer() {
+		return mEndTimeAnswer;
+	}
+	
+	public void updateToDatabase(Context context) {
+		EventDataHandler dataHandler = new EventDataHandler(context);
+		dataHandler.updateEvent(mId, mStartTimeAnswer, mEndTimeAnswer, mWithWhoAnswer, mPlannedDrinks + 1, mStartTime, mName);
+		
+	}
+	
+	public String getEndTimeAsText(Context context) {
+		if (mEndTimeAnswer == 0) {
+			return "";
+		}
+		EventDataHandler dataHandler = new EventDataHandler(context);
+		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_COME_BACK).getAnswer(mEndTimeAnswer);
 	}
 
 }

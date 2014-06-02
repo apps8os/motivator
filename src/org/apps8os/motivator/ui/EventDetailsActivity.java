@@ -25,13 +25,22 @@ import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.MotivatorEvent;
+import org.apps8os.motivator.data.Question;
+import org.apps8os.motivator.data.Sprint;
+import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.utils.UtilityMethods;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -45,6 +54,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 /**
  * Represents a details activity for an event.
@@ -55,7 +65,9 @@ public class EventDetailsActivity extends Activity {
 	
 	private MotivatorEvent mEvent;
 	private EventDataHandler mEventDataHandler;
-
+	private Resources mRes;
+	
+	public static final int EDIT_EVENT_HELP = 10011;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +87,7 @@ public class EventDetailsActivity extends Activity {
 	    	}
 	    }
 	    
+	    mRes = getResources();
 	    final Context context = this;
 	    
 	    TextView titleView = (TextView) findViewById(R.id.event_detail_title);
@@ -82,19 +95,33 @@ public class EventDetailsActivity extends Activity {
 	    final EventDetailsActivity parentActivity = this;
 	    final int eventId = mEvent.getId();
 	    MotivatorEvent checkedEvent = null;
+	    final Button saveChangesButton = (Button) findViewById(R.id.event_detail_save_changes_button);
+	    final TextView startTimeTextView = (TextView) findViewById(R.id.event_time_to_go_entry);
+	    final TextView endTimeTextView = (TextView) findViewById(R.id.event_end_time_entry);
+	    final TextView withWhoTextView = (TextView) findViewById(R.id.event_with_who_entry);
+	    final TextView plannedDrinksTextView = ((TextView) findViewById(R.id.event_amount_of_drinks_entry));
+	    saveChangesButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mEvent.updateToDatabase(parentActivity);
+				parentActivity.finish();
+				
+			}
+	    });
+	    saveChangesButton.setVisibility(View.GONE);
 	    if (section == MotivatorEvent.TODAY) {
-	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_green));
-	    	titleView.setTextColor(getResources().getColor(R.color.actionbar_green));
+	    	getActionBar().setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_green));
+	    	titleView.setTextColor(mRes.getColor(R.color.actionbar_green));
 	    } else if (section == MotivatorEvent.PLAN) {
-	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
+	    	getActionBar().setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_blue));
 	    }
 	    
 	    if (section == MotivatorEvent.HISTORY) {
 	    	checkedEvent = mEventDataHandler.getCheckedEvent(mEvent.getId());
 		    
 	    	title = UtilityMethods.getDateAsString(mEvent.getStartTime(), this);
-	    	getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
-	    	titleView.setTextColor(getResources().getColor(R.color.orange));
+	    	getActionBar().setBackgroundDrawable(mRes.getDrawable(R.drawable.action_bar_orange));
+	    	titleView.setTextColor(mRes.getColor(R.color.orange));
 	    	Button okButton = (Button) findViewById(R.id.event_detail_cancel_button);
 	    	okButton.setText(getString(R.string.ok));
 		    okButton.setOnClickListener(new OnClickListener() {
@@ -102,9 +129,74 @@ public class EventDetailsActivity extends Activity {
 				public void onClick(View arg0) {
 					parentActivity.finish();
 				}
-		    	
 		    });
+		    
+		    if (checkedEvent != null) {
+		    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
+		    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getPlannedDrinks());
+		    	if (checkedEvent.getStartTimeAsText(this).length() > 0) {
+		    		((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getStartTimeAsText(this));
+		    	}
+		    	if (checkedEvent.getEndTimeAsText(this).length() > 0) {
+		    		((TextView) findViewById(R.id.event_end_time_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getEndTimeAsText(this));
+		    	}
+		    	if (checkedEvent.getWithWho(this).length() > 0) {
+		    		((TextView) findViewById(R.id.event_with_who_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getWithWho(this));
+		    	}
+		    	
+		    } else {
+		    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setVisibility(View.GONE);
+		    	((TextView) findViewById(R.id.event_time_to_go_actual)).setVisibility(View.GONE);
+		    	((TextView) findViewById(R.id.event_end_time_actual)).setVisibility(View.GONE);
+		    	((TextView) findViewById(R.id.event_with_who_actual)).setVisibility(View.GONE);
+		    }
+		    
+		    DayDataHandler dataHandler = new DayDataHandler(this);
+		    DayInHistory day = dataHandler.getDayInHistory(mEvent.getStartTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+		    Mood firstMood = day.getFirstMoodOfTheDay();
+		    
+		    // Setting a mood image for the first mood of the following day
+		    if (firstMood.getEnergy() > 0) {
+		    	// Scale for using density independent pixels
+		    	final float scale = mRes.getDisplayMetrics().density;
+		    	TextView textView = new TextView(this);
+		    	textView.setText(getString(R.string.first_mood_of_the_next_day));
+		    	LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		    	params.setMargins((int) (10 * scale), (int) (20 * scale), (int) (10 * scale), (int) (10 * scale));
+		    	textView.setLayoutParams(params);
+		    	textView.setGravity(Gravity.CENTER);
+		    	textView.setTextSize(14);
+		    	textView.setTypeface(null, Typeface.BOLD);
+		    	textView.setTextColor(mRes.getColor(R.color.medium_gray));
+		    	LinearLayout rootLayout = (LinearLayout) findViewById(R.id.event_info_layout);
+		    	LinearLayout moodImage = (LinearLayout) getLayoutInflater().inflate(R.layout.element_mood_image, rootLayout, false);
+		    	((ImageView) moodImage.getChildAt(0))
+		    			.setImageResource(mRes.getIdentifier("energy" + firstMood.getEnergy(), "drawable", getPackageName()));
+		    	((ImageView) moodImage.getChildAt(1))
+		    			.setImageResource(mRes.getIdentifier("mood" + firstMood.getMood(), "drawable", getPackageName()));
+		    	
+		    	
+		    	params = new LinearLayout.LayoutParams((int) (105 * scale), (int) (100 * scale));
+		    	params.gravity = Gravity.CENTER;
+		    	moodImage.setLayoutParams(params);
+		    	rootLayout.addView(textView);
+		    	rootLayout.addView(moodImage);
+		    }
 	    } else {
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_end_time_actual)).setVisibility(View.GONE);
+	    	((TextView) findViewById(R.id.event_with_who_actual)).setVisibility(View.GONE);
+	    	
+	    	new ShowcaseView.Builder(this, true)
+			    .setTarget(new ViewTarget(startTimeTextView))
+			    .setContentTitle("Muuta suunnitelmaa")
+			    .setContentText("Kosketa suunnittelmia muuttaaksesi niitä.")
+			    .hideOnTouchOutside()
+			    .setStyle(R.style.ShowcaseView)
+			    .singleShot(EDIT_EVENT_HELP)
+			    .build();
+	    	
 	    	Calendar calendar = Calendar.getInstance();
 	    	UtilityMethods.setToDayStart(calendar);
 	    	if (mEvent.getStartTime() - calendar.getTimeInMillis() < TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
@@ -132,6 +224,7 @@ public class EventDetailsActivity extends Activity {
 							toastText.setText(getString(R.string.event_canceled));
 							toastText.setTextColor(Color.WHITE);
 							
+
 							Toast canceled = new Toast(context);
 							canceled.setDuration(Toast.LENGTH_SHORT);
 							canceled.setView(toastLayout);
@@ -148,6 +241,129 @@ public class EventDetailsActivity extends Activity {
 				}
 		    	
 		    });
+		    
+		    startTimeTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+					
+					Question whenToGo = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_GO);
+					final String[] answers = whenToGo.getAnswers();
+					builder.setTitle(whenToGo.getQuestion())
+							.setSingleChoiceItems(answers, mEvent.getStartTimeAnswer() - 1, null);
+					final AlertDialog alertDialog = builder.create();
+					alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mEvent.setStartTimeAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
+							startTimeTextView.setText(mEvent.getStartTimeAsText(EventDetailsActivity.super));
+							startTimeTextView.setTextColor(mRes.getColor(R.color.purple));
+							saveChangesButton.setVisibility(View.VISIBLE);
+						}
+					});
+					alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					alertDialog.show();
+				}
+		    	
+		    });
+		    
+		    endTimeTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+					
+					Question endTime = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_COME_BACK);
+					final String[] answers = endTime.getAnswers();
+					builder.setTitle(endTime.getQuestion())
+							.setSingleChoiceItems(answers, mEvent.getEndTimeAnswer() - 1, null);
+					final AlertDialog alertDialog = builder.create();
+					alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mEvent.setEndTimeAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
+							endTimeTextView.setText(mEvent.getEndTimeAsText(EventDetailsActivity.super));
+							endTimeTextView.setTextColor(mRes.getColor(R.color.purple));
+							saveChangesButton.setVisibility(View.VISIBLE);
+						}
+					});
+					alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					alertDialog.show();
+				}
+		    });
+		    
+		    withWhoTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+					
+					Question withWho = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_WITH_WHO);
+					final String[] answers = withWho.getAnswers();
+					builder.setTitle(withWho.getQuestion())
+							.setSingleChoiceItems(answers, mEvent.getWithWhoAnswer() - 1, null);
+					final AlertDialog alertDialog = builder.create();
+					alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mEvent.setWithWhoAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
+							withWhoTextView.setText(mEvent.getWithWho(EventDetailsActivity.super));
+							withWhoTextView.setTextColor(mRes.getColor(R.color.purple));
+							saveChangesButton.setVisibility(View.VISIBLE);
+						}
+					});
+					alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					alertDialog.show();
+				}
+		    	
+		    });
+		    
+		    plannedDrinksTextView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+					
+					Question plannedDrinks = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH);
+					final String[] answers = plannedDrinks.getAnswers();
+					builder.setTitle(plannedDrinks.getQuestion())
+							.setSingleChoiceItems(answers, mEvent.getPlannedDrinks(), null);
+					final AlertDialog alertDialog = builder.create();
+					alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mEvent.setPlannedDrinks(alertDialog.getListView().getCheckedItemPosition());
+							plannedDrinksTextView.setText(mEvent.getPlannedDrinksAsText(context));
+							plannedDrinksTextView.setTextColor(mRes.getColor(R.color.purple));
+							saveChangesButton.setVisibility(View.VISIBLE);
+						}
+					});
+					alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+						}
+					});
+					alertDialog.show();
+				}
+		    	
+		    });
 	    }
 	    final String eventName = mEvent.getName();
 	    if (eventName.length() > 0) {
@@ -155,82 +371,28 @@ public class EventDetailsActivity extends Activity {
 	    } else {
 	    	titleView.setText(title);
 	    }
-	    TextView textView = (TextView) findViewById(R.id.event_time_to_go_entry);
-	    String textToAdd = mEvent.getStartTimeAsText();
+	    String textToAdd = mEvent.getStartTimeAsText(this);
 	    if (textToAdd.length() > 0) {
-	    	textView.setText(Html.fromHtml(textToAdd));
-	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	startTimeTextView.setText(Html.fromHtml(textToAdd));
+	    	startTimeTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
-	    
-	    textView = (TextView) findViewById(R.id.event_end_time_entry);
-	    textToAdd = mEvent.getEndTimeAsText();
+	    textToAdd = mEvent.getEndTimeAsText(this);
 	    if (textToAdd.length() > 0) {
-	    	textView.setText(Html.fromHtml(textToAdd));
-	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	endTimeTextView.setText(Html.fromHtml(textToAdd));
+	    	endTimeTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
-	    textView = (TextView) findViewById(R.id.event_with_who_entry);
-	    textToAdd = mEvent.getWithWho();
+	    textToAdd = mEvent.getWithWho(this);
 	    if (textToAdd.length() > 0) {
-	    	textView.setText(Html.fromHtml(textToAdd));
-	    	textView.setTextColor(getResources().getColor(R.color.dark_gray));
+	    	withWhoTextView.setText(Html.fromHtml(textToAdd));
+	    	withWhoTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
-	    textToAdd = "" + mEvent.getPlannedDrinks();
+	    textToAdd = mEvent.getPlannedDrinksAsText(this);
 	    if (textToAdd.length() > 0) {
-		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setText(textToAdd);
-		    ((TextView) findViewById(R.id.event_amount_of_drinks_entry)).setTextColor(getResources().getColor(R.color.dark_gray));
-	    }
-	    if (checkedEvent != null) {
-	    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
-	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getPlannedDrinks());
-	    	if (checkedEvent.getStartTimeAsText().length() > 0) {
-	    		((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getStartTimeAsText());
-	    	}
-	    	if (checkedEvent.getEndTimeAsText().length() > 0) {
-	    		((TextView) findViewById(R.id.event_end_time_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getEndTimeAsText());
-	    	}
-	    	if (checkedEvent.getWithWho().length() > 0) {
-	    		((TextView) findViewById(R.id.event_with_who_actual)).setText(getString(R.string.actual)+ ": " + checkedEvent.getWithWho());
-	    	}
-	    	
-	    } else {
-	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setVisibility(View.GONE);
-	    	((TextView) findViewById(R.id.event_time_to_go_actual)).setVisibility(View.GONE);
-	    	((TextView) findViewById(R.id.event_end_time_actual)).setVisibility(View.GONE);
-	    	((TextView) findViewById(R.id.event_with_who_actual)).setVisibility(View.GONE);
+		    plannedDrinksTextView.setText(textToAdd);
+		    plannedDrinksTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
-	    DayDataHandler dataHandler = new DayDataHandler(this);
-	    DayInHistory day = dataHandler.getDayInHistory(mEvent.getStartTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-	    Mood firstMood = day.getFirstMoodOfTheDay();
-	    
-	    // Setting a mood image for the first mood of the following day
-	    if (firstMood.getEnergy() > 0) {
-	    	// Scale for using density independent pixels
-	    	final float scale = getResources().getDisplayMetrics().density;
-	    	textView = new TextView(this);
-	    	textView.setText(getString(R.string.first_mood_of_the_next_day));
-	    	LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-	    	params.setMargins((int) (10 * scale), (int) (20 * scale), (int) (10 * scale), (int) (10 * scale));
-	    	textView.setLayoutParams(params);
-	    	textView.setGravity(Gravity.CENTER);
-	    	textView.setTextSize(14);
-	    	textView.setTypeface(null, Typeface.BOLD);
-	    	textView.setTextColor(getResources().getColor(R.color.medium_gray));
-	    	LinearLayout rootLayout = (LinearLayout) findViewById(R.id.event_info_layout);
-	    	LinearLayout moodImage = (LinearLayout) getLayoutInflater().inflate(R.layout.element_mood_image, rootLayout, false);
-	    	((ImageView) moodImage.getChildAt(0))
-	    			.setImageResource(getResources().getIdentifier("energy" + firstMood.getEnergy(), "drawable", getPackageName()));
-	    	((ImageView) moodImage.getChildAt(1))
-	    			.setImageResource(getResources().getIdentifier("mood" + firstMood.getMood(), "drawable", getPackageName()));
-	    	
-	    	
-	    	params = new LinearLayout.LayoutParams((int) (105 * scale), (int) (100 * scale));
-	    	params.gravity = Gravity.CENTER;
-	    	moodImage.setLayoutParams(params);
-	    	rootLayout.addView(textView);
-	    	rootLayout.addView(moodImage);
-	    }
 	}
 }

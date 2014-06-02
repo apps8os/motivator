@@ -300,7 +300,7 @@ public class TodaySectionFragment extends Fragment {
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_larger_event_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
-				String startTimeAsText = event.getStartTimeAsText();
+				String startTimeAsText = event.getStartTimeAsText(mContext);
 				LinearLayout drinkAmountLayout = ((LinearLayout) buttonTextLayout.getChildAt(1));
 				((TextView) drinkAmountLayout.getChildAt(1)).setText(" " + getString(R.string.drinks));
 				((ImageView) eventButton.findViewById(R.id.drink_amount_image)).setImageResource(mAmountImages[event.getPlannedDrinks()]);

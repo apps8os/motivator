@@ -45,7 +45,8 @@
     <string name="add_event">Lisää suunnitelma</string>
     <string name="show_mood_history">Päivähistoria</string>
     <string name="questionnaire_done_toast_bad_mood">Tsemppiä!</string>
-    <string name="questionnaire_done_toast_good_mood">Hyvin menee!</string>
+    <string name="questionnaire_done_toast_ok_mood">Hyvin menee!</string>
+    <string name="questionnaire_done_toast_good_mood">Mahtavaa!</string>
     <string name="add_goal">Lisää tavoite</string>
     <string name="this_weekend">Tänä viikonloppuna</string>
     <string name="send_notifications">Lähetä muistutuksia?</string>
@@ -166,4 +167,5 @@
 	<string name="no_active_sprint">Jaksosi on päättynyt</string>
 	<string name="start_a_new_sprint">Aloita uusi jakso?</string>
 	<string name="current_sprint_will_end">Nykyinen jakso lopetetaan.</string>
+	<string name="save_changes">Tallenna</string>
 </resources>

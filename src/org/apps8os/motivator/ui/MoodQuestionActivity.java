@@ -144,8 +144,10 @@ public class MoodQuestionActivity extends Activity {
 					saveMood(v);
 					
 					String toastMsg;
-					if ( mCardsViewPagerMood.getCurrentItem() > 1 ) {
+					if ( mCardsViewPagerMood.getCurrentItem() > 2 ) {
 						toastMsg = getString(R.string.questionnaire_done_toast_good_mood);
+					} else if (mCardsViewPagerMood.getCurrentItem() == 2) {
+						toastMsg = getString(R.string.questionnaire_done_toast_ok_mood);
 					} else {
 						toastMsg = getString(R.string.questionnaire_done_toast_bad_mood);
 					}

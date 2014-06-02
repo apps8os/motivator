@@ -288,13 +288,13 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 				event.setEndTime(query.getLong(3));
 			}
 			if (!query.isNull(5)) {
-				event.setWithWho(mQuestions.get(QUESTION_ID_WITH_WHO).getAnswer(query.getInt(5)));
+				event.setWithWhoAnswer(query.getInt(5));
 			}
 			if (!query.isNull(6)) {
-				event.setStartTimeAsText(mQuestions.get(QUESTION_ID_TIME_TO_GO).getAnswer(query.getInt(6)));
+				event.setStartTimeAnswer(query.getInt(6));
 			}
 			if (!query.isNull(7)) {
-				event.setEndTimeAsText(mQuestions.get(QUESTION_ID_TIME_TO_COME_BACK).getAnswer(query.getInt(7)));
+				event.setEndTimeAnswer(query.getInt(7));
 			}
 			if (!query.isNull(8)) {
 				event.setEventDateAsText(mQuestions.get(QUESTION_ID_WHEN).getAnswer(query.getInt(8)));
@@ -506,6 +506,66 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		} else {
 			return -1;
 		}
+	}
+	
+	public void updateEvent(int eventId, int startTimeAnswer, int endTimeAnswer, int withWhoAnswer, int plannedDrinks, long startTime, String eventName) {
+		open();
+		Calendar calendarCache = Calendar.getInstance();
+		calendarCache.setTimeInMillis(startTime);
+		ContentValues values = new ContentValues();
+		UtilityMethods.setToDayStart(calendarCache);
+		switch (startTimeAnswer) {
+			case 1: 
+				calendarCache.set(Calendar.HOUR_OF_DAY, 16);
+				break;
+			case 2:
+				calendarCache.set(Calendar.HOUR_OF_DAY, 18);
+				break;
+			case 3:
+				calendarCache.set(Calendar.HOUR_OF_DAY, 21);
+				break;
+		}
+		values.put(KEY_START_TIME, calendarCache.getTimeInMillis());
+		
+		// Schedule an alarm for notification when the event is starting.
+		if (startTimeAnswer > 0) {
+			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+			// Set the notification to repeat over the given time at notificationTime
+			Intent notificationIntent = new Intent(mContext, NotificationService.class);
+			notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_START);
+			notificationIntent.putExtra(EVENT_ID, eventId);
+			notificationIntent.putExtra(EVENT_NAME, eventName);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, eventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarmManager.set(AlarmManager.RTC_WAKEUP, calendarCache.getTimeInMillis(), pendingNotificationIntent);
+		}
+		
+		UtilityMethods.setToDayStart(calendarCache);
+		values.put(KEY_PLANNED_AMOUNT_OF_DRINKS, plannedDrinks - 1);
+		if (startTimeAnswer != 0) {
+			values.put(KEY_START_TIME_ANSWER, startTimeAnswer);
+		}
+		if (endTimeAnswer != 0) {
+			switch (endTimeAnswer) {
+				case 1: 
+					calendarCache.set(Calendar.HOUR_OF_DAY, 21);
+					break;
+				case 2:
+					calendarCache.set(Calendar.HOUR_OF_DAY, 23);
+					calendarCache.set(Calendar.MINUTE, 59);
+					break;
+				case 3:
+					calendarCache.add(Calendar.DATE, 1);
+					calendarCache.set(Calendar.HOUR_OF_DAY, 2);
+					break;
+			}
+			values.put(KEY_END_TIME, calendarCache.getTimeInMillis());
+			values.put(KEY_END_TIME_ANSWER, endTimeAnswer);
+		}
+		if (withWhoAnswer != 0) {
+			values.put(KEY_WITH_WHO, withWhoAnswer);
+		}
+		mDb.update(TABLE_NAME_EVENTS, values, KEY_EVENT_ID + " = " + eventId, null);
+		close();
 	}
 	
 	

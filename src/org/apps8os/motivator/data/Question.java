@@ -68,8 +68,15 @@ public class Question implements Parcelable{
 		return mQuestion;
 	}
 
+	/*
+	 * gets the answer with the given number/order, runs from 1 to answer count.
+	 */
 	public String getAnswer(int number) {
 		return mAnswers[number - 1];
+	}
+	
+	public String[] getAnswers() {
+		return mAnswers;
 	}
 	
 	public int getAnswerCount() {

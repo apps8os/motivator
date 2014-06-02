@@ -159,7 +159,7 @@ public class PlanSectionFragment extends Fragment {
 				final LinearLayout eventButton = (LinearLayout) mInflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				String eventName = event.getName();
-				String startTimeAsText = event.getStartTimeAsText();
+				String startTimeAsText = event.getStartTimeAsText(mContext);
 				String eventDateAsText;
 				if ((event.getStartTime() - calendar.getTimeInMillis()) < TimeUnit.MILLISECONDS.convert(2, TimeUnit.DAYS)) {
 					eventDateAsText = getString(R.string.tomorrow);

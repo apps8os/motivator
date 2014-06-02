@@ -59,6 +59,7 @@
 	        style="@style/EventTitleView" />
 	            <TextView
 	                android:id="@+id/event_time_to_go_entry"
+	                android:clickable="true"
 	                style="@style/EventEntryTextView"
 	                android:text="@string/not_defined" />
 
@@ -87,6 +88,7 @@
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_entry"
 			        android:text="@string/not_defined"
+			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_actual"
@@ -112,6 +114,7 @@
 		        <TextView
 			        android:id="@+id/event_end_time_entry"
 			        android:text="@string/not_defined"
+			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_end_time_actual"
@@ -138,6 +141,7 @@
 		        <TextView
 			        android:id="@+id/event_with_who_entry"
 			        android:text="@string/not_defined"
+			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_with_who_actual"
@@ -150,14 +154,31 @@
 
     </ScrollView>
     <include layout="@layout/element_main_activity_button_separator"></include>
-    <Button
-        android:id="@+id/event_detail_cancel_button"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-    	android:layout_weight="1"
-        android:layout_gravity="center"
-        android:text="@string/cancel_event"
-        style="?android:attr/borderlessButtonStyle"
-        android:textColor="@color/dark_gray" />
+    <LinearLayout 
+         android:layout_width="match_parent"
+	     android:layout_height="0dp"
+	     android:orientation="horizontal"
+	   	 android:layout_weight="1"
+	   	 style="?android:attr/buttonBarStyle"
+	   	 android:animateLayoutChanges="true">
+	   <Button
+	       android:id="@+id/event_detail_cancel_button"
+	       android:layout_width="0dp"
+	       android:layout_height="match_parent"
+	   	   android:layout_weight="1"
+	       android:layout_gravity="center"
+	       android:text="@string/cancel_event"
+	       style="?android:attr/borderlessButtonStyle"
+	       android:textColor="@color/dark_gray" />
+	   <Button
+	       android:id="@+id/event_detail_save_changes_button"
+	       android:layout_width="0dp"
+	       android:layout_height="match_parent"
+	   	   android:layout_weight="1"
+	       android:layout_gravity="center"
+	       android:text="@string/save_changes"
+	       style="?android:attr/borderlessButtonStyle"
+	       android:textColor="@color/dark_gray" />
+    </LinearLayout>
 
 </LinearLayout>
