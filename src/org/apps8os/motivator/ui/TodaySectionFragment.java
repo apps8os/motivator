@@ -36,18 +36,16 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +65,8 @@ public class TodaySectionFragment extends Fragment {
 	private Resources mRes;
 	private View mRootView;
 	private LayoutInflater mInflater;
+	private Context mContext;
+	private boolean mNoActiveSprintLayoutVisible = false;
 	private int mDrinkCounter = 0;
 	private int mPlannedDrinks = 0;
 	private int mShowHelpAmount = 1;
@@ -86,9 +86,10 @@ public class TodaySectionFragment extends Fragment {
 		mEventLayout = (LinearLayout) mRootView.findViewById(R.id.today_section_events);
 		// mGoalLayout = (LinearLayout) mRootView.findViewById(R.id.today_section_goals);
 		
-		mDayDataHandler = new DayDataHandler(getActivity());
+		mContext = getActivity();
+		mDayDataHandler = new DayDataHandler(mContext);
 		// mGoalDataHandler = new GoalDataHandler(getActivity());
-		mEventDataHandler = new EventDataHandler(getActivity());
+		mEventDataHandler = new EventDataHandler(mContext);
 		
 		// two buttons that are always present
 		mMoodButton = (LinearLayout) mRootView.findViewById(R.id.main_activity_today_mood_button);
@@ -113,18 +114,33 @@ public class TodaySectionFragment extends Fragment {
 	@Override
 	public void onResume() {
 		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
-		ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
-		TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
+		// ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
+		// TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
 		
 		mDrinkCounter = mDayDataHandler.getDrinksForDay(System.currentTimeMillis());
 		mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
 		
+		/** Sprint progress layout, commented out for now
 		sprintProgress.setMax(currentSprint.getDaysInSprint() -1);
 		sprintProgress.setProgress(currentSprint.getCurrentDayOfTheSprint());
 		sprintTextView.setText(Html.fromHtml(getString(R.string.day) + " " + currentSprint.getCurrentDayOfTheSprint() + "/" + currentSprint.getDaysInSprint()));
+		**/
 		
-		if (currentSprint.isOver()) {
-			mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+		if (currentSprint.isOver() && !mNoActiveSprintLayoutVisible) {
+			if (mRootView.findViewById(R.id.no_sprint_overlay) == null) {
+				mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+				((Button) mRootView.findViewById(R.id.start_new_sprint)).setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(mContext, StartingSprintActivity.class);
+						startActivity(intent);
+					}
+					
+				});
+			} else {
+				mRootView.findViewById(R.id.no_sprint_overlay).setVisibility(View.VISIBLE);
+			}
+			mNoActiveSprintLayoutVisible = true;
 		}
 		new LoadPlansTask(getActivity()).execute();
 		// new LoadGoalsTask().execute();

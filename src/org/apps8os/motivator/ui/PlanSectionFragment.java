@@ -41,6 +41,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +60,7 @@ public class PlanSectionFragment extends Fragment {
 	private LinearLayout mEventLayout;
 	private LayoutInflater mInflater;
 	private View mRootView;
+	private boolean mNoActiveSprintLayoutVisible = false;
 	
 	public PlanSectionFragment() {
 	}
@@ -109,11 +111,23 @@ public class PlanSectionFragment extends Fragment {
 	public void onResume() {
 		new LoadPlansTask(getActivity()).execute();
 		Sprint currentSprint = getArguments().getParcelable(Sprint.CURRENT_SPRINT);
-		if (currentSprint.isOver()) {
+		if (currentSprint.isOver() && !mNoActiveSprintLayoutVisible) {
+			final Context context = getActivity();
 			mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+			((LinearLayout) mRootView.findViewById(R.id.no_sprint_overlay_textlayout)).setBackgroundResource(R.color.actionbar_blue);
+			((Button) mRootView.findViewById(R.id.start_new_sprint)).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(context, StartingSprintActivity.class);
+					startActivity(intent);
+				}
+				
+			});
+			mNoActiveSprintLayoutVisible = true;
 		}
 		super.onResume();
 	}
+	
 	
 	/**
 	 * Inner class for loading the plans to the plan section asynchronously.

@@ -574,8 +574,12 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		String columns[] = {KEY_TIMESTAMP};
 		Cursor query = mDb.query(TABLE_NAME_EVENTS, columns, null, null, null, null, KEY_TIMESTAMP);
 		if (query.moveToLast()) {
-			return query.getLong(0);
+			long result = query.getLong(0);
+			query.close();
+			close();
+			return result;
 		} else {
+			close();
 			return 0L;
 		}
 	}

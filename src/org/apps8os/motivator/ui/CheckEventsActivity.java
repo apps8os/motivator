@@ -60,7 +60,7 @@ public class CheckEventsActivity extends Activity {
 	    
 	    mEvents = getIntent().getExtras().getParcelableArrayList(MotivatorEvent.YESTERDAYS_EVENTS);
 	    mEventDataHandler = new EventDataHandler(this);
-		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_blue));
+		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.action_bar_orange));
 		
 	    mViewPager = (ViewPager) findViewById(R.id.question_activity_pager);
 	    mEventsPagerAdapter = new EventsPagerAdapter(
@@ -122,6 +122,7 @@ public class CheckEventsActivity extends Activity {
 		previousButton.setEnabled(false);
 		
 		LinePageIndicator titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
+		titleIndicator.setSelectedColor(getResources().getColor(R.color.actionbar_orange));
 		titleIndicator.setViewPager(mViewPager);
 		
 		// Set up a page change listener to enable and disable buttons.

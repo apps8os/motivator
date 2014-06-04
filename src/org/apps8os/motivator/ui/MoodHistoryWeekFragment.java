@@ -248,7 +248,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 					p = new LinePoint();
 					p2 = new LinePoint();
 				}
-				l.setColor(mRes.getColor(R.color.purple));
+				l.setColor(mRes.getColor(R.color.dark_purple));
 				l2.setColor(mRes.getColor(R.color.orange));
 				mLineGraph.addLine(l2);
 				mLineGraph.addLine(l);
@@ -280,7 +280,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 					p = new LinePoint();
 					p2 = new LinePoint();
 				}
-				l2.setColor(mRes.getColor(R.color.purple));
+				l2.setColor(mRes.getColor(R.color.dark_purple));
 				mLineGraph.addLine(l);
 				mLineGraph.setRangeY(0, 5);
 				mLineGraph.setLineToFill(0);

@@ -4,20 +4,46 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/gray_transparent"
+    android:background="@color/white_transparent"
     android:clickable="true" >
 
+    <LinearLayout
+        android:id="@+id/no_sprint_overlay_textlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="48dp"
+        android:paddingTop="14dp"
+	    android:paddingLeft="20dp"
+	    android:paddingRight="20dp"
+	    android:paddingBottom="14dp"
+        android:background="@color/actionbar_green" >
     <TextView
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_active_sprint"
-        android:layout_gravity="center"
-        android:layout_marginTop="48dp"
+        android:text="@string/completed_sprint"
+        android:gravity="center"
         android:textColor="@color/white"
-        android:padding="8dp"
-        android:background="@color/medium_gray"
-        style="@style/CardSeparatorTitle"
+        android:layout_marginBottom="24dp"
         android:textSize="20sp" />
+    <include layout="@layout/element_card_inner_separator_horizontal"
+	        android:background="@color/white_transparent"/>
+    
+   <Button
+        android:id="@+id/start_new_sprint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_a_new_sprint"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        style="?android:attr/borderlessButtonStyle"
+         />
+    
+    <include layout="@layout/element_card_inner_separator_horizontal"
+	        android:background="@color/white_transparent"/>
+    </LinearLayout>
 
 </LinearLayout>

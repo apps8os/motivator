@@ -33,9 +33,9 @@
          	android:id="@+id/event_title"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-            android:gravity="left|bottom"
+            android:gravity="center|bottom"
             android:fontFamily="sans-serif-light"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/actionbar_orange"
             android:text="@string/how_did_the_event_go"
             android:textSize="25sp" />
 	</LinearLayout>
@@ -52,26 +52,28 @@
 		        android:text=""
 		        android:layout_width="match_parent"
 		   		android:layout_height="wrap_content"
-		        android:gravity="left|top"
+		        android:gravity="center|top"
 		        style="?android:attr/textAppearanceMedium"
-		        android:textColor="@color/dark_blue"
-		        android:layout_marginLeft="30dp"
-		        android:layout_marginBottom="8dp"/>
+		        android:textColor="@color/actionbar_orange"
+		        android:layout_marginBottom="8dp"
+		        />
 		    
 		    <TextView
 		        android:id="@+id/amount_of_drinks_yesterday"
 		        android:text=""
 		        android:layout_width="match_parent"
 		   		android:layout_height="wrap_content"
+		   		android:textColor="@color/dark_gray"
 		   		android:textStyle="bold"
 		        android:gravity="center"
-		        android:layout_marginBottom="12dp"/>
+		        android:layout_marginBottom="20dp"/>
 		    
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal"
-			    android:layout_marginBottom="8dp">
+			    android:layout_marginBottom="14dp"
+			    android:layout_marginRight="6dp">
 		        <TextView
 			        android:text="@string/amount_of_drinks"
 			        android:layout_width="0dp"
@@ -80,20 +82,21 @@
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
 			        android:fontFamily="sans-serif-condensed"
-			        android:textColor="@color/medium_gray"
-			        android:layout_marginRight="10dp"/>
+			        style="@style/CheckEventTitleView"/>
 
 		        <Spinner
 		            android:id="@+id/planned_drinks_spinner"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
-		            android:layout_weight="2" />
+		            android:layout_weight="2"
+		             />
 		    </LinearLayout>
 		    <LinearLayout 
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal"
-			    android:layout_marginBottom="8dp">
+			    android:layout_marginBottom="14dp"
+			    android:layout_marginRight="6dp">
 		        <TextView
 			        android:text="@string/when_to_go"
 			        android:layout_width="0dp"
@@ -102,8 +105,7 @@
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
 			        android:fontFamily="sans-serif-condensed"
-			        android:textColor="@color/medium_gray"
-			        android:layout_marginRight="10dp"/>
+			        style="@style/CheckEventTitleView"/>
 
 		        <Spinner
 		            android:id="@+id/start_time_spinner"
@@ -115,7 +117,8 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal"
-			    android:layout_marginBottom="8dp">
+			    android:layout_marginBottom="14dp"
+			    android:layout_marginRight="6dp">
 		        <TextView
 			        android:text="@string/end_time"
 			        android:layout_width="0dp"
@@ -124,8 +127,7 @@
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
 			        android:fontFamily="sans-serif-condensed"
-			        android:textColor="@color/medium_gray"
-			        android:layout_marginRight="10dp"/>
+			        style="@style/CheckEventTitleView"/>
 
 		        <Spinner
 		            android:id="@+id/end_time_spinner"
@@ -137,7 +139,8 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:orientation="horizontal"
-			    android:layout_marginBottom="8dp">
+			    android:layout_marginBottom="14dp"
+			    android:layout_marginRight="6dp">
 		        <TextView
 			        android:text="@string/with_who"
 			        android:layout_width="0dp"
@@ -146,8 +149,7 @@
 			        android:layout_gravity="center"
 			        android:gravity="center|right"
 			        android:fontFamily="sans-serif-condensed"
-			        android:textColor="@color/medium_gray"
-			        android:layout_marginRight="10dp"/>
+			        style="@style/CheckEventTitleView"/>
 
 		        <Spinner
 		            android:id="@+id/with_who_spinner"

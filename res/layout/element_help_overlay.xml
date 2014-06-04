@@ -62,6 +62,7 @@
 	        android:text="@string/next"
 	        android:textColor="@color/white"
 	        android:textStyle="bold"
+	        android:textAllCaps="true"
 	        style="?android:attr/borderlessButtonStyle"
 	         />
 	    <include layout="@layout/element_card_inner_separator_horizontal"

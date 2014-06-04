@@ -36,6 +36,7 @@
     <color name="red_transparent">#80ff4444</color>
     <color name="black_transparent">#80000000</color>
     <color name="gray_transparent">#80808080</color>
+    <color name="lightgray_transparent">#40808080</color>
     <color name="actionbar_text">#000000</color>
     <color name="actionbar_blue">#0099ff</color>
     <color name="actionbar_green">#00cc66</color>

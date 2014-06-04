@@ -51,15 +51,15 @@
 	    <include layout="@layout/element_card_inner_separator_horizontal"/>
 	    
 	    <LinearLayout 
-	        style="@style/EventQuestionLayout">
+	        style="@style/EventQuestionLayout"
+	        android:id="@+id/event_time_to_go">
 	        <TextView
-	        android:id="@+id/event_time_to_go"
+	        android:id="@+id/event_time_to_go_title"
 	        android:text="@string/when_to_go"
 	        android:fontFamily="sans-serif-condensed"
 	        style="@style/EventTitleView" />
 	            <TextView
 	                android:id="@+id/event_time_to_go_entry"
-	                android:clickable="true"
 	                style="@style/EventEntryTextView"
 	                android:text="@string/not_defined" />
 
@@ -78,17 +78,17 @@
 	        android:layout_marginRight="24dp"/>
 	    
 	    <LinearLayout 
-	        style="@style/EventQuestionLayout">
+	        style="@style/EventQuestionLayout"
+	        android:id="@+id/event_amount_of_drinks">
 	        
 	        <TextView
-	        android:id="@+id/event_amount_of_drinks"
+	        android:id="@+id/event_amount_of_drinks_title"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/amount_of_drinks"
 	        style="@style/EventTitleView" />
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_entry"
 			        android:text="@string/not_defined"
-			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_amount_of_drinks_actual"
@@ -104,17 +104,17 @@
 	        android:layout_marginRight="24dp"/>
 	     
 	    <LinearLayout 
-	        style="@style/EventQuestionLayout">
+	        style="@style/EventQuestionLayout"
+	        android:id="@+id/event_end_time">
 	        
 	        <TextView
-	        android:id="@+id/event_end_time"
+	        android:id="@+id/event_end_time_title"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/end_time"
 	        style="@style/EventTitleView" />
 		        <TextView
 			        android:id="@+id/event_end_time_entry"
 			        android:text="@string/not_defined"
-			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_end_time_actual"
@@ -130,10 +130,11 @@
 	        android:layout_marginRight="24dp"/>
 	    
 	    <LinearLayout 
-	        style="@style/EventQuestionLayout">
+	        style="@style/EventQuestionLayout"
+	        android:id="@+id/event_with_who">
 	        
 	        <TextView
-	        android:id="@+id/event_with_who"
+	        android:id="@+id/event_with_who_title"
 	        android:fontFamily="sans-serif-condensed"
 	        android:text="@string/with_who"
 	        style="@style/EventTitleView" />
@@ -141,7 +142,6 @@
 		        <TextView
 			        android:id="@+id/event_with_who_entry"
 			        android:text="@string/not_defined"
-			        android:clickable="true"
 			        style="@style/EventEntryTextView" />
 		        <TextView
 			        android:id="@+id/event_with_who_actual"
@@ -177,8 +177,8 @@
 	   	   android:layout_weight="1"
 	       android:layout_gravity="center"
 	       android:text="@string/save_changes"
-	       style="?android:attr/borderlessButtonStyle"
-	       android:textColor="@color/dark_gray" />
+	       android:textColor="@color/purple"
+	       style="?android:attr/borderlessButtonStyle" />
     </LinearLayout>
 
 </LinearLayout>

@@ -184,6 +184,10 @@ public class MainActivity extends Activity {
 		
 		if (mCurrentSprint == null) {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
+			mActionBar.setTitle(getString(R.string.app_name));
+			mActionBar.setSubtitle(getString(R.string.no_active_sprint));
+			/** Dialog for asking to start a new sprint, redundant with the inflated no active sprint layout on the today and plan
+			 * fragments
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(getString(R.string.no_active_sprint))
 				.setMessage(getString(R.string.start_a_new_sprint))
@@ -201,6 +205,7 @@ public class MainActivity extends Activity {
 			});
 			Dialog dialog = builder.create();
 			dialog.show();
+			**/
 			
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());

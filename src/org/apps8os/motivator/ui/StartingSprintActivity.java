@@ -17,7 +17,6 @@
 package org.apps8os.motivator.ui;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.Sprint;
@@ -55,7 +54,7 @@ public class StartingSprintActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				long startDayInMillis = UtilityMethods.setToDayStart(new GregorianCalendar()).getTimeInMillis();
+				long startDayInMillis = UtilityMethods.setToDayStart(Calendar.getInstance()).getTimeInMillis();
 				EditText numberOfDays = (EditText) findViewById(R.id.number_of_days_edit);
 				EditText sprintTitle = (EditText) findViewById(R.id.name_of_sprint_edit);
 				SprintDataHandler mDataHandler = new SprintDataHandler(activity);
@@ -67,6 +66,8 @@ public class StartingSprintActivity extends Activity {
 				editor.commit();
 				
 				Intent intent = new Intent(activity, MainActivity.class);
+				// Clear the back stack to avoid weird behavior after the user starts a new sprint.
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); 
 				startActivity(intent);
 				
 				Calendar notificationTime = Calendar.getInstance();

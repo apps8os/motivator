@@ -18,7 +18,6 @@ package org.apps8os.motivator.data;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -117,8 +116,16 @@ public class Sprint implements Parcelable {
 		return (int) TimeUnit.DAYS.convert(mEndTime - mStartTime, TimeUnit.MILLISECONDS);
 	}
 	
+	/**
+	 * Determines whether the sprint is over
+	 * @return
+	 */
 	public boolean isOver() {
 		return (mEndTime < System.currentTimeMillis());
+	}
+	
+	public boolean endedYesterday() {
+		return ((System.currentTimeMillis() - mEndTime) > 0 && (System.currentTimeMillis() - mEndTime) < TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 	}
 
 	/**

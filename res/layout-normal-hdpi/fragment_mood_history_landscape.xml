@@ -64,7 +64,7 @@
 	        android:ellipsize="end"
 	        android:textAllCaps="true"
 	        android:orientation="vertical"
-	        android:textColor="@color/purple"
+	        android:textColor="@color/dark_purple"
 	        android:text="@string/actual_hyphen"/>
 	    </LinearLayout>
 	    <include layout="@layout/element_main_activity_button_separator"/>
@@ -116,7 +116,7 @@
 	        android:layout_weight="1"
 	        android:id="@+id/mood_history_weekview"
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent"
+	        android:layout_height="0dp"
 	        android:layout_marginRight="2dp"
 	        android:layout_marginTop="2dp"
 	        android:layout_marginLeft="2dp" >

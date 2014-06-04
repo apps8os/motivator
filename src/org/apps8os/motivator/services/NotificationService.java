@@ -27,6 +27,7 @@ import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.ui.EventDetailsActivity;
+import org.apps8os.motivator.ui.MainActivity;
 import org.apps8os.motivator.ui.MoodQuestionActivity;
 import org.apps8os.motivator.ui.SettingsActivity;
 
@@ -53,7 +54,8 @@ public class NotificationService extends IntentService {
 		super("Notification Service");
 	}
 
-	public final static int NOTIFICATION_ID_MOOD = 10;
+	public final static int NOTIFICATION_ID_MOOD = 100000;
+	public final static int NOTIFICATION_ID_SPRINT_ENDED = 100001;
 	public final static String NOTIFICATION_TYPE = "notification_type";
 	public final static int NOTIFICATION_MOOD = 100;
 	public final static int NOTIFICATION_EVENT_START = 101;
@@ -71,17 +73,32 @@ public class NotificationService extends IntentService {
 			int notificationType = extras.getInt(NOTIFICATION_TYPE);
 			if (notificationType == NOTIFICATION_MOOD) {
 				manager.cancelAll();
-				builder.setContentTitle(getString(R.string.today_screen_mood));
 				
 				SprintDataHandler dataHandler = new SprintDataHandler(this);
 				Sprint currentSprint = dataHandler.getCurrentSprint();
 				AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 				// If there is no current sprint, cancel alarms.
 				if (currentSprint == null) {
+					Sprint latestEndedSprint = dataHandler.getLatestEndedSprint();
+					if (latestEndedSprint != null) {
+						if (latestEndedSprint.endedYesterday()) {
+							builder.setContentTitle(getString(R.string.completed_sprint));
+							builder.setSmallIcon(R.drawable.ic_stat_notification_icon_1);
+							builder.setAutoCancel(true);
+							Intent resultIntent = new Intent(this, MainActivity.class);
+							TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+							stackBuilder.addParentStack(MainActivity.class);
+							stackBuilder.addNextIntent(resultIntent);
+							PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+							builder.setContentIntent(pendingResultIntent);
+							manager.notify(NOTIFICATION_ID_SPRINT_ENDED, builder.build());
+						}
+					} 
 					Intent notificationIntent = new Intent(this, NotificationService.class);
 					PendingIntent pendingNotificationIntent = PendingIntent.getService(this,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 					alarmManager.cancel(pendingNotificationIntent);
 				} else {
+					builder.setContentTitle(getString(R.string.today_screen_mood));
 					int currentDateInSprint = currentSprint.getCurrentDayOfTheSprint();
 					
 					builder.setSmallIcon(R.drawable.ic_stat_notification_icon_1);

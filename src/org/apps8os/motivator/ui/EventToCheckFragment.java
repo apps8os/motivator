@@ -94,6 +94,8 @@ public class EventToCheckFragment extends Fragment {
 		
 		if (mEvent.getName().length() > 0) {
 			((TextView) rootView.findViewById(R.id.name)).setText(mEvent.getName());
+		} else {
+			((TextView) rootView.findViewById(R.id.name)).setVisibility(View.GONE);
 		}
 		return rootView;
 	}
