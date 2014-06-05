@@ -169,4 +169,5 @@
 	<string name="start_a_new_sprint">Start a new sprint</string>
 	<string name="current_sprint_will_end">Current sprint will be ended</string>
 	<string name="save_changes">Save</string>
+	<string name="showing_last_ended">Showing latest ended sprint</string>
 </resources>

@@ -143,9 +143,9 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     }
     
     /**
-     * Used to get a DayInHistory representing the day given as milliseconds.
+     * Used to get a day in history that has recorded moods.
      * @param dayInMillis
-     * @return
+     * @return DayInHistory object, if the day has no recorded moods, returns null
      */
     public DayInHistory getDayInHistoryWithMoods(long dayInMillis) {
     	open();

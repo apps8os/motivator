@@ -24,6 +24,7 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
+import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 
@@ -37,11 +38,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -50,6 +53,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents a activity where the user can view the average moods in relation to other data.
@@ -189,7 +193,7 @@ public class MoodRelationHistoryActivity extends Activity {
 					mCaseSelector = ALL;
 					threeAmount.setSelected(false);
 				} else {
-					mArgument = 3;
+					mArgument = 4;
 					mCaseSelector = AMOUNT_OF_DRINKS;
 					threeAmount.setSelected(true);
 				}
@@ -234,8 +238,30 @@ public class MoodRelationHistoryActivity extends Activity {
 		for (DayInHistory day : days) {
 			if (selector == ALL) {
 				allMoods.addAll(day.getMoods());
-			} else if (selector == AMOUNT_OF_DRINKS && mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) == argument) {
-				allMoods.addAll(day.getMoods());
+				
+			} else {
+				
+				int drinksYesterday = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+				DayInHistory yesterday = mDayDataHandler.getDayInHistory(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+				yesterday.setEvents();
+				int checkedDrinks = 0;
+				ArrayList<MotivatorEvent> checkedEvents = yesterday.getCheckedEvents(this);
+				for (MotivatorEvent event: checkedEvents) {
+					checkedDrinks += event.getPlannedDrinks();
+				}
+				
+				if (checkedDrinks > 4) {
+					checkedDrinks = 4;
+				}
+				
+				if (checkedDrinks > drinksYesterday) {
+					drinksYesterday = checkedDrinks;
+				}
+			    if (selector == AMOUNT_OF_DRINKS && drinksYesterday  == argument) {
+					allMoods.addAll(day.getMoods());
+				} else if (selector == AMOUNT_OF_DRINKS && argument == 2 && drinksYesterday == 3) {
+					allMoods.addAll(day.getMoods());
+				}
 			}
 		}
 		int avgMood = 0;
@@ -299,6 +325,18 @@ public class MoodRelationHistoryActivity extends Activity {
 			
 			else if (itemPosition == 3) {
 				Sprint current = mSprintDataHandler.getCurrentSprint();
+				if (current == null) {
+					current = mSprintDataHandler.getLatestEndedSprint();
+					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(getString(R.string.no_active_sprint) + ". " + getString(R.string.showing_last_ended));
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast questionnaireDone = new Toast(getApplicationContext());
+					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
+					questionnaireDone.setView(toastLayout);
+					questionnaireDone.show();
+				}
 				mFromTimeInMillis = current.getStartTime();
 				mAmountOfDays = current.getCurrentDayOfTheSprint();
 				mDays = mDayDataHandler.getDaysWithMoodsAfter(mFromTimeInMillis, mAmountOfDays);
@@ -325,6 +363,7 @@ public class MoodRelationHistoryActivity extends Activity {
 		    startDate.setMaxDate(System.currentTimeMillis());
 		    startDate.setMinDate(mSprintDataHandler.getFirstSprintStart());
 		    endDate.setMaxDate(System.currentTimeMillis());
+		    endDate.setMinDate(mSprintDataHandler.getFirstSprintStart());
 		    
 		    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mContext);
 		    dialogBuilder.setView(timeframePicker);

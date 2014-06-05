@@ -126,7 +126,7 @@ public class NotificationService extends IntentService {
 				    	if (lastAddedEventTimestamp != 0L && System.currentTimeMillis() - lastAddedEventTimestamp > TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)) {
 				    		builder.setContentText("Muistatko, että voit suunnitella tapahtumiasi?");
 				    	} else {
-				    		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + " " + getString(R.string.of_glory));
+				    		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + "/" + currentSprint.getDaysInSprint() + " - " + currentSprint.getSprintTitle());
 				    	}
 				    }
 					// Preserve the normal navigation of the app by adding the parent stack of the result activity

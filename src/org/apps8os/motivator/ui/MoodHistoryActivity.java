@@ -98,6 +98,8 @@ public class MoodHistoryActivity extends Activity {
 	private Calendar mStartDate;
 	private int mSelectedAttribute = DayInHistory.AMOUNT_OF_DRINKS;
 
+	private static long mSprintEndDateInMillis;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -109,6 +111,7 @@ public class MoodHistoryActivity extends Activity {
 	    mCurrentSprint = getIntent().getExtras().getParcelable(Sprint.CURRENT_SPRINT);
 	    mRes = getResources();
 	    mSprintStartDateInMillis = mCurrentSprint.getStartTime();
+	    mSprintEndDateInMillis = mCurrentSprint.getEndTime();
 	    
 	    mDaysInSprint = mCurrentSprint.getDaysInSprint();
 	    ActionBar actionBar = getActionBar();
@@ -293,7 +296,7 @@ public class MoodHistoryActivity extends Activity {
 	public static class DatePickerFragment extends DialogFragment
 		    implements DatePickerDialog.OnDateSetListener {
 		
-		private Calendar mToday = new GregorianCalendar();
+		private Calendar mToday = Calendar.getInstance();
 		
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -305,7 +308,11 @@ public class MoodHistoryActivity extends Activity {
 			DatePickerDialog pickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
 			// Set the minimun and maximum dates based on the sprint and today.
 			pickerDialog.getDatePicker().setMinDate(mSprintStartDateInMillis);
-			pickerDialog.getDatePicker().setMaxDate(mToday.getTimeInMillis());
+			if (mToday.getTimeInMillis() > mSprintEndDateInMillis) {
+				pickerDialog.getDatePicker().setMaxDate(mSprintEndDateInMillis);
+			} else {
+				pickerDialog.getDatePicker().setMaxDate(mToday.getTimeInMillis());
+			}
 			pickerDialog.setTitle(getString(R.string.select_a_day));
 			return pickerDialog;
 		}
