@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.services.NotificationService;
@@ -42,7 +41,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseArray;
 
 /**
- * Handles the access for event data.
+ * Handles the access for event data. Additionally holds the questions asked in adding events.
  * open() before using and close() after done
  * @author Toni Järvinen
  *
@@ -422,6 +421,11 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
+	/**
+	 * Gets the checked event for the given unchecked event id. 
+	 * @param uncheckedEventId
+	 * @return the checked event if there was one, null if not
+	 */
 	public MotivatorEvent getCheckedEvent(int uncheckedEventId) {
 		open();
 		String selection = KEY_EVENT_ID + " = " + uncheckedEventId + " AND " + KEY_EVENT_CHECKED + " = " + EVENT_CHECKED;
@@ -508,6 +512,16 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
+	/**
+	 * Updating the event with the eventId.
+	 * @param eventId
+	 * @param startTimeAnswer
+	 * @param endTimeAnswer
+	 * @param withWhoAnswer
+	 * @param plannedDrinks
+	 * @param startTime
+	 * @param eventName
+	 */
 	public void updateEvent(int eventId, int startTimeAnswer, int endTimeAnswer, int withWhoAnswer, int plannedDrinks, long startTime, String eventName) {
 		open();
 		Calendar calendarCache = Calendar.getInstance();
@@ -568,7 +582,10 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 		close();
 	}
 	
-	
+	/**
+	 * 
+	 * @return timestamp of when the latest event was added
+	 */
 	public long getLatestAddedEventTimestamp() {
 		open();
 		String columns[] = {KEY_TIMESTAMP};

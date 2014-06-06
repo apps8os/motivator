@@ -18,7 +18,6 @@ package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
@@ -30,7 +29,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;

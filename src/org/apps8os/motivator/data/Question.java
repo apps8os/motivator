@@ -95,6 +95,10 @@ public class Question implements Parcelable{
 		dest.writeStringArray(mAnswers);
 	}
 
+	/**
+	 * 
+	 * @return if the question is required. (ie, the user has to answer)
+	 */
 	public boolean isRequired() {
 		return mRequired;
 	}

@@ -150,6 +150,11 @@ public class MotivatorEvent implements Parcelable {
 		return mPlannedDrinks;
 	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public String getPlannedDrinksAsText(Context context) {
 		EventDataHandler dataHandler = new EventDataHandler(context);
 		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
@@ -189,6 +194,11 @@ public class MotivatorEvent implements Parcelable {
 		dest.writeInt(mChecked);
 	}
 
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public String getStartTimeAsText(Context context) {
 		if (mStartTimeAnswer == 0) {
 			return "";
@@ -197,6 +207,10 @@ public class MotivatorEvent implements Parcelable {
 		return dataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_GO).getAnswer(mStartTimeAnswer);
 	}
 	
+	/**
+	 * 
+	 * @param answer
+	 */
 	public void setStartTimeAnswer(int answer) {
 		mStartTimeAnswer = answer;
 	}
@@ -233,12 +247,20 @@ public class MotivatorEvent implements Parcelable {
 		return mEndTimeAnswer;
 	}
 	
+	/**
+	 * Update the event to database.
+	 * @param context
+	 */
 	public void updateToDatabase(Context context) {
 		EventDataHandler dataHandler = new EventDataHandler(context);
 		dataHandler.updateEvent(mId, mStartTimeAnswer, mEndTimeAnswer, mWithWhoAnswer, mPlannedDrinks + 1, mStartTime, mName);
-		
 	}
 	
+	/**
+	 * 
+	 * @param context
+	 * @return
+	 */
 	public String getEndTimeAsText(Context context) {
 		if (mEndTimeAnswer == 0) {
 			return "";

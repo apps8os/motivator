@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Represents an abstract class for database access. Here are implemented generally applicable methods for all tables.
+ * Represents the base class for database access. Here are implemented generally applicable methods for all tables.
  * Subclasses should specially handle the operations specific to a table.
  * @author Toni Järvinen
  *

@@ -124,6 +124,10 @@ public class Sprint implements Parcelable {
 		return (mEndTime < System.currentTimeMillis());
 	}
 	
+	/**
+	 * Used to check if the sprint ended yesterday
+	 * @return
+	 */
 	public boolean endedYesterday() {
 		return ((System.currentTimeMillis() - mEndTime) > 0 && (System.currentTimeMillis() - mEndTime) < TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 	}

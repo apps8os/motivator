@@ -20,22 +20,15 @@ package org.apps8os.motivator.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.DayDataHandler;
+import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 import org.apps8os.motivator.utils.UtilityMethods;
-
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -60,6 +53,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * Represents the mood history of the user. In this activity, the functionality and layout

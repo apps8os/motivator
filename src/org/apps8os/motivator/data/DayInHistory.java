@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 
 import org.apps8os.motivator.utils.UtilityMethods;
 
@@ -149,6 +148,10 @@ public class DayInHistory implements Parcelable{
 		return avgEnergy;
 	}
 	
+	/**
+	 * 
+	 * @return the first recorded mood of the day
+	 */
 	public Mood getFirstMoodOfTheDay() {
 		if (mMoods.size() > 0) {
 			return mMoods.get(0);
@@ -214,6 +217,10 @@ public class DayInHistory implements Parcelable{
 		dest.writeTypedList(mMoods);
 	}
 
+	/**
+	 * All events for the day. Needs to have setEvents() called before.
+	 * @return
+	 */
 	public ArrayList<MotivatorEvent> getEvents() {
 		return mEvents;
 	}
@@ -269,10 +276,17 @@ public class DayInHistory implements Parcelable{
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @return all mooods for the day
+	 */
 	public ArrayList<Mood> getMoods() {
 		return mMoods;
 	}
 
+	/**
+	 * Gets the events for the day and stores them in the DayInHistory obejct.
+	 */
 	public void setEvents() {
 		EventDataHandler eventData = new EventDataHandler(mContext);
 		mEvents = eventData.getUncheckedEventsForDay(mDateInMillis);

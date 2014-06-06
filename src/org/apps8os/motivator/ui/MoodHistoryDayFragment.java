@@ -17,12 +17,10 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
-import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.MotivatorEvent;
 

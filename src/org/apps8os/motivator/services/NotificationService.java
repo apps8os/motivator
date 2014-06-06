@@ -45,6 +45,7 @@ import android.support.v4.app.TaskStackBuilder;
 
 /**
  * Represents a notification service for sending notifications.
+ * Notifications are identified by ids and handled in onHandleIntent.
  * @author Toni Järvinen
  *
  */

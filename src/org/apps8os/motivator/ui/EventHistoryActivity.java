@@ -19,26 +19,18 @@ package org.apps8os.motivator.ui;
 import java.util.ArrayList;
 
 import org.apps8os.motivator.R;
-import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
-import org.apps8os.motivator.ui.MoodHistoryActivity.DatePickerFragment;
 import org.apps8os.motivator.utils.UtilityMethods;
-
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -49,6 +41,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
 public class EventHistoryActivity extends Activity {
 	

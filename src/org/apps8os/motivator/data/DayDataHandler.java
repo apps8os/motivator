@@ -31,7 +31,8 @@ import android.database.Cursor;
 import android.util.SparseArray;
 
 /**
- * Handles the access for event data.
+ * Handles the access for the "Day" data. Mainly focuses on reading the mood data and
+ * creating DayInHistory objects.
  * open() before using and close() after done
  * @author Toni Järvinen
  *
@@ -41,32 +42,11 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 	public static final String NO_COMMENT = "";
 	
 	private static final String TABLE_NAME_MOOD = TABLE_NAME_MOOD_LEVELS;
-	
-	private SparseArray<Question> mQuestions;
 	private Context mContext;
 	
 	public DayDataHandler(Context context) {
 		super(context);
 		mContext = context;
-		
-		mQuestions = new SparseArray<Question>();
-		Resources res = context.getResources();
-		// Inserting the questions to the SpareArrays.
-		String[] moodQuestionIds =  res.getStringArray(R.array.mood_question_ids);
-		String[] requiredQuestionIds = res.getStringArray(R.array.mood_required_ids);
-		boolean required;
-		String[] questionAndAnswers;
-		int id;
-		for (int i = 0; i < moodQuestionIds.length; i++) {
-			required = Arrays.asList(requiredQuestionIds).contains(moodQuestionIds[i]);
-			// String array of questions
-			questionAndAnswers = res.getStringArray(res.getIdentifier(moodQuestionIds[i], "array", context.getPackageName()));
-			// discard the "id" part of the question id
-			id = Integer.parseInt(moodQuestionIds[i].substring(2));
-			// Creation of new Question object and inserting it to the array.
-			Question question = new Question(id, questionAndAnswers[0], Arrays.copyOfRange(questionAndAnswers, 1, questionAndAnswers.length), required);
-			mQuestions.put(id, question);
-		}
 	}
 	
     /**
@@ -303,20 +283,6 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 		
 		super.deleteLastRow(TABLE_NAME_DRINKS);
 		close();
-	}
-    
-
-	public Question getQuestion(int id) {
-		return mQuestions.get(id);
-	}
-	
-
-	public int getAmountOfQuestions() {
-		return mQuestions.size();
-	}
-
-	public int getFirstQuestionId() {
-		return mQuestions.keyAt(0);
 	}
 	
 }

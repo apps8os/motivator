@@ -49,7 +49,6 @@ import android.widget.Toast;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionItemTarget;
-import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 import com.viewpagerindicator.LinePageIndicator;
 
 /**
