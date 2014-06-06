@@ -331,10 +331,10 @@ public class MoodRelationHistoryActivity extends Activity {
 					toastText.setText(getString(R.string.no_active_sprint) + ". " + getString(R.string.showing_last_ended));
 					toastText.setTextColor(Color.WHITE);
 					
-					Toast questionnaireDone = new Toast(getApplicationContext());
-					questionnaireDone.setDuration(Toast.LENGTH_SHORT);
-					questionnaireDone.setView(toastLayout);
-					questionnaireDone.show();
+					Toast noActiveSprint = new Toast(getApplicationContext());
+					noActiveSprint.setDuration(Toast.LENGTH_SHORT);
+					noActiveSprint.setView(toastLayout);
+					noActiveSprint.show();
 				}
 				mFromTimeInMillis = current.getStartTime();
 				mAmountOfDays = current.getCurrentDayOfTheSprint();

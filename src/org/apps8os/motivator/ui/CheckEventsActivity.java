@@ -105,10 +105,10 @@ public class CheckEventsActivity extends Activity {
 				toastText.setTextColor(Color.WHITE);
 				
 				
-				Toast questionnaireDone = new Toast(getApplicationContext());
-				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
-				questionnaireDone.setView(toastLayout);
-				questionnaireDone.show();
+				Toast planChecked = new Toast(getApplicationContext());
+				planChecked.setDuration(Toast.LENGTH_SHORT);
+				planChecked.setView(toastLayout);
+				planChecked.show();
 				
 				finish();
 			}

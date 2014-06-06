@@ -195,10 +195,10 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 				toastText.setText(getString(R.string.event_added));
 				toastText.setTextColor(Color.WHITE);
 				
-				Toast questionnaireDone = new Toast(getApplicationContext());
-				questionnaireDone.setDuration(Toast.LENGTH_SHORT);
-				questionnaireDone.setView(toastLayout);
-				questionnaireDone.show();
+				Toast eventAdded = new Toast(getApplicationContext());
+				eventAdded.setDuration(Toast.LENGTH_SHORT);
+				eventAdded.setView(toastLayout);
+				eventAdded.show();
 				
 				//Add a flag for which section the event was added to.
 				SharedPreferences motivatorPrefs = getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);

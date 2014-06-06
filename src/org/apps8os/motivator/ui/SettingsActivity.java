@@ -48,6 +48,8 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 	    getFragmentManager().beginTransaction()
         .replace(android.R.id.content, new SettingsFragment())
         .commit();
+	    
+	    
 	}
 	
 	@Override

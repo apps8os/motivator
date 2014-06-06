@@ -170,4 +170,8 @@
 	<string name="current_sprint_will_end">Nykyinen jakso lopetetaan.</string>
 	<string name="save_changes">Tallenna</string>
 	<string name="showing_last_ended">Näytetään viimeisin päättynyt jakso</string>
+	<string name="delete_all_data">Poista kaikki data</string>
+	<string name="delete_all_data_summary">Poistaa kaiken lisäämäsi tiedon</string>
+	<string name="delete_all_data_warning">Tämä poistaa kaiken lisäämäsi datan. Oletko varma, että haluat poistaa kaiken tiedon?</string>
+	<string name="all_data_deleted">Kaikki tiedot poistettu</string>
 </resources>

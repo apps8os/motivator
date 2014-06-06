@@ -151,7 +151,7 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 	}
 	
 	/**
-	 * Gets the latest sprint that has ended.
+	 * Gets the latest sprint that has ended or null if there are no sprints.
 	 * @return
 	 */
 	public Sprint getLatestEndedSprint() {

@@ -114,7 +114,18 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean isOpen() {
-		return mDb.isOpen();
+		if (mDb != null) {
+			return mDb.isOpen();
+		} else {
+			return false;
+		}
+	}
+	
+	public void deleteAllData(Context context) {
+		if (isOpen()) {
+			mDb.close();
+		}
+		context.deleteDatabase(DATABASE_NAME);
 	}
 	
 	/**

@@ -170,4 +170,8 @@
 	<string name="current_sprint_will_end">Current sprint will be ended</string>
 	<string name="save_changes">Save</string>
 	<string name="showing_last_ended">Showing latest ended sprint</string>
+	<string name="delete_all_data">Delete all data</string>
+	<string name="delete_all_data_summary">Deletes all data you have added</string>
+	<string name="delete_all_data_warning">This will delete all data you have added. Are you sure you want to delete all data?</string>
+	<string name="all_data_deleted">All data deleted</string>
 </resources>

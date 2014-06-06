@@ -212,10 +212,10 @@ public class TodaySectionFragment extends Fragment {
 							toastText.setText("Hyvä! Pidä hauskaa.");
 							toastText.setTextColor(Color.WHITE);
 							
-							Toast canceled = new Toast(context);
-							canceled.setDuration(Toast.LENGTH_SHORT);
-							canceled.setView(toastLayout);
-							canceled.show();
+							Toast moodToast = new Toast(context);
+							moodToast.setDuration(Toast.LENGTH_SHORT);
+							moodToast.setView(toastLayout);
+							moodToast.show();
 						}
 					}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
 						@Override
@@ -234,10 +234,10 @@ public class TodaySectionFragment extends Fragment {
 									toastText.setText(getString(R.string.questionnaire_done_toast_bad_mood));
 									toastText.setTextColor(Color.WHITE);
 									
-									Toast canceled = new Toast(context);
-									canceled.setDuration(Toast.LENGTH_SHORT);
-									canceled.setView(toastLayout);
-									canceled.show();
+									Toast moodToast = new Toast(context);
+									moodToast.setDuration(Toast.LENGTH_SHORT);
+									moodToast.setView(toastLayout);
+									moodToast.show();
 								}
 							});
 							Dialog helpDialog = builder.create();

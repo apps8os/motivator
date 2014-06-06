@@ -182,6 +182,12 @@ public class MainActivity extends Activity {
 		
 		if (mCurrentSprint == null) {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
+			
+			if (mCurrentSprint == null) {
+				Intent intent = new Intent(this, StartGuideActivity.class);
+				startActivity(intent);
+				finish();
+			}
 			mActionBar.setTitle(getString(R.string.app_name));
 			mActionBar.setSubtitle(getString(R.string.no_active_sprint));
 			/** Dialog for asking to start a new sprint, redundant with the inflated no active sprint layout on the today and plan
