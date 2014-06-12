@@ -295,6 +295,9 @@ public class MainActivity extends Activity {
 		case R.id.action_show_help:
 			showHelp();
 			return true;
+		case R.id.action_info:
+			intent = new Intent(this, InfoActivity.class);
+			startActivity(intent);
 		}
 		return super.onOptionsItemSelected(item);
 	}

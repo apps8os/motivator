@@ -27,6 +27,7 @@ import org.apps8os.motivator.data.MotivatorEvent;
 import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,7 +103,12 @@ public class MoodHistoryDayFragment extends Fragment {
 			energyImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("energy" + firstMoodOfTheDay.getEnergy(), "drawable", getActivity().getPackageName())));
 			moodImage.setImageDrawable(mRes.getDrawable(mRes.getIdentifier("mood" + firstMoodOfTheDay.getMood(), "drawable", getActivity().getPackageName())));
 			final String comment = firstMoodOfTheDay.getComment();
-			commentView.setText("\"" + comment + "\"");
+			if (comment.length() > 0) {
+				commentView.setText("\"" + comment + "\"");
+			} else {
+				commentView.setText(Html.fromHtml(getString(R.string.energy) + ": " + getString(Mood.ENERGY_TITLES[firstMoodOfTheDay.getEnergy() - 1])
+						+ "<br>" + getString(R.string.mood) + ": " + getString(Mood.MOOD_TITLES[firstMoodOfTheDay.getMood() - 1])));
+			}
 		}
 		
 		loadMoods((LinearLayout) rootView.findViewById(R.id.mood_history_day_moodlist));

@@ -56,6 +56,7 @@ public class QuestionFragment extends Fragment {
 	private int mXAmount = 0;
 	private String mPreviousX = "X";
 	private Calendar mCalendar;
+	private String mInput;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

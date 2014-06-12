@@ -65,6 +65,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	public static final String KEY_END_TIME = "end_time";
 	public static final String KEY_PLANNED_AMOUNT_OF_DRINKS = "planned_amount_of_drinks";
 	public static final String KEY_WITH_WHO = "with_who";
+	public static final String KEY_WITH_WHO_ANSWER = "with_who";
 	public static final String KEY_START_TIME_ANSWER = "start_time_answer";
 	public static final String KEY_END_TIME_ANSWER = "end_time_answer";
 	public static final String KEY_DAY_ANSWER = "day_time_answer";
@@ -79,7 +80,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			KEY_START_TIME + " INTEGER, " +
 			KEY_END_TIME + " INTEGER, " +
 			KEY_PLANNED_AMOUNT_OF_DRINKS + " INTEGER, " +
-			KEY_WITH_WHO + " INTEGER, " +
+			KEY_WITH_WHO_ANSWER + " INTEGER, " +
 			KEY_START_TIME_ANSWER + " INTEGER, " +
 			KEY_END_TIME_ANSWER + " INTEGER, " +
 			KEY_DAY_ANSWER + " INTEGER, " +

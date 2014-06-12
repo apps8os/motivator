@@ -125,7 +125,7 @@ public class NotificationService extends IntentService {
 				    	EventDataHandler eventHandler = new EventDataHandler(this);
 				    	long lastAddedEventTimestamp = eventHandler.getLatestAddedEventTimestamp();
 				    	if (lastAddedEventTimestamp != 0L && System.currentTimeMillis() - lastAddedEventTimestamp > TimeUnit.MILLISECONDS.convert(7, TimeUnit.DAYS)) {
-				    		builder.setContentText("Muistatko, että voit suunnitella tapahtumiasi?");
+				    		builder.setContentText(getString(R.string.plan_reminder));
 				    	} else {
 				    		builder.setContentText(getString(R.string.today_is_the_day) + " " + currentDateInSprint + "/" + currentSprint.getDaysInSprint() + " - " + currentSprint.getSprintTitle());
 				    	}

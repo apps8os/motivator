@@ -28,7 +28,7 @@
     <string name="title_section3">Suunnittele</string>
     <string name="today_screen_mood">Mikä fiilis?</string>
     <string name="action_info">Info</string>
-    <string name="action_start_sprint">Aloita jakso</string>
+    <string name="action_start_sprint">Aloita uusi jakso</string>
     <string name="next">Seuraava</string>
     <string name="mood_selection_image_view_content">Fiiliksen valitsemiseen kuvat</string>
     <string name="prompt_selection">Valitse vastaus</string>
@@ -149,10 +149,10 @@
 	<string name="for_a_week">viikon ajan</string>
 	<string name="for_two_weeks">kahden viikon ajan</string>
 	<string name="for_four_weeks">neljän viikon ajan</string>
-	<string name="you_have_no_plans">Sinulla ei ole suunniteltuja juomisia.</string>
+	<string name="you_have_no_plans">Sinulla ei ole suunnitelmia.</string>
 	<string name="do_you_want_to_add_event">Haluatko lisätä suunnitelman?</string>
-	<string name="you_went_over_planned_drinks">Lisäsit enemmän juomia kuin olit suunnitellut.</string>
-	<string name="is_everything_ok">Onko kaikki hyvin?</string>
+	<string name="you_went_over_planned_drinks">Olet ottanut enemmän kuin olit suunnitellut.</string>
+	<string name="is_everything_ok">Onko kaikki OK?</string>
 	<string name="your_average_mood">Keskimääräinen fiiliksesi</string>
 	<string name="not_defined">Ei määritelty</string>
 	<string name="first_mood_of_the_next_day">Ensimmäinen fiilis seuraavana päivänä</string>
@@ -174,4 +174,38 @@
 	<string name="delete_all_data_summary">Poistaa kaiken lisäämäsi tiedon</string>
 	<string name="delete_all_data_warning">Tämä poistaa kaiken lisäämäsi datan. Oletko varma, että haluat poistaa kaiken tiedon?</string>
 	<string name="all_data_deleted">Kaikki tiedot poistettu</string>
+	<string name="send_email_to_HDL">Lähetä meille palautetta</string>
+	<string name="send_email_to_HDL_summary">Onko sinulla ehdotuksia sovellukseen tai löysitkö bugeja?</string>
+	<string name="choose_email_client">Valitse sähköpostiohjelma</string>
+	<string name="email_subject">Motivaattori BETA palaute</string>
+	<string name="add_yesterdays_drinks">Merkitse eilisen juomat</string>
+	<string name="give_feedback">Anna palautetta</string>
+	<string name="plan_reminder">Muistathan, että voit suunnitella tapahtumiasi?</string>
+	<string name="you_clicked">Klikkasit</string>
+	<string name="on_this_day">juomaa tänä päivänä</string>
+	<string name="clicked_drinks">klikattua juomaa</string>
+	<string name="realized_planned_drinks">toteutunutta juomaa suunnitelmissa</string>
+	<string name="info_first_section"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pysymään suunnitelmassasi!</p>
+	    Motivaattori ei lähetä mitään informaatiota muille osapuolille. <b>Kaikki datasi on vain Sinulla.</b>
+	    ]]></string>
+    <string name="info_second_section"><![CDATA[
+        Motivaattorin ovat toteuttaneet Helsingin Diakonissalaitos sekä Aalto-yliopiston Tietotekniikan laitos RAY:n tuella.
+        Yhteistyössä mukana on ollut Ehkäisevä päihdetyö EHYT ry.
+	    ]]></string>
+    <string name="info_third_section"><![CDATA[
+        <p>Motivaattori on beta-vaiheessa eli kehitämme sitä vielä eteenpäin. <b>Tähän tarvitsemme Sinun apuasi.</b> </p>
+        Jos Sinulla on ideoita uusista ominaisuuksista, löysit jonkin asian mikä ei toimi, 
+        haluat vain muuten antaa palautetta tai osallistua sovelluksen käytettävyyttä arvioivaan
+        tutkimukseen, voit tehdä sen <b>anonyymisti</b> täältä:
+	    ]]></string>
+	<string name="guide_first_page"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pysymään suunnitelmassasi!</p>
+	    ]]></string>
+	    
+	
 </resources>

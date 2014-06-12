@@ -23,8 +23,7 @@ public class GuidePageFragment extends Fragment{
 		switch (guidePage) {
 		case 0:
 			((TextView) rootView.findViewById(R.id.title)).setText("Tervetuloa!");
-			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml("Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> ja seurata omien <b>suunnitelmiesi</b> toteutumista. " +
-						"Suunnittele itse, mitä aiot tehdä, sovellus auttaa Sinua pitäytymään suunnitelmassasi!"));
+			((TextView) rootView.findViewById(R.id.content)).setText(Html.fromHtml(getString(R.string.guide_first_page)));
 			break;
 		case 1:
 			((TextView) rootView.findViewById(R.id.title)).setText("Motivaattori");

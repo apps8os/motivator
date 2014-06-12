@@ -61,7 +61,7 @@
     <string name="action_attribute_drinking">Amount of drinks</string>
     <string name="action_attribute_moods">Moods</string>
     <string name="action_attribute_all">All</string>
-    <string name="action_start_sprint">Start a sprint</string>
+    <string name="action_start_sprint">Start a new sprint</string>
     <string name="ok">OK</string>
     <string name="in_the_morning">In the morning</string>
     <string name="morning_and_evening">In the morning and evening</string>
@@ -174,4 +174,26 @@
 	<string name="delete_all_data_summary">Deletes all data you have added</string>
 	<string name="delete_all_data_warning">This will delete all data you have added. Are you sure you want to delete all data?</string>
 	<string name="all_data_deleted">All data deleted</string>
+	<string name="send_email_to_HDL">Send us feedback</string>
+	<string name="send_email_to_HDL_summary">Do you have suggestions or bug reports?</string>
+	<string name="choose_email_client">Choose email client</string>
+	<string name="email_subject">Motivator BETA feedback</string>
+	<string name="add_yesterdays_drinks">Add yesterdays dirnks</string>
+	<string name="give_feedback">Give feedback</string>
+	<string name="plan_reminder">Muistathan, että voit suunnitella tapahtumiasi?</string>
+	<string name="you_clicked">You clicked</string>
+	<string name="on_this_day">drinks on this day</string>
+	<string name="clicked_drinks">clicked drinks</string>
+	<string name="realized_planned_drinks">realized drinks in plans</string>
+	<string name="info_first_section"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pitäytymään suunnitelmassasi!</p>
+	    Motivaattori ei lähetä mitään informaatiota muille osapuolille. <b>Kaikki datasi on vain Sinulla.</b>
+	    ]]></string>
+	<string name="guide_first_page"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pitäytymään suunnitelmassasi!</p>
+	    ]]></string>
 </resources>

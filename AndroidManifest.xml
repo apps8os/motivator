@@ -86,6 +86,9 @@
 		        <action android:name="android.intent.action.BOOT_COMPLETED" />
 		    </intent-filter>
             </receiver>
+        <activity 
+            android:name="org.apps8os.motivator.ui.InfoActivity"
+            android:parentActivityName="org.apps8os.motivator.ui.MainActivity"></activity>
     </application>
 
 </manifest>

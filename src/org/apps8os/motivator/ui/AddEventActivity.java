@@ -103,8 +103,8 @@ public class AddEventActivity extends Activity implements QuestionnaireActivityI
 	    getMenuInflater().inflate(R.menu.questions, menu);
 	    new ShowcaseView.Builder(this, true)
 	    .setTarget(new ActionItemTarget(this, R.id.questions_add_comment))
-	    .setContentTitle("Lisää suunnitelmalle nimi")
-	    .setContentText("Täältä voit lisätä suunnitelmallesi nimen, josta tunnistat sen.")
+	    .setContentTitle("Voit lisätä suunnitelmalle nimen, jos haluat")
+	    .setContentText("Klikkaamalla tästä voit lisätä suunnitelmallesi nimen.")
 	    .hideOnTouchOutside()
 	    .setStyle(R.style.ShowcaseView)
 	    .singleShot(ADD_NAME_HELP_ID)

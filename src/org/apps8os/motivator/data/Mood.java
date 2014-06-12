@@ -16,6 +16,7 @@
  ******************************************************************************/
 package org.apps8os.motivator.data;
 
+import org.apps8os.motivator.R;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.Context;
@@ -33,6 +34,18 @@ public class Mood implements Parcelable {
 	private int mEnergy;
 	private long mTimestamp;
 	private String mComment;
+	
+	public static final int[] ENERGY_TITLES = {
+    		R.string.energy_level1, R.string.energy_level2, 
+    		R.string.energy_level3, R.string.energy_level4,
+    		R.string.energy_level5
+    		};
+    
+	public static final int[] MOOD_TITLES = {
+    		R.string.mood_level1, R.string.mood_level2,
+    		R.string.mood_level3, R.string.mood_level4,
+    		R.string.mood_level5
+    		};
 
 	/**
 	 * @return the mComment

@@ -181,7 +181,7 @@ public class EventDetailsActivity extends Activity {
 	    if (mCheckedEvent != null) {
 	    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
 	    	titleView.setPadding((int) (mScale * 21.333), 0, 0, 0);
-	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getPlannedDrinks());
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getPlannedDrinksAsText(this));
 	    	if (mCheckedEvent.getStartTimeAsText(this).length() > 0) {
 	    		((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getStartTimeAsText(this));
 	    	}
@@ -255,8 +255,8 @@ public class EventDetailsActivity extends Activity {
     	// Help view for the editing of an event
     	new ShowcaseView.Builder(this, true)
 		    .setTarget(new ViewTarget(startTimeTextView))
-		    .setContentTitle("Muuta suunnitelmaa")
-		    .setContentText("Kosketa suunnittelmia muuttaaksesi niitä.")
+		    .setContentTitle("Voit muuttaa suunnitelmaasi")
+		    .setContentText("Kosketa kynällä merkittyjä osioita muuttaaksesi niitä.")
 		    .hideOnTouchOutside()
 		    .setStyle(R.style.ShowcaseView)
 		    .singleShot(EDIT_EVENT_HELP)

@@ -40,8 +40,10 @@
     
     <string name="event_question_5">Kenen kanssa menet?</string>
     <string name="event_question_5_answer_1">Yksin</string>
-    <string name="event_question_5_answer_2">Perusporukka</string>
-    <string name="event_question_5_answer_3">Työkavereiden</string>
+    <string name="event_question_5_answer_2">Peruspoppoo</string>
+    <string name="event_question_5_answer_3">Työkaverit</string>
+    <string name="event_question_5_answer_4">Puoliso</string>
+    <string name="event_question_5_answer_5">Muu</string>
  
     <string-array name="event_question_ids">
         <item >id1000</item>

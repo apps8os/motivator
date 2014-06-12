@@ -104,8 +104,8 @@ public class MoodRelationHistoryActivity extends Activity {
 	    
 	    new ShowcaseView.Builder(this, true)
 	    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.SPINNER))
-	    .setContentTitle("Valitse aikajakso")
-	    .setContentText("Täältä voit valita aikajakson, jonka keskimääräisen fiiliksen haluat nähdä.")
+	    .setContentTitle("Täältä voit valita aikajakson")
+	    .setContentText("Klikkaamalla tästä voit valita aikajakson, jonka keskimääräisen fiiliksen haluat nähdä.")
 	    .hideOnTouchOutside()
 	    .setStyle(R.style.ShowcaseView)
 	    .singleShot(SELECT_TIMEFRAME_HELP_ID)

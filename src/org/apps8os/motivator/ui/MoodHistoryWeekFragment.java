@@ -270,6 +270,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 					if (energy == 0) {
 						p.setColor("#777777");
 						p2.setColor("#777777");
+						energy = 3;
+						mood = 3;
 					}
 					p.setY(energy);
 					p2.setY(mood);
@@ -280,7 +282,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 				}
 				l2.setColor(mRes.getColor(R.color.dark_purple));
 				mLineGraph.addLine(l);
-				mLineGraph.setRangeY(0, 5);
+				mLineGraph.setRangeY(1, 5);
 				mLineGraph.setLineToFill(0);
 				mLineGraph.setUsingDips(true);
 				

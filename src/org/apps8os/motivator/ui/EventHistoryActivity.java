@@ -77,8 +77,8 @@ public class EventHistoryActivity extends Activity {
 	    getMenuInflater().inflate(R.menu.event_history, menu);
 	    new ShowcaseView.Builder(this, true)
 	    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.OVERFLOW))
-	    .setContentTitle("Vaihda jaksoa")
-	    .setContentText("Täältä voit vaihtaa jakson jonka suunnitelmat näytetään.")
+	    .setContentTitle("Täältä voit vaihtaa jaksoa")
+	    .setContentText("Klikkaamalla tästä voit valita jakson, jonka suunnitelmat näytetään.")
 	    .hideOnTouchOutside()
 	    .setStyle(R.style.ShowcaseView)
 	    .singleShot(CHANGE_SPRINT_HELP)
@@ -168,7 +168,7 @@ public class EventHistoryActivity extends Activity {
 			// Create buttons for the result set.
 			for (MotivatorEvent event : result) {
 				event.setEventDateAsText(getString(R.string.today));
-				final LinearLayout eventButton = (LinearLayout) inflater.inflate(R.layout.element_main_activity_card_button, mEventLayout, false);
+				final LinearLayout eventButton = (LinearLayout) inflater.inflate(R.layout.element_main_activity_card_button2, mEventLayout, false);
 				LinearLayout buttonTextLayout = (LinearLayout) eventButton.getChildAt(0);
 				final String eventName = event.getName();
 				long eventStartTime = event.getStartTime();
@@ -177,26 +177,30 @@ public class EventHistoryActivity extends Activity {
 				
 				MotivatorEvent checked = mEventDataHandler.getCheckedEvent(event.getId());
 				
+				if (eventName.length() > 0) {
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
+					.setText(UtilityMethods.getDateAsString(eventStartTime, mContext) + ", " + eventName);
+				}
+				
+				if (event.getPlannedDrinks() < 4) {
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+							.setText("\u25A0 " + getString(R.string.planned) + ": " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
+				} else {
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+					.setText("\u25A0 " + getString(R.string.planned) + ": " + event.getPlannedDrinks() + "+" + " " + getString(R.string.drinks));
+				}
 				if (checked != null) {
 					Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
 					((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
 							.setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
-					if (eventName.length() > 0) {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-								.setText(eventName + " \u25A0 " + checked.getPlannedDrinks() + " " + getString(R.string.drinks));
+					if (checked.getPlannedDrinks() < 4) {
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text2))
+								.setText("\u25A0 " + getString(R.string.actual) + ": " + checked.getPlannedDrinks() + " " + getString(R.string.drinks));
 					} else {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-								.setText(checked.getPlannedDrinks() + " " + getString(R.string.drinks));
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text2))
+						.setText("\u25A0 " + getString(R.string.actual) + ": " + checked.getPlannedDrinks() + "+" + " " + getString(R.string.drinks));
 					}
 				} else {
-				
-					if (eventName.length() > 0) {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-								.setText(eventName + " \u25A0 " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
-					} else {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-								.setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
-					}
 				}
 				
 				((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
