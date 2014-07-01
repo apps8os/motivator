@@ -166,7 +166,7 @@ public class DayInHistory implements Parcelable{
 	 */
 	public int getAlcoholDrinks(Context context) {
 		DayDataHandler dataHandler = new DayDataHandler(context);
-		return dataHandler.getDrinksForDay(mDateInMillis);
+		return dataHandler.getClickedDrinksForDay(mDateInMillis);
 	}
 	
 	/**

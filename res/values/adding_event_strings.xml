@@ -15,36 +15,40 @@
   OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
+
+<!-- 
+	Here are the questions for adding an event. The questions have id's attached with the arrays.
+ -->
 <resources>
-    <string name="event_question_1">When?</string>
-    <string name="event_question_1_answer_1">Today</string>
-    <string name="event_question_1_answer_2">Tomorrow</string>
-    <string name="event_question_1_answer_3">Choose a date&#8230;</string>
+    <string name="event_question_1">Minä päivänä?</string>
+    <string name="event_question_1_answer_1">Tänään</string>
+    <string name="event_question_1_answer_2">Huomenna</string>
+    <string name="event_question_1_answer_3">Valitse päivä&#8230;</string>
     
-    <string name="event_question_2">How much do you plan on drinking?</string>
-    <string name="event_question_2_answer_1">Nothing</string>
-    <string name="event_question_2_answer_2">One</string>
-    <string name="event_question_2_answer_3">Couple</string>
-    <string name="event_question_2_answer_4">Three</string>
-    <string name="event_question_2_answer_5">Four or more</string>
+    <string name="event_question_2">Paljon aiot juoda?</string>
+    <string name="event_question_2_answer_1">En yhtään</string>
+    <string name="event_question_2_answer_2">Yhden</string>
+    <string name="event_question_2_answer_3">Pari</string>
+    <string name="event_question_2_answer_4">Kolme</string>
+    <string name="event_question_2_answer_5">Neljä tai enemmän</string>
     
-    <string name="event_question_3">When will you start drinking?</string>
-    <string name="event_question_3_answer_1">Before 6pm</string>
-    <string name="event_question_3_answer_2">Between 6pm and 9pm</string>
-    <string name="event_question_3_answer_3">After 9pm</string>
+    <string name="event_question_3">Monelta otat ekan?</string>
+    <string name="event_question_3_answer_1">Ennen kuutta</string>
+    <string name="event_question_3_answer_2">Kuuden ja yhdeksän välissä</string>
+    <string name="event_question_3_answer_3">Yhdeksän jälkeen</string>
     
-    <string name="event_question_4">When will you stop drinking?</string>
-    <string name="event_question_4_answer_1">Before 9pm</string>
-    <string name="event_question_4_answer_2">Between 9pm and 12pm</string>
-    <string name="event_question_4_answer_3">After 12pm</string>
+    <string name="event_question_4">Monelta otat vikan?</string>
+    <string name="event_question_4_answer_1">Ennen yhdeksää</string>
+    <string name="event_question_4_answer_2">Yhdeksän ja kahdentoista välissä</string>
+    <string name="event_question_4_answer_3">Kahdentoista jälkeen</string>
     
-    <string name="event_question_5">Who are you going with?</string>
-    <string name="event_question_5_answer_1">Alone</string>
-    <string name="event_question_5_answer_2">Regular group</string>
-    <string name="event_question_5_answer_3">Work friends</string>
-    <string name="event_question_5_answer_4">Spouse</string>
-    <string name="event_question_5_answer_5">Other</string>
-    
+    <string name="event_question_5">Kenen kanssa menet?</string>
+    <string name="event_question_5_answer_1">Yksin</string>
+    <string name="event_question_5_answer_2">Peruspoppoo</string>
+    <string name="event_question_5_answer_3">Työkaverit</string>
+    <string name="event_question_5_answer_4">Puoliso</string>
+    <string name="event_question_5_answer_5">Muu</string>
+ 
     <string-array name="id1000">
         <item >@string/event_question_1</item>
         <item >@string/event_question_1_answer_1</item>
@@ -117,6 +121,7 @@
         <item >@string/event_question_5_answer_5</item>
     </string-array>
     
+     <!-- All questions when adding events as a string array of the ids -->
     <string-array name="event_question_ids">
         <item >id1000</item>
         <item >id1001</item>
@@ -129,5 +134,5 @@
         <item >id1000</item>
         <item >id1001</item>
     </string-array>
-
+    
 </resources>

@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Page of the guide in the beginning of the application.
+ * @author Toni Järvinen
+ *
+ */
 public class GuidePageFragment extends Fragment{
 	
 	@Override

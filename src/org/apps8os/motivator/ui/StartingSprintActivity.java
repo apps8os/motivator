@@ -60,12 +60,17 @@ public class StartingSprintActivity extends Activity {
 				SprintDataHandler mDataHandler = new SprintDataHandler(activity);
 				mDataHandler.insertSprint(startDayInMillis, Integer.parseInt(numberOfDays.getText().toString()), sprintTitle.getText().toString());
 				
+				
 				SharedPreferences motivatorPrefs = getSharedPreferences(MainActivity.MOTIVATOR_PREFS, 0);
+				Intent intent = new Intent(activity, MainActivity.class);
+				if (!motivatorPrefs.getBoolean(Sprint.FIRST_SPRINT_SET, false)) {
+					intent = new Intent(activity, IntroActivity.class);
+				}
 				SharedPreferences.Editor editor = motivatorPrefs.edit();
 				editor.putBoolean(Sprint.FIRST_SPRINT_SET, true);
 				editor.commit();
 				
-				Intent intent = new Intent(activity, MainActivity.class);
+				
 				// Clear the back stack to avoid weird behavior after the user starts a new sprint.
 				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK); 
 				startActivity(intent);
@@ -73,13 +78,12 @@ public class StartingSprintActivity extends Activity {
 				Calendar notificationTime = Calendar.getInstance();
 				notificationTime.set(Calendar.MINUTE, 0);
 				notificationTime.set(Calendar.SECOND, 0);	
-				Context context = StartingSprintActivity.super;
 				// An alarm manager for scheduling notifications
-				AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+				AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
 				// Set the notification to repeat over the given time at notificationTime
-				Intent notificationIntent = new Intent(context, NotificationService.class);
+				Intent notificationIntent = new Intent(activity, NotificationService.class);
 				notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_MOOD);
-				PendingIntent pendingNotificationIntent = PendingIntent.getService(context,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+				PendingIntent pendingNotificationIntent = PendingIntent.getService(activity,0,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 				alarmManager.cancel(pendingNotificationIntent);
 				if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 					notificationTime.add(Calendar.DATE, 1);

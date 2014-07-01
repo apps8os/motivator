@@ -60,6 +60,7 @@ public class NotificationService extends IntentService {
 	public final static String NOTIFICATION_TYPE = "notification_type";
 	public final static int NOTIFICATION_MOOD = 100;
 	public final static int NOTIFICATION_EVENT_START = 101;
+	public final static int NOTIFICATION_EVENT_END = 102;
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -73,6 +74,7 @@ public class NotificationService extends IntentService {
 			// Check the notification type.
 			int notificationType = extras.getInt(NOTIFICATION_TYPE);
 			if (notificationType == NOTIFICATION_MOOD) {
+				// Cancel all previous notifications.
 				manager.cancelAll();
 				
 				SprintDataHandler dataHandler = new SprintDataHandler(this);
@@ -155,10 +157,30 @@ public class NotificationService extends IntentService {
 				TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 				stackBuilder.addParentStack(EventDetailsActivity.class);
 				stackBuilder.addNextIntent(resultIntent);
-				PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_CANCEL_CURRENT);
+				PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 				builder.setContentIntent(pendingResultIntent);
 
 				manager.notify(eventId, builder.build());
+			}
+			
+			else if (notificationType == NOTIFICATION_EVENT_END) {
+				// Set up a notification for the start of an event.
+				int eventId = extras.getInt(EventDataHandler.EVENT_ID);
+				builder.setContentTitle(getString(R.string.event_ending));
+				builder.setContentText(getString(R.string.go_home));
+				builder.setSmallIcon(R.drawable.ic_stat_notification_icon_1);
+				// Remove the notification when the user clicks it.
+				builder.setAutoCancel(true);
+				
+				Intent resultIntent = new Intent(this, EventDetailsActivity.class);
+				resultIntent.putExtra(EventDataHandler.EVENT_ID, eventId);
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+				stackBuilder.addParentStack(EventDetailsActivity.class);
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent pendingResultIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+				builder.setContentIntent(pendingResultIntent);
+
+				manager.notify(eventId + 10000, builder.build());
 			}
 		}
 	}

@@ -72,9 +72,6 @@ public class TodaySectionFragment extends Fragment {
 	private int mShowHelpAmount = 1;
 	// private LinearLayout mGoalLayout;
 	
-	private int[] mAmountImages = {R.drawable.amount_zero, R.drawable.amount_one,
-			R.drawable.amount_two, R.drawable.amount_three, R.drawable.amount_fourplus};
-	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -117,7 +114,7 @@ public class TodaySectionFragment extends Fragment {
 		// ProgressBar sprintProgress = (ProgressBar) mRootView.findViewById(R.id.today_section_sprint_progress_bar);
 		// TextView sprintTextView = (TextView) mRootView.findViewById(R.id.today_section_sprint_progress_text);
 		
-		mDrinkCounter = mDayDataHandler.getDrinksForDay(System.currentTimeMillis());
+		mDrinkCounter = mDayDataHandler.getClickedDrinksForDay(System.currentTimeMillis());
 		mDrinkCounterTextView.setText(mDrinkCounter + " " + getString(R.string.drinks_today));
 		
 		/** Sprint progress layout, commented out for now
@@ -129,6 +126,9 @@ public class TodaySectionFragment extends Fragment {
 		if (currentSprint.isOver() && !mNoActiveSprintLayoutVisible) {
 			if (mRootView.findViewById(R.id.no_sprint_overlay) == null) {
 				mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
+				String succeededPlans = getArguments().getString(MainActivity.SUCCEEDED_PLANS);
+				((TextView) mRootView.findViewById(R.id.sprint_success_textview)).setText("Edellisessä jaksossasi suunnitelmistasi " + succeededPlans + " toteutui. Tsemppiä!");
+				((TextView) mRootView.findViewById(R.id.sprint_success_textview)).setVisibility(View.VISIBLE);
 				((Button) mRootView.findViewById(R.id.start_new_sprint)).setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -196,7 +196,7 @@ public class TodaySectionFragment extends Fragment {
 					Dialog dialog = builder.create();
 					dialog.show();
 					
-				} else if (mPlannedDrinks > 0 && mPlannedDrinks < 4 && mDrinkCounter == mPlannedDrinks + 1) {
+				} else if (mPlannedDrinks > 0 && mDrinkCounter == mPlannedDrinks + 1) {
 					
 					// Set up a prompt asking whether everything is ok if the drink amount goes over the planned.
 					// If user has planned to drink over 4, dont ask this.
@@ -318,8 +318,7 @@ public class TodaySectionFragment extends Fragment {
 				String eventName = event.getName();
 				String startTimeAsText = event.getStartTimeAsText(mContext);
 				LinearLayout drinkAmountLayout = ((LinearLayout) buttonTextLayout.getChildAt(1));
-				((TextView) drinkAmountLayout.getChildAt(1)).setText(" " + getString(R.string.drinks));
-				((ImageView) eventButton.findViewById(R.id.drink_amount_image)).setImageResource(mAmountImages[event.getPlannedDrinks()]);
+				((TextView) drinkAmountLayout.getChildAt(0)).setText(event.getPlannedDrinks() + " " + getString(R.string.drinks));
 				
 				if (eventName.length() > 0) {
 					((TextView) buttonTextLayout.getChildAt(0)).setText(eventName);
@@ -351,13 +350,7 @@ public class TodaySectionFragment extends Fragment {
 								if (mPlannedDrinks == 0) {
 									mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 								} else {
-									String drinkAmount;
-									if (mPlannedDrinks < 4) {
-										drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
-									} else {
-										drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(5);
-									}
-									mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + drinkAmount);
+									mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
 								}
 								mEventDataHandler.deleteEvent(eventId);
 								mEventLayout.removeView(eventButton);
@@ -389,13 +382,7 @@ public class TodaySectionFragment extends Fragment {
 			if (mPlannedDrinks == 0) {
 				mPlannedDrinksTextView.setText(getString(R.string.no_drinks_planned));
 			} else {
-				String drinkAmount;
-				if (mPlannedDrinks < 4) {
-					drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(mPlannedDrinks + 1);
-				} else {
-					drinkAmount = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH).getAnswer(5);
-				}
-				mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + drinkAmount);
+				mPlannedDrinksTextView.setText(getString(R.string.drinks_planned) + " " + mPlannedDrinks);
 			}
 			if (mDrinkCounter > mPlannedDrinks) {
 				mPlannedDrinksTextView.setTextColor(mRes.getColor(R.color.red));

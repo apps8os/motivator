@@ -24,7 +24,6 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
-import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 import org.apps8os.motivator.data.SprintDataHandler;
 
@@ -240,25 +239,20 @@ public class MoodRelationHistoryActivity extends Activity {
 				
 			} else {
 				
-				int drinksYesterday = mDayDataHandler.getDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-				DayInHistory yesterday = mDayDataHandler.getDayInHistory(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-				yesterday.setEvents();
-				int checkedDrinks = 0;
-				ArrayList<MotivatorEvent> checkedEvents = yesterday.getCheckedEvents(this);
-				for (MotivatorEvent event: checkedEvents) {
-					checkedDrinks += event.getPlannedDrinks();
+				int daysDrinks = 0;
+				
+				daysDrinks = mDayDataHandler.getDailyDrinkAmount(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+				
+				if (daysDrinks < 0) {
+					daysDrinks = mDayDataHandler.getClickedDrinksForDay(day.getDateInMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 				}
 				
-				if (checkedDrinks > 4) {
-					checkedDrinks = 4;
+				if (daysDrinks > 4) {
+					daysDrinks = 4;
 				}
-				
-				if (checkedDrinks > drinksYesterday) {
-					drinksYesterday = checkedDrinks;
-				}
-			    if (selector == AMOUNT_OF_DRINKS && drinksYesterday  == argument) {
+			    if (selector == AMOUNT_OF_DRINKS && daysDrinks  == argument) {
 					allMoods.addAll(day.getMoods());
-				} else if (selector == AMOUNT_OF_DRINKS && argument == 2 && drinksYesterday == 3) {
+				} else if (selector == AMOUNT_OF_DRINKS && argument == 2 && daysDrinks == 3) {
 					allMoods.addAll(day.getMoods());
 				}
 			}

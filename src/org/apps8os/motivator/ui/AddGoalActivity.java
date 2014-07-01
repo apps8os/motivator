@@ -46,6 +46,12 @@ import android.widget.Toast;
 
 import com.viewpagerindicator.LinePageIndicator;
 
+
+/**
+ * Unfinished event for adding Goals. Goals not yet in the application.
+ * @author Toni Järvinen
+ *
+ */
 public class AddGoalActivity extends Activity implements QuestionnaireActivityInterface {
 	
 	private ViewPager mViewPager;

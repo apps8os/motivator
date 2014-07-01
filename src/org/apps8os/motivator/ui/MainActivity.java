@@ -48,6 +48,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -63,6 +64,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -82,6 +84,9 @@ public class MainActivity extends Activity {
 	private SprintDataHandler mSprintDataHandler;
 	private Resources mRes;
 	private SharedPreferences mPrefs;
+	private String mSucceededPlans;
+	
+	public static final String SUCCEEDED_PLANS = "succeeded_plans";
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -180,6 +185,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		mCurrentSprint = mSprintDataHandler.getCurrentSprint();
 		
+		// Check if there is a sprint ongoing
 		if (mCurrentSprint == null) {
 			mCurrentSprint = mSprintDataHandler.getLatestEndedSprint();
 			
@@ -187,29 +193,25 @@ public class MainActivity extends Activity {
 				Intent intent = new Intent(this, StartGuideActivity.class);
 				startActivity(intent);
 				finish();
+			} else {
+				mActionBar.setTitle(getString(R.string.app_name));
+				mActionBar.setSubtitle(getString(R.string.no_active_sprint));
+				
+				EventDataHandler eventHandler = new EventDataHandler(this);
+				ArrayList<MotivatorEvent> plannedEvents = eventHandler.getUncheckedEventsBetween(mCurrentSprint.getStartTime(), mCurrentSprint.getEndTime());
+				int succeededPlans = 0;
+				for (MotivatorEvent event: plannedEvents) {
+					MotivatorEvent checkedEvent = eventHandler.getCheckedEvent(event.getId());
+					if (checkedEvent == null) {
+						succeededPlans += 1;
+					} else {
+						if (event.getPlannedDrinks() >= checkedEvent.getPlannedDrinks()) {
+							succeededPlans += 1;
+						}
+					}
 			}
-			mActionBar.setTitle(getString(R.string.app_name));
-			mActionBar.setSubtitle(getString(R.string.no_active_sprint));
-			/** Dialog for asking to start a new sprint, redundant with the inflated no active sprint layout on the today and plan
-			 * fragments
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle(getString(R.string.no_active_sprint))
-				.setMessage(getString(R.string.start_a_new_sprint))
-				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog,
-						int which) {
-					Intent intent = new Intent(MainActivity.super, StartingSprintActivity.class);
-					startActivity(intent);
-				}
-			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			});
-			Dialog dialog = builder.create();
-			dialog.show();
-			**/
+			mSucceededPlans = "" + succeededPlans + "/" + plannedEvents.size();
+			}
 			
 		} else  {
 			mActionBar.setSubtitle(mCurrentSprint.getSprintTitle());
@@ -218,6 +220,8 @@ public class MainActivity extends Activity {
 		}
 		
 		final int eventAdded = mPrefs.getInt(AddEventActivity.EVENT_ADDED, -1);
+		
+		// Move to appropriate page after adding an event.
 		if (eventAdded == MotivatorEvent.TODAY) {
 			mViewPager.setCurrentItem(1);
 			Editor editor = mPrefs.edit();
@@ -234,6 +238,8 @@ public class MainActivity extends Activity {
 	    yesterday.setEvents();
 	    final Context context = this;
 	    final ArrayList<MotivatorEvent> yesterdayEvents = yesterday.getUncheckedEvents(this);
+	    
+	    // Set up the alert dialog for checking yesterdays events
 	    if (!yesterdayEvents.isEmpty()) {
 	    	
 	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -268,20 +274,22 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
+		AlertDialog.Builder builder;
+		final Context context = this;
 		switch (item.getItemId()) {
 		case R.id.action_settings: 
 			intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_start_sprint:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = new AlertDialog.Builder(this);
 			builder.setTitle(getString(R.string.start_a_new_sprint))
 				.setMessage(getString(R.string.current_sprint_will_end))
 				.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog,
 						int which) {
-					Intent intent = new Intent(MainActivity.super, StartingSprintActivity.class);
+					Intent intent = new Intent(context, StartingSprintActivity.class);
 					startActivity(intent);
 				}
 			}).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -298,6 +306,30 @@ public class MainActivity extends Activity {
 		case R.id.action_info:
 			intent = new Intent(this, InfoActivity.class);
 			startActivity(intent);
+			return true;
+		case R.id.action_show_substance_help:
+			// Set up a dialog with info on where to get help if user answers everything is not ok
+			builder = new AlertDialog.Builder(this);
+			LinearLayout helpDialogLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.element_alcohol_help_dialog, null);
+			builder.setView(helpDialogLayout);
+			builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog,
+						int which) {
+					View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, null);
+					TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+					toastText.setText(getString(R.string.questionnaire_done_toast_bad_mood));
+					toastText.setTextColor(Color.WHITE);
+					
+					Toast moodToast = new Toast(context);
+					moodToast.setDuration(Toast.LENGTH_SHORT);
+					moodToast.setView(toastLayout);
+					moodToast.show();
+				}
+			});
+			Dialog helpDialog = builder.create();
+			helpDialog.show();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -311,6 +343,9 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * Showing the guide of the main sections in the application
+	 */
 	public void showHelp() {
 		if (!mHelpIsVisible ) {
 			mHelpIsVisible = true;
@@ -412,9 +447,22 @@ public class MainActivity extends Activity {
 		**/
 	}
 	
+	/**
+	 * Visiting the paihdeneuvonta website
+	 * @param view
+	 */
 	public void visitWebsite(View view) {
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.paihdeneuvonta.fi"));
 		startActivity(browserIntent);
+	}
+	
+	/**
+	 * Calls the substance work number
+	 * @param view
+	 */
+	public void callSubstanceWork(View view) {
+		Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "080090045"));
+		startActivity(callIntent);
 	}
 
 	/**
@@ -424,6 +472,7 @@ public class MainActivity extends Activity {
 	private class SectionsPagerAdapter extends FragmentPagerAdapter {
 		
 		private Bundle mBundle = new Bundle();
+
 
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -443,11 +492,13 @@ public class MainActivity extends Activity {
 			if (position == 1) {
 				mBundle.clear();
 				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
+				mBundle.putString(SUCCEEDED_PLANS, mSucceededPlans);
 				fragment = new TodaySectionFragment();
 				fragment.setArguments(mBundle);
 			} else if(position == 2) {
 				mBundle.clear();
 				mBundle.putParcelable(Sprint.CURRENT_SPRINT, mCurrentSprint);
+				mBundle.putString(SUCCEEDED_PLANS, mSucceededPlans);
 				fragment = new PlanSectionFragment();
 				fragment.setArguments(mBundle);
 			} else if (position == 0) {

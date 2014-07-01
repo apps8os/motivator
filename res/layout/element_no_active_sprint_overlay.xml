@@ -28,6 +28,17 @@
         android:textColor="@color/white"
         android:layout_marginBottom="24dp"
         android:textSize="20sp" />
+    
+    <TextView
+        android:id="@+id/sprint_success_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp"
+        android:textSize="20sp" />
     <include layout="@layout/element_card_inner_separator_horizontal"
 	        android:background="@color/white_transparent"/>
     

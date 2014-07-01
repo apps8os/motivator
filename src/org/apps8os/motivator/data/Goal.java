@@ -101,7 +101,7 @@ public class Goal {
 		DayDataHandler dataHandler = new DayDataHandler(context);
 		switch (mGoalId) {
 		case 0:
-			mCurrentAmount = dataHandler.getDrinksForDay(System.currentTimeMillis());
+			mCurrentAmount = dataHandler.getClickedDrinksForDay(System.currentTimeMillis());
 			break;
 		case 1:
 			Calendar calendarFirst = Calendar.getInstance();

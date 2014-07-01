@@ -17,7 +17,7 @@
 -->
 <resources>
 
-    <string name="app_name">Motivaattori</string>
+    <string name="app_name">Motivaattori (beta)</string>
     <string name="action_settings">Asetukset</string>
     <string name="action_select_attribute">Etsi</string>
     <string name="action_attribute_drinking">Juomien määrä</string>
@@ -114,8 +114,8 @@
     <string name="you_drank">Joit</string>
     <string name="drinks_yesterday_in_total">juomaa eilen yhteensä.</string>
     <string name="drinks_in_total">juomaa.</string>
-    <string name="how_did_the_event_go">Miten meni?</string>
-    <string name="you_had_an_event_yesterday">Sinulla oli suunnitelma eilen. Miten meni?</string>
+    <string name="how_did_the_event_go">Miten suunnitelmasi meni?</string>
+    <string name="you_had_an_event_yesterday">Sinulla oli suunnitelmia eilen. Miten meni?</string>
     <string name="drinks">juomaa</string>
     <string name="you_did_not_drink_yesterday">Et juonut eilen!</string>
     <string name="you_did_not_drink">Et juonut yhtään!</string>
@@ -157,11 +157,11 @@
 	<string name="not_defined">Ei määritelty</string>
 	<string name="first_mood_of_the_next_day">Ensimmäinen fiilis seuraavana päivänä</string>
 	<string name="you_have_an_event_starting">Suunnitelmasi on alkamassa</string>
-	<string name="check_the_event">Tarkista suunnitelma?</string>
+	<string name="check_the_event">Tarkista suunnitelmat?</string>
 	<string name="planned">Suunniteltu</string>
 	<string name="actual">Toteutunut</string>
 	<string name="you_marked">Merkitsit</string>
-	<string name="plan_checked">Suunnitelma tarkistettu</string>
+	<string name="plan_checked">Suunnitelmat tarkistettu</string>
 	<string name="planned_hyphen">Suunni-teltu</string>
 	<string name="actual_hyphen">Toteu-tunut</string>
 	<string name="no_active_sprint">Jakso päättynyt</string>
@@ -185,6 +185,14 @@
 	<string name="on_this_day">juomaa tänä päivänä</string>
 	<string name="clicked_drinks">klikattua juomaa</string>
 	<string name="realized_planned_drinks">toteutunutta juomaa suunnitelmissa</string>
+	<string name="i_need_guidance">Tarvitsen neuvontaa</string>
+	<string name="plans_drinks">Suunnitelman juomat</string>
+	<string name="event_ending">Toivottavasti oli hauska ilta!</string>
+	<string name="go_home">Vartin päästä kotiin?</string>
+	<string name="sprint_added">Jaksosi on aloitettu!</string>
+	<string name="app_version_number">Sovelluksen versio:</string>
+	<string name="intro_text">Seuraavaksi, esittelemme sovelluksen kolme pääsivua. Saat esityksen eri sivuista
+	    uudelleen näkyviin pääsivun kysymysmerkistä.</string>
 	<string name="info_first_section"><![CDATA[
 	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
 	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 

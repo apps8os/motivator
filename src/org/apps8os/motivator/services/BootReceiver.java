@@ -21,6 +21,7 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		// Start the notifications if the phone was booted
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 			if (prefs.getBoolean(SettingsActivity.KEY_SEND_NOTIFICATIONS, true)) {

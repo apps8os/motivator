@@ -22,7 +22,6 @@ import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
 import org.apps8os.motivator.data.Mood;
-import org.apps8os.motivator.data.MotivatorEvent;
 
 import android.app.Fragment;
 import android.content.res.Resources;
@@ -58,14 +57,10 @@ public class MoodHistoryDayFragment extends Fragment {
 		mRes = getActivity().getResources();
 		mDay.setEvents();
 		DayDataHandler dayDataHandler = new DayDataHandler(getActivity());
-		int todaysDrinks = dayDataHandler.getDrinksForDay(mDay.getDateInMillis());
-		ArrayList<MotivatorEvent> checkedEvents = mDay.getCheckedEvents(getActivity());
-		int checkedDrinks = 0;
-		for (MotivatorEvent event: checkedEvents) {
-			checkedDrinks += event.getPlannedDrinks();
-		}
-		if (checkedDrinks > todaysDrinks) {
-			todaysDrinks = checkedDrinks;
+		int todaysDrinks = dayDataHandler.getDailyDrinkAmount(mDay.getDateInMillis());
+		
+		if (todaysDrinks < 0) {
+			todaysDrinks = dayDataHandler.getClickedDrinksForDay(mDay.getDateInMillis());
 		}
 		
 		TextView title = (TextView)  rootView.findViewById(R.id.mood_history_fragment_title);

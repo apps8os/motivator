@@ -22,6 +22,7 @@ import java.util.Calendar;
 import org.apps8os.motivator.R;
 import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.DayInHistory;
+import org.apps8os.motivator.data.Mood;
 import org.apps8os.motivator.data.MotivatorEvent;
 import org.apps8os.motivator.data.Sprint;
 
@@ -38,9 +39,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.holographlibrary.Line;
 import com.echo.holographlibrary.LineGraph;
+import com.echo.holographlibrary.LineGraph.OnPointClickedListener;
 import com.echo.holographlibrary.LinePoint;
 
 /**
@@ -61,6 +64,8 @@ public class MoodHistoryWeekFragment extends Fragment {
 	private long mSprintStartDate;
 	private int mPosition;
 	private int mSelectedAttribute;
+	
+	private Toast mToast;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup viewGroup, Bundle savedInstanceState) {
@@ -74,6 +79,28 @@ public class MoodHistoryWeekFragment extends Fragment {
 		mDayLayout = (LinearLayout) mRootView.findViewById(R.id.mood_history_weekview);
 		mLoadingView = (RelativeLayout) mRootView.findViewById(R.id.mood_history_loading_panel);
 		mLineGraph = (LineGraph) mRootView.findViewById(R.id.graph);
+		mToast = Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT);
+		
+		mLineGraph.setOnPointClickedListener(new OnPointClickedListener() {
+			@Override
+			public void onClick(int lineIndex, int pointIndex) {
+				LinePoint point = mLineGraph.getLine(lineIndex).getPoint(pointIndex);
+				if (point.getColor().equals("#777777")) {
+					mToast.setText("Ei dataa");
+					mToast.show();
+				} else if (mSelectedAttribute == DayInHistory.AMOUNT_OF_DRINKS){
+					mToast.setText("" + (int) point.getY());
+					mToast.show();
+				} else if (mSelectedAttribute == DayInHistory.MOODS && lineIndex == 0) {
+					mToast.setText(Mood.ENERGY_TITLES[(int) point.getY() - 1]);
+					mToast.show();
+				} else if (mSelectedAttribute == DayInHistory.MOODS && lineIndex == 1) {
+					mToast.setText(Mood.MOOD_TITLES[(int) point.getY() - 1]);
+					mToast.show();
+				}
+			}
+		});
+		
 		
 		// Loading the days on a different thread.
 		LoadDaysAsyncTask loadingTask = new LoadDaysAsyncTask(mSprintStartDate, mPosition);
@@ -214,30 +241,26 @@ public class MoodHistoryWeekFragment extends Fragment {
 			case DayInHistory.AMOUNT_OF_DRINKS:
 				daysSize = mDays.size();
 				mLineGraph.removeAllLines();
+				int maxDrinks = 0;
 				for (int i = 0; i < daysSize; i++) {
 					day = mDays.get(i);
 					day.setEvents();
 					p.setX(i);
 					p2.setX(i);
-					int drinks = mDayDataHandler.getDrinksForDay(day.getDateInMillis());
+					int drinks = mDayDataHandler.getDailyDrinkAmount(day.getDateInMillis());
+					if (drinks < 0) {
+						drinks = mDayDataHandler.getClickedDrinksForDay(day.getDateInMillis());
+					}
 					int plannedDrinks = 0;
-					int checkedDrinks = 0;
 					ArrayList<MotivatorEvent> events = day.getPlannedEvents(getActivity());
-					ArrayList<MotivatorEvent> checkedEvents = day.getCheckedEvents(getActivity());
 					for (MotivatorEvent event: events) {
 						plannedDrinks += event.getPlannedDrinks();
 					}
-					for (MotivatorEvent event: checkedEvents) {
-						checkedDrinks += event.getPlannedDrinks();
+					if (drinks > maxDrinks) {
+						maxDrinks = drinks;
 					}
-					if (checkedDrinks > drinks) {
-						drinks = checkedDrinks;
-					}
-					if (drinks > 4) {
-						drinks = 4;
-					}
-					if (plannedDrinks > 4) {
-						plannedDrinks = 4;
+					if (plannedDrinks > maxDrinks) {
+						maxDrinks = plannedDrinks;
 					}
 					p2.setY(plannedDrinks);
 					p.setY(drinks);
@@ -250,7 +273,7 @@ public class MoodHistoryWeekFragment extends Fragment {
 				l2.setColor(mRes.getColor(R.color.orange));
 				mLineGraph.addLine(l2);
 				mLineGraph.addLine(l);
-				mLineGraph.setRangeY(0, 4);
+				mLineGraph.setRangeY(0, maxDrinks);
 				mLineGraph.setLineToFill(0);
 				mLineGraph.setUsingDips(true);
 				((ImageView) mRootView.findViewById(R.id.attribute_image)).setImageResource(R.drawable.drink_icon);

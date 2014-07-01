@@ -17,14 +17,20 @@
 package org.apps8os.motivator.ui;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import org.apps8os.motivator.R;
+import org.apps8os.motivator.data.DayDataHandler;
 import org.apps8os.motivator.data.EventDataHandler;
 import org.apps8os.motivator.data.MotivatorEvent;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -40,6 +46,11 @@ import android.widget.Toast;
 
 import com.viewpagerindicator.LinePageIndicator;
 
+/**
+ * Activity for checking the events on the following day.
+ * @author Toni Järvinen
+ *
+ */
 public class CheckEventsActivity extends Activity {
 
 	private EventDataHandler mEventDataHandler;
@@ -63,6 +74,7 @@ public class CheckEventsActivity extends Activity {
 	    		getFragmentManager(), mEvents.size());
 	    mViewPager.setAdapter(mEventsPagerAdapter);
 	    mViewPager.setOffscreenPageLimit(10);
+		
 	    setButtons();
 	}
 	
@@ -85,36 +97,59 @@ public class CheckEventsActivity extends Activity {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			}
 		});
+		
+		final Context context = this;
+		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);
+		mCompleteButton.setEnabled(false);
 		if (mEventsPagerAdapter.getCount() == 1) {
 			nextButton.setEnabled(false);
 			nextButton.setVisibility(View.GONE);
 			previousButton.setVisibility(View.GONE);
+			mCompleteButton.setEnabled(true);
 		}
-		mCompleteButton = (Button) findViewById(R.id.questions_complete_button);
 		mCompleteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				final int count = mEventsPagerAdapter.getCount();
+				int checkedDrinksAmount = 0;
+				final DayDataHandler dayHandler = new DayDataHandler(context);
+				final int clickedDrinks = dayHandler.getClickedDrinksForDay(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 				for (int i = 0; i < count; i++) {
 					int[] answers = mEventsPagerAdapter.getFragment(i).getAnswers();
-					mEventDataHandler.insertCheckedEvent(mEvents.get(i).getId(), answers[0] - 1, answers[1], answers[2], answers[3], mEvents.get(i).getName());
+					checkedDrinksAmount += answers[0];
+					mEventDataHandler.insertCheckedEvent(mEvents.get(i).getId(), answers[0] + 1, answers[1], answers[2], answers[3], mEvents.get(i).getName());
 				}
-				View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
-				TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
-				toastText.setText(getString(R.string.plan_checked));
-				toastText.setTextColor(Color.WHITE);
+				final int checkedDrinks = checkedDrinksAmount;
 				
+				// If the user is confirming lower amount of drinks than he clicked on the previous day, confirm the amount with a dialog
+				if (checkedDrinksAmount < clickedDrinks) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(context);
+					builder.setTitle("Suunnitelmissasi on vähemmän juomia kuin klikkasit eilen.")
+						.setMessage("Eilen klikatut: " + clickedDrinks + " \r\n" + "Tarkistetut suunnitelmat: " + checkedDrinksAmount + " \r\n \r\n" + "Paljon joit eilenä yhteensä?")
+						.setPositiveButton("" + checkedDrinksAmount, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog,
+								int which) {
+							dayHandler.insertDailyDrinkAmount(checkedDrinks, System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+							eventsChecked();
+						}
+					}).setNegativeButton("" + clickedDrinks, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dayHandler.insertDailyDrinkAmount(clickedDrinks, System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+							eventsChecked();
+						}
+					});
+					Dialog dialog = builder.create();
+					dialog.show();
+				} else {
+					dayHandler.insertDailyDrinkAmount(checkedDrinks, System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+					eventsChecked();
+				}
 				
-				Toast planChecked = new Toast(getApplicationContext());
-				planChecked.setDuration(Toast.LENGTH_SHORT);
-				planChecked.setView(toastLayout);
-				planChecked.show();
-				
-				finish();
 			}
 		});
 		// Disable these buttons at start.
-		mCompleteButton.setEnabled(true);
 		previousButton.setEnabled(false);
 		
 		LinePageIndicator titleIndicator = (LinePageIndicator)findViewById(R.id.indicator);
@@ -133,6 +168,7 @@ public class CheckEventsActivity extends Activity {
 			public void onPageSelected(int arg0) {
 				if (arg0 == mEventsPagerAdapter.getCount() - 1) {
 					nextButton.setEnabled(false);
+					mCompleteButton.setEnabled(true);
 				} else {
 					nextButton.setEnabled(true);
 				}
@@ -145,7 +181,30 @@ public class CheckEventsActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Displaying toast after checking events
+	 */
+	private void eventsChecked() {
+		View toastLayout = (View) getLayoutInflater().inflate(R.layout.element_mood_toast, (ViewGroup) findViewById(R.id.mood_toast_layout));
+		TextView toastText = (TextView) toastLayout.findViewById(R.id.mood_toast_text);
+		toastText.setText(getString(R.string.plan_checked));
+		toastText.setTextColor(Color.WHITE);
+		
+		
+		Toast planChecked = new Toast(getApplicationContext());
+		planChecked.setDuration(Toast.LENGTH_SHORT);
+		planChecked.setView(toastLayout);
+		planChecked.show();
+		
+		finish();
+	}
 	
+	
+	/**
+	 * Inner class for the fragment adapter.
+	 * @author Toni Järvinen
+	 *
+	 */
 	private class EventsPagerAdapter extends FragmentPagerAdapter {
 		
 		private SparseArray<EventToCheckFragment> fragments = new SparseArray<EventToCheckFragment>();

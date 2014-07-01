@@ -38,6 +38,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,6 +46,12 @@ import android.widget.TextView;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ActionViewTarget;
 
+
+/**
+ * Activity for the past events.
+ * @author Toni Järvinen
+ *
+ */
 public class EventHistoryActivity extends Activity {
 	
 	private EventDataHandler mEventDataHandler;
@@ -59,7 +66,8 @@ public class EventHistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_event_history);
-	    mSelectedSprint = (Sprint) getIntent().getExtras().get(Sprint.CURRENT_SPRINT);
+	    Bundle bundle = getIntent().getExtras();
+	    mSelectedSprint = (Sprint) bundle.getParcelable(Sprint.CURRENT_SPRINT);
 	    mEventLayout = (LinearLayout) findViewById(R.id.events_layout);
 	    mRes = getResources();
 	    ActionBar actionBar = getActionBar();
@@ -75,6 +83,10 @@ public class EventHistoryActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    getMenuInflater().inflate(R.menu.event_history, menu);
+	    
+	    if (ViewConfiguration.get(this).hasPermanentMenuKey()) {
+	    	
+	    } else {
 	    new ShowcaseView.Builder(this, true)
 	    .setTarget(new ActionViewTarget(this, ActionViewTarget.Type.OVERFLOW))
 	    .setContentTitle("Täältä voit vaihtaa jaksoa")
@@ -83,6 +95,7 @@ public class EventHistoryActivity extends Activity {
 	    .setStyle(R.style.ShowcaseView)
 	    .singleShot(CHANGE_SPRINT_HELP)
 	    .build();
+	    }
 	    
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -182,24 +195,18 @@ public class EventHistoryActivity extends Activity {
 					.setText(UtilityMethods.getDateAsString(eventStartTime, mContext) + ", " + eventName);
 				}
 				
-				if (event.getPlannedDrinks() < 4) {
-					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
+				((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
 							.setText("\u25A0 " + getString(R.string.planned) + ": " + event.getPlannedDrinks() + " " + getString(R.string.drinks));
-				} else {
-					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text))
-					.setText("\u25A0 " + getString(R.string.planned) + ": " + event.getPlannedDrinks() + "+" + " " + getString(R.string.drinks));
-				}
+				
 				if (checked != null) {
-					Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
-					((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
+					if (event.getPlannedDrinks() >= checked.getPlannedDrinks()) {
+						Drawable checkMark = mRes.getDrawable(R.drawable.check_mark);
+						((TextView) buttonTextLayout.findViewById(R.id.card_button_top_text))
 							.setCompoundDrawablesWithIntrinsicBounds(null, null, checkMark, null);
-					if (checked.getPlannedDrinks() < 4) {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text2))
-								.setText("\u25A0 " + getString(R.string.actual) + ": " + checked.getPlannedDrinks() + " " + getString(R.string.drinks));
-					} else {
-						((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text2))
-						.setText("\u25A0 " + getString(R.string.actual) + ": " + checked.getPlannedDrinks() + "+" + " " + getString(R.string.drinks));
 					}
+					
+					((TextView) buttonTextLayout.findViewById(R.id.card_button_bottom_text2))
+								.setText("\u25A0 " + getString(R.string.actual) + ": " + checked.getPlannedDrinks() + " " + getString(R.string.drinks));
 				} else {
 				}
 				

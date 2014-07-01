@@ -43,7 +43,8 @@
         android:layout_margin="5dp"
         android:layout_height="wrap_content"
         android:textColor="@color/dark_gray"
-        android:text="@string/call_substance_work"/>
+        android:text="@string/call_substance_work"
+        android:onClick="callSubstanceWork"/>
     
     <Button
         android:id="@+id/visit_substance_work_website"

@@ -65,6 +65,11 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		}
 	}
 	
+	/**
+	 * Get the sprint with the given id
+	 * @param id
+	 * @return
+	 */
 	public Sprint getSprint(int id) {
 		open();
 		String selection = KEY_ID + " = " + id;
@@ -112,6 +117,10 @@ public class SprintDataHandler extends MotivatorDatabaseHelper {
 		return null;
 	}
 	
+	/**
+	 * Inner private method for getting current sprint
+	 * @return
+	 */
 	private Sprint getCurrentSprintInner() {
 		String selection = KEY_SPRINT_START + " < " + System.currentTimeMillis() + " AND " + KEY_SPRINT_END + " > " + System.currentTimeMillis();
 		String columns[] = {KEY_ID, KEY_SPRINT_START, KEY_SPRINT_DAYS, KEY_SPRINT_END, KEY_SPRINT_TITLE};

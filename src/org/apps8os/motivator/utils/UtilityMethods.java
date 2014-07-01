@@ -41,6 +41,9 @@ public final class UtilityMethods {
 	 * @return
 	 */
 	public static Calendar setToDayStart(Calendar calendar) {
+		if (calendar.get(Calendar.HOUR_OF_DAY) < 4) {
+			calendar.add(Calendar.DATE, -1);
+		}
 		calendar.set(Calendar.HOUR_OF_DAY, 4);
 		calendar.set(Calendar.MINUTE, 0);
 		calendar.set(Calendar.SECOND, 0);
@@ -54,9 +57,6 @@ public final class UtilityMethods {
 	 * @return
 	 */
 	public static long[] getDayInMillis(Calendar calendar) {
-		if (calendar.get(Calendar.HOUR_OF_DAY) < 4) {
-			calendar.add(Calendar.DATE, -1);
-		}
 		UtilityMethods.setToDayStart(calendar);
 		long earlierBoundary = calendar.getTimeInMillis();
     	calendar.add(Calendar.DATE, 1);

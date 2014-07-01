@@ -46,7 +46,10 @@
 		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:orientation="vertical" >
+		    android:orientation="vertical"
+		    android:descendantFocusability="beforeDescendants"
+		    android:focusableInTouchMode="true"
+		    android:paddingTop="12dp" >
 		    <TextView
 		        android:id="@+id/name"
 		        android:text=""
@@ -84,12 +87,13 @@
 			        android:fontFamily="sans-serif-condensed"
 			        style="@style/CheckEventTitleView"/>
 
-		        <Spinner
-		            android:id="@+id/planned_drinks_spinner"
+		        <EditText
+		            android:id="@+id/amount_of_drinks_edit_text"
 		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
 		            android:layout_weight="2"
-		             />
+		            android:inputType="number"
+		            />
 		    </LinearLayout>
 		    <LinearLayout 
 			    android:layout_width="match_parent"

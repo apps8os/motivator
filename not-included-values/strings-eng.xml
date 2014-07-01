@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!--
+  Copyright (c) 2014 Helsingin Diakonissalaitos and the authors
+   
+  The MIT License (MIT)
+   
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+  to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+   
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO 
+  THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS 
+  OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<resources>
+    
+    <string name="app_name">Motivator (beta)</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_section1">History</string>
+    <string name="title_section2">Today</string>
+    <string name="title_section3">Plan</string>
+    <string name="today_screen_mood">How are you feeling?</string>
+    <string name="action_info">Info</string>
+    <string name="next">Next</string>
+    <string name="mood_selection_image_view_content">Image for the selection of mood</string>
+    <string name="prompt_selection">Please select an answer</string>
+    <string name="mood_level1">Sad</string>
+    <string name="mood_level2">Moody</string>
+    <string name="mood_level3">Alright</string>
+    <string name="mood_level4">Good</string>
+    <string name="mood_level5">Happy</string>
+    <string name="energy_level1">Exhausted</string>
+    <string name="energy_level2">Tired</string>
+    <string name="energy_level3">Calm</string>
+    <string name="energy_level4">Energized</string>
+    <string name="energy_level5">Super</string>
+    <string name="add_event">Add event</string>
+    <string name="show_mood_history">Day history</string>
+    <string name="questionnaire_done_toast_bad_mood">Hang in there</string>
+    <string name="questionnaire_done_toast_ok_mood">Alright!</string>
+    <string name="questionnaire_done_toast_good_mood">Awesome!</string>
+    <string name="add_goal">Add goal</string>
+    <string name="this_weekend">This weekend</string>
+    <string name="send_notifications">Send notifications?</string>
+    <string name="minimum_notification_interval">When do we send notifications?</string>
+    <string name="cancel_event">Cancel event</string>
+    <string name="your_mood">Your mood</string>
+    <string name="last_mood">Answer more mood questions</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+    <string name="sunday_short">Sun</string>
+    <string name="action_search">Search</string>
+    <string name="action_select_attribute">Search</string>
+    <string name="action_attribute_drinking">Amount of drinks</string>
+    <string name="action_attribute_moods">Moods</string>
+    <string name="action_attribute_all">All</string>
+    <string name="action_start_sprint">Start a new sprint</string>
+    <string name="ok">OK</string>
+    <string name="in_the_morning">In the morning</string>
+    <string name="morning_and_evening">In the morning and evening</string>
+    <string name="every_hour">Every hour</string>
+    <string name="days_of_glory">days of kudos</string>
+    <string name="day">Day</string>
+    <string name="days">days</string>
+    <string name="of_glory">of kudos</string>
+    <string name="no_added_moods">No added moods.</string>
+    <string name="amount_of_drinks">How many drinks</string>
+    <string name="amount_of_drinks_on_the_previous_day">How many drinks on the previous day</string>
+    <string name="swipe_right_for_plans">On the right you can make plans</string>
+    <string name="swipe_left_for_history">On the left you can see your history</string>
+    <string name="data_analysis">View your moods</string>
+    <string name="week">Week</string>
+    <string name="today_is_the_day">Today is the day</string>
+    <string name="select_a_timeframe">Select a timeframe</string>
+    <string name="default_sprint_title">105 days of Kudos</string>
+    <string name="select_a_day">Select a day</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="mood_comment">Add a comment</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="select_sprint">Select sprint</string>
+    <string name="when_to_go">Start time</string>
+    <string name="previous">Previous</string>
+    <string name="complete">Complete</string>
+    <string name="planned_events">Planned events</string>
+    <string name="todays_events">Today\'s events</string>
+    <string name="energy_dots">Energy:</string>
+    <string name="mood_dots">Mood:</string>
+    <string name="energy">Energy</string>
+    <string name="mood">Mood</string>
+    <string name="comment">Comment</string>
+    <string name="cancel">Cancel</string>
+    <string name="drinks_today">drinks today</string>
+    <string name="drinks_planned">You have planned to drink</string>
+    <string name="no_drinks_planned">You have not planned to drink today</string>
+    <string name="name_the_event">Give the event a name</string>
+    <string name="name">Name</string>
+    <string name="event_history">Past events</string>
+    <string name="end_time">End time</string>
+    <string name="with_who">With who</string>
+    <string name="start_a_sprint">Start a Sprint</string>
+    <string name="number_of_days">Number of days</string>
+    <string name="name_of_the_sprint">Name of the Sprint</string>
+    <string name="start_the_sprint">Start the Sprint</string>
+   
+    <string name="you_drank">You drank</string>
+    <string name="drinks_yesterday_in_total">drinks yesterday in total.</string>
+    <string name="drinks_in_total">drinks in total.</string>
+    <string name="how_did_the_event_go">How did it go?</string>
+    <string name="you_had_an_event_yesterday">You had an event yesterday. How did it go?</string>
+    <string name="drinks">drinks</string>
+    <string name="you_did_not_drink_yesterday">You did not drink yesterday!</string>
+    <string name="you_did_not_drink">You did not drink!</string>
+    <string name="today_section">Today section</string>
+    <string name="today_section_help">Here you can see your events for the day and record your mood. You can also record the drinks you\'ve drunk with the clicker.</string>
+    <string name="plan_section">Plan section</string>
+    <string name="plan_section_help">Here you can plan events and add goals. You can also see your upcoming events.</string>
+    <string name="history_section">History section</string>
+    <string name="history_section_help">Here you can see your past moods and events. You can also check your sprint.</string>
+    <string name="show_help">Show help</string>
+    <string name="no_events">No Events</string>
+    <string name="no_goals">No Goals</string>
+    <string name="average_mood">Avg Mood</string>
+    <string name="filter_by">Filter by</string>
+    <string name="select_language">Select language</string>
+    <string name="english">English</string>
+    <string name="finnish">Finnish</string>
+    <string name="event_added">Event Added</string>
+    <string name="event_canceled">Event Canceled</string>
+    <string name="event_will_be_deleted">The event will be deleted.</string>
+    <string name="substance_help">We provide substance abuse counseling and help around the clock, every day of the year - completely free of charge and anonymously. Call us on 0800 900 45 and ask for advice from substance abuse professionals.</string>
+	<string name="call_substance_work">Call Substance Work</string>
+	<string name="visit_substance_work_website">Visit Substance Work Website</string>
+	<string name="x_amount">X amount</string>
+	<string name="goal_added">Goal Added</string>
+	<string name="goal_not_added">You did not provide the X amount, goal not added.</string>
+	<string name="ongoing_goals">Goals in Progress</string>
+	<string name="in_a_week">in a week</string>
+	<string name="in_two_weeks">in two weeks</string>
+	<string name="in_four_weeks">in four weeks</string>
+	<string name="for_a_week">for a week</string>
+	<string name="for_two_weeks">for two weeks</string>
+	<string name="for_four_weeks">for four weeks</string>
+	<string name="you_have_no_plans">You do not have any drinks planned.</string>
+	<string name="do_you_want_to_add_event">Do you want to add a plan for today?</string>
+	<string name="you_went_over_planned_drinks">You went over the drinks you had planned.</string>
+	<string name="is_everything_ok">Is everything ok?</string>
+	<string name="your_average_mood">Your average mood</string>
+	<string name="not_defined">Not defined</string>
+	<string name="first_mood_of_the_next_day">First mood on the next day</string>
+	<string name="you_have_an_event_starting">You have an event starting</string>
+	<string name="check_the_event">Check the event?</string>
+	<string name="planned">Planned</string>
+	<string name="actual">Actual</string>
+	<string name="you_marked">You marked</string>
+	<string name="plan_checked">Plan checked</string>
+	<string name="planned_hyphen">Planned</string>
+	<string name="actual_hyphen">Actual</string>
+	<string name="no_active_sprint">No active sprint</string>
+	<string name="completed_sprint">You completed your sprint! Great</string>
+	<string name="start_a_new_sprint">Start a new sprint</string>
+	<string name="current_sprint_will_end">Current sprint will be ended</string>
+	<string name="save_changes">Save</string>
+	<string name="showing_last_ended">Showing latest ended sprint</string>
+	<string name="delete_all_data">Delete all data</string>
+	<string name="delete_all_data_summary">Deletes all data you have added</string>
+	<string name="delete_all_data_warning">This will delete all data you have added. Are you sure you want to delete all data?</string>
+	<string name="all_data_deleted">All data deleted</string>
+	<string name="send_email_to_HDL">Send us feedback</string>
+	<string name="send_email_to_HDL_summary">Do you have suggestions or bug reports?</string>
+	<string name="choose_email_client">Choose email client</string>
+	<string name="email_subject">Motivator BETA feedback</string>
+	<string name="add_yesterdays_drinks">Add yesterdays dirnks</string>
+	<string name="give_feedback">Give feedback</string>
+	<string name="plan_reminder">Muistathan, että voit suunnitella tapahtumiasi?</string>
+	<string name="you_clicked">You clicked</string>
+	<string name="on_this_day">drinks on this day</string>
+	<string name="clicked_drinks">clicked drinks</string>
+	<string name="realized_planned_drinks">realized drinks in plans</string>
+	<string name="i_need_guidance">I need guidance</string>
+	<string name="plans_drinks">Drinks in this plan</string>
+	<string name="event_ending">Hopefully you had a fun night!</string>
+	<string name="go_home">Go home in 15 minutes?</string>
+	<string name="sprint_added">Your Sprint has been added!</string>
+	<string name="intro_text">Next, we will go through the 3 main sections of the Motivator application. You can always
+	    see the introductions by clicking from the question mark in the main screen. Let\'s go!</string>
+	<string name="info_first_section"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pitäytymään suunnitelmassasi!</p>
+	    Motivaattori ei lähetä mitään informaatiota muille osapuolille. <b>Kaikki datasi on vain Sinulla.</b>
+	    ]]></string>
+	<string name="guide_first_page"><![CDATA[
+	    <p>Motivaattori on tarkoitettu <b><i>Sinulle</i></b>, joka haluat tarkkailla omaa <b>alkoholinkäyttöäsi</b> 
+	    ja seurata omien <b>suunnitelmiesi</b> toteutumista. Suunnittele itse, mitä aiot tehdä &#8212;sovellus auttaa Sinua 
+	    pitäytymään suunnitelmassasi!</p>
+	    ]]></string>
+</resources>

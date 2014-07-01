@@ -92,10 +92,16 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 	private SparseArray<Question> mQuestions;
 	private Context mContext;
 	
+	/**
+	 * Creates the instance and adds the questions for adding events to the array.
+	 * @param context
+	 */
 	public EventDataHandler(Context context) {
 		super(context);
 		mContext = context;
 		mQuestions = new SparseArray<Question>();
+		
+		
 		Resources res = context.getResources();
 		// Inserting the questions to the SpareArrays.
 		String[] eventQuestionIds =  res.getStringArray(R.array.event_question_ids);
@@ -163,12 +169,15 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			}
 		}
 		switch (startTimeAnswer) {
+			// Before six pm
 			case 1: 
 				calendarCache.set(Calendar.HOUR_OF_DAY, 16);
 				break;
+			// Between 6 and 9 pm
 			case 2:
 				calendarCache.set(Calendar.HOUR_OF_DAY, 18);
 				break;
+			// After 9 pm
 			case 3:
 				calendarCache.set(Calendar.HOUR_OF_DAY, 21);
 				break;
@@ -184,7 +193,7 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_START);
 			notificationIntent.putExtra(EVENT_ID, innerEventId);
 			notificationIntent.putExtra(EVENT_NAME, name);
-			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, innerEventId,notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, innerEventId,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 			alarmManager.set(AlarmManager.RTC_WAKEUP, calendarCache.getTimeInMillis(), pendingNotificationIntent);
 		}
 		
@@ -213,6 +222,19 @@ public class EventDataHandler extends MotivatorDatabaseHelper {
 			values.put(KEY_END_TIME, calendarCache.getTimeInMillis());
 			values.put(KEY_END_TIME_ANSWER, endTimeAnswer);
 		}
+		
+		// Schedule an alarm for notification when the event is starting.
+		if (endTimeAnswer > 0 && checked == EVENT_NOT_CHECKED) {
+			AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+			// Set the notification to repeat over the given time at notificationTime
+			Intent notificationIntent = new Intent(mContext, NotificationService.class);
+			notificationIntent.putExtra(NotificationService.NOTIFICATION_TYPE, NotificationService.NOTIFICATION_EVENT_END);
+			notificationIntent.putExtra(EVENT_ID, innerEventId);
+			notificationIntent.putExtra(EVENT_NAME, name);
+			PendingIntent pendingNotificationIntent = PendingIntent.getService(mContext, innerEventId + 10000,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+			alarmManager.set(AlarmManager.RTC_WAKEUP, calendarCache.getTimeInMillis(), pendingNotificationIntent);
+		}
+		
 		if (withWho != 0) {
 			values.put(KEY_WITH_WHO, withWho);
 		}

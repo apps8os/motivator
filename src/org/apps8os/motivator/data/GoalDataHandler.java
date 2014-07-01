@@ -32,7 +32,7 @@ import android.util.SparseArray;
 
 /**
  * Handles the access for goal data. 
- * open() before using and close() after done
+ * Goals not yet implemented in the applications
  * @author Toni Järvinen
  *
  */

@@ -28,10 +28,10 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -41,6 +41,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Represents a question fragment.
@@ -56,7 +57,7 @@ public class QuestionFragment extends Fragment {
 	private int mXAmount = 0;
 	private String mPreviousX = "X";
 	private Calendar mCalendar;
-	private String mInput;
+	private int mInput = 4;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,7 @@ public class QuestionFragment extends Fragment {
 			mRequiredTextView.setTextColor(getResources().getColor(R.color.red));
 		}
 		
+		
 		mQuestionTextView.setText(mQuestion.getQuestion());
 		// Insert possible answers to the RadioGroup by looping through parsedAnswers[]
 		for (int i = 0; i < mQuestion.getAnswerCount(); i++) {
@@ -86,8 +88,10 @@ public class QuestionFragment extends Fragment {
 			radioButton.setText(mQuestion.getAnswer(i + 1));
 			mAnswerGroupView.addView(radioButton);
 		}
-		final Resources res = getResources();
+		
 		mAnswerGroupView.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			private int mPreviousId = -1;
 
 			@Override
 			public void onCheckedChanged(RadioGroup rGroup, int checkedID) {
@@ -95,6 +99,7 @@ public class QuestionFragment extends Fragment {
 				final int checkedId = checkedID;
 				((QuestionnaireActivityInterface) getActivity()).setChecked(mQuestion.getId());
 				
+				// Adding goals alert dialog, goals not yet implemented
 				if (mQuestion.getId() == GoalDataHandler.QUESTION_ID_WHAT_TO_ACHIEVE && (checkedId == 0 || checkedId == 1)) {
 					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 					final LinearLayout xAmountLayout = (LinearLayout) layoutInflater.inflate(R.layout.element_number_entry, null);
@@ -125,14 +130,19 @@ public class QuestionFragment extends Fragment {
 										mPreviousX = "" + mXAmount;
 										radioButton.setText(radioText);
 									} else {
-										((TextView) xAmountLayout.findViewById(R.id.number_entry_title)).setTextColor(res.getColor(R.color.red));
+										//((TextView) xAmountLayout.findViewById(R.id.number_entry_title)).setTextColor(res.getColor(R.color.red));
 									}
 								}
 							});
 						}
 					});
 					helpDialog.show();
-				} else if (mQuestion.getId() == EventDataHandler.QUESTION_ID_WHEN && checkedId == 2) {
+				} else 
+				
+
+				// Third answer for the when question is selecting a day, create a date picker dialog if user selects it
+				if (mQuestion.getId() == EventDataHandler.QUESTION_ID_WHEN && checkedId == 2) {
+					Calendar calendar = Calendar.getInstance();
 					DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 						@Override
 						public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -145,8 +155,42 @@ public class QuestionFragment extends Fragment {
 							
 						}
 					}, mCalendar.get(Calendar.YEAR),mCalendar.get(Calendar.MONTH),mCalendar.get(Calendar.DAY_OF_MONTH));
+					dialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
 					dialog.show();
+				} else 
+					
+					// If user selects four or more drinks, create dialog for setting the amount
+					if (mQuestion.getId() == EventDataHandler.QUESTION_ID_HOW_MUCH && checkedId == 4 && checkedId != mPreviousId) {
+
+					final LinearLayout amountLayout = (LinearLayout) layoutInflater.inflate(R.layout.element_number_entry, null);
+					final EditText input = (EditText) amountLayout.findViewById(R.id.number_entry_edit_text);
+					input.setHint(getString(R.string.amount_of_drinks));
+					final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+						    .setTitle("Syötä määrä")
+						    .setView(amountLayout)
+						    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+						        public void onClick(DialogInterface dialog, int whichButton) {
+						        }
+						    })
+						    .show();
+					Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+					theButton.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							String value = input.getText().toString();
+							if (value.length() < 1) {
+								Toast.makeText(getActivity(), "Syötä määrä", Toast.LENGTH_SHORT).show();
+							} else {
+								alertDialog.dismiss();
+								mInput = Integer.parseInt(value);
+								RadioButton radioButton = (RadioButton) group.getChildAt(checkedId);
+								radioButton.setText("" + mInput);
+							}
+						}
+					});
 				}
+				
+				mPreviousId = checkedID;
 			}
 			
 		});
@@ -159,6 +203,9 @@ public class QuestionFragment extends Fragment {
 	 * @return
 	 */
 	public int getSelectedAnswer() {
+		if (mQuestion.getId() == EventDataHandler.QUESTION_ID_HOW_MUCH && mAnswerGroupView.getCheckedRadioButtonId() == 4) {
+			return mInput + 1;
+		}
 		return mAnswerGroupView.getCheckedRadioButtonId() + 1;
 	}
 	

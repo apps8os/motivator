@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -65,6 +66,7 @@ public class EventDetailsActivity extends Activity {
 	private Resources mRes;
 	private Context mContext;
 	private float mScale;
+	private int mDrinks;
 	
 	public static final int EDIT_EVENT_HELP = 10011;
 	/** Called when the activity is first created. */
@@ -91,6 +93,8 @@ public class EventDetailsActivity extends Activity {
 	    mRes = getResources();
 	    mScale = mRes.getDisplayMetrics().density;
 	    mContext = this;
+	    
+	    mDrinks = mEvent.getPlannedDrinks();
 	    
 	    TextView titleView = (TextView) findViewById(R.id.event_detail_title);
 	    final EventDetailsActivity parentActivity = this;
@@ -172,16 +176,18 @@ public class EventDetailsActivity extends Activity {
 	    	withWhoTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
-	    textToAdd = mEvent.getPlannedDrinksAsText(this);
+	    textToAdd = "" + mEvent.getPlannedDrinks();
 	    if (textToAdd.length() > 0) {
 		    plannedDrinksTextView.setText(textToAdd);
 		    plannedDrinksTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
 	    if (mCheckedEvent != null) {
-	    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
-	    	titleView.setPadding((int) (mScale * 21.333), 0, 0, 0);
-	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getPlannedDrinksAsText(this));
+	    	if (mEvent.getPlannedDrinks() >= mCheckedEvent.getPlannedDrinks()) {
+		    	titleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_mark, 0);
+		    	titleView.setPadding((int) (mScale * 21.333), 0, 0, 0);
+	    	}
+	    	((TextView) findViewById(R.id.event_amount_of_drinks_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getPlannedDrinks());
 	    	if (mCheckedEvent.getStartTimeAsText(this).length() > 0) {
 	    		((TextView) findViewById(R.id.event_time_to_go_actual)).setText(getString(R.string.actual)+ ": " + mCheckedEvent.getStartTimeAsText(this));
 	    	}
@@ -309,12 +315,12 @@ public class EventDetailsActivity extends Activity {
 	    });
 	    
 	    startTimeTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.edit_icon, 0, 0, 0);
-	    startTimeTextView.setPadding(0, 0, (int) (mScale * 42.667), 0);
+	    startTimeTextView.setPadding(0, 0, ((int) (mScale * 42.667)), 0);
 	    startTimeLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 				
 				Question whenToGo = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_GO);
 				final String[] answers = whenToGo.getAnswers();
@@ -325,7 +331,7 @@ public class EventDetailsActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						mEvent.setStartTimeAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
-						startTimeTextView.setText(mEvent.getStartTimeAsText(EventDetailsActivity.super));
+						startTimeTextView.setText(mEvent.getStartTimeAsText(mContext));
 						startTimeTextView.setTextColor(mRes.getColor(R.color.purple));
 						saveChangesButton.setVisibility(View.VISIBLE);
 					}
@@ -347,7 +353,7 @@ public class EventDetailsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 				
 				Question endTime = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_TIME_TO_COME_BACK);
 				final String[] answers = endTime.getAnswers();
@@ -358,7 +364,7 @@ public class EventDetailsActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						mEvent.setEndTimeAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
-						endTimeTextView.setText(mEvent.getEndTimeAsText(EventDetailsActivity.super));
+						endTimeTextView.setText(mEvent.getEndTimeAsText(mContext));
 						endTimeTextView.setTextColor(mRes.getColor(R.color.purple));
 						saveChangesButton.setVisibility(View.VISIBLE);
 					}
@@ -379,7 +385,7 @@ public class EventDetailsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 				
 				Question withWho = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_WITH_WHO);
 				final String[] answers = withWho.getAnswers();
@@ -390,7 +396,7 @@ public class EventDetailsActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						mEvent.setWithWhoAnswer(alertDialog.getListView().getCheckedItemPosition() + 1);
-						withWhoTextView.setText(mEvent.getWithWho(EventDetailsActivity.super));
+						withWhoTextView.setText(mEvent.getWithWho(mContext));
 						withWhoTextView.setTextColor(mRes.getColor(R.color.purple));
 						saveChangesButton.setVisibility(View.VISIBLE);
 					}
@@ -412,29 +418,37 @@ public class EventDetailsActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(EventDetailsActivity.super);
-				
-				Question plannedDrinks = mEventDataHandler.getQuestion(EventDataHandler.QUESTION_ID_HOW_MUCH);
-				final String[] answers = plannedDrinks.getAnswers();
-				builder.setTitle(plannedDrinks.getQuestion())
-						.setSingleChoiceItems(answers, mEvent.getPlannedDrinks(), null);
-				final AlertDialog alertDialog = builder.create();
-				alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						mEvent.setPlannedDrinks(alertDialog.getListView().getCheckedItemPosition());
-						plannedDrinksTextView.setText(mEvent.getPlannedDrinksAsText(mContext));
-						plannedDrinksTextView.setTextColor(mRes.getColor(R.color.purple));
-						saveChangesButton.setVisibility(View.VISIBLE);
-					}
-				});
-				alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.cancel), new DialogInterface.OnClickListener() {
+				final LinearLayout amountLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.element_number_entry, null);
+				final EditText input = (EditText) amountLayout.findViewById(R.id.number_entry_edit_text);
+				input.setHint(getString(R.string.amount_of_drinks));
+				final AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+					    .setTitle("Syötä määrä")
+					    .setView(amountLayout)
+					    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					        public void onClick(DialogInterface dialog, int whichButton) {
+					        }
+					    })
+					    .show();
+				input.setText("" + mDrinks);
+				Button theButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+				theButton.setOnClickListener(new OnClickListener() {
 					
+
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(View v) {
+						String value = input.getText().toString();
+						if (value.length() < 1) {
+							Toast.makeText(mContext, "Syötä määrä", Toast.LENGTH_SHORT).show();
+						} else {
+							alertDialog.dismiss();
+							mDrinks = Integer.parseInt(value);
+							mEvent.setPlannedDrinks(mDrinks);
+							plannedDrinksTextView.setText("" + mDrinks);
+							plannedDrinksTextView.setTextColor(mRes.getColor(R.color.purple));
+							saveChangesButton.setVisibility(View.VISIBLE);
+						}
 					}
 				});
-				alertDialog.show();
 			}
 	    	
 	    });
@@ -462,7 +476,7 @@ public class EventDetailsActivity extends Activity {
 	    	withWhoTextView.setTextColor(mRes.getColor(R.color.dark_gray));
 	    }
 	    
-	    textToAdd = mEvent.getPlannedDrinksAsText(this);
+	    textToAdd = "" + mEvent.getPlannedDrinks();
 	    if (textToAdd.length() > 0) {
 		    plannedDrinksTextView.setText(textToAdd);
 		    plannedDrinksTextView.setTextColor(mRes.getColor(R.color.dark_gray));

@@ -17,23 +17,18 @@
 package org.apps8os.motivator.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apps8os.motivator.R;
 import org.apps8os.motivator.utils.UtilityMethods;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.util.SparseArray;
 
 /**
  * Handles the access for the "Day" data. Mainly focuses on reading the mood data and
  * creating DayInHistory objects.
- * open() before using and close() after done
  * @author Toni Järvinen
  *
  */
@@ -169,11 +164,11 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
     
     
     /**
-     * Gets the amount of drinks for the day given in millis from the drink table.
+     * Gets the amount of clicked drinks for the day given in millis from the drink table.
      * @param dayInMillis
      * @return
      */
-    public int getDrinksForDay(long dayInMillis) {
+    public int getClickedDrinksForDay(long dayInMillis) {
     	open();
     	Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(dayInMillis);
@@ -272,6 +267,45 @@ public class DayDataHandler extends MotivatorDatabaseHelper {
 		values.put(KEY_TIMESTAMP, timestamp);
 		mDb.insert(TABLE_NAME_DRINKS, null, values);
 		close();
+	}
+	
+	/**
+	 * Sets the daily total drinks. This is meant to be used when checking events.
+	 * CAUTION: There are two different places
+	 * for the drinks, the added drinks with the clicker and the checked. This gets the checked total drinks.
+	 * @param amount
+	 * @param timestamp
+	 */
+	public void insertDailyDrinkAmount(int amount, long timestamp) {
+		open();
+		ContentValues values = new ContentValues();
+		values.put(KEY_TIMESTAMP, timestamp);
+		values.put(KEY_TOTAL_DAILY_DRINKS, amount);
+		mDb.insert(TABLE_NAME_TOTAL_DRINKS, null, values);
+		close();
+	}
+	
+	/**
+	 * Getting the checked drinks from the daily drinks database. CAUTION: There are two different places
+	 * for the drinks, the added drinks with the clicker and the checked. This gets the checked total drinks.
+	 * @param timestamp
+	 * @return
+	 */
+	public int getDailyDrinkAmount(long timestamp) {
+		open();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(timestamp);
+		long dayBoundaries[] = UtilityMethods.getDayInMillis(calendar);
+		String selection = KEY_TIMESTAMP + " > " + dayBoundaries[0] + " AND " + KEY_TIMESTAMP + " <= " + dayBoundaries[1];
+		String columns[] = {KEY_TOTAL_DAILY_DRINKS};
+		Cursor query = mDb.query(TABLE_NAME_TOTAL_DRINKS, columns, selection, null, null, null, null);
+		int result = -1;
+		if (query.moveToFirst()) {
+			result = query.getInt(0);
+		}
+		query.close();
+		close();
+		return result;
 	}
 	
 	/**

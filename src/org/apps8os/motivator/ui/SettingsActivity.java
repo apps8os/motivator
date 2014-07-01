@@ -107,7 +107,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
 		}
 		notificationTime.set(Calendar.HOUR_OF_DAY, 10);
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, notificationTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingNotificationIntent);
-		/**
+		/** Different times for the notifications, not implemented currently
 		if (mTimeToNotify == mRes.getString(R.string.in_the_morning_value)) {
 			if (notificationTime.get(Calendar.HOUR_OF_DAY) >= 10) {
 				notificationTime.add(Calendar.DATE, 1);

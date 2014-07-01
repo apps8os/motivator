@@ -40,12 +40,6 @@
            android:orientation="horizontal"
            android:layout_width="match_parent"
            android:layout_height="wrap_content" >
-           <ImageView
-               android:id="@+id/drink_amount_image"
-               android:layout_width="18dp"
-		       android:layout_height="18dp"
-		       android:src="@drawable/amount_two"
-               />
 		   <TextView 
 		        android:id="@+id/card_button_middle_text"
 		        android:layout_width="wrap_content"

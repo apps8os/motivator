@@ -115,6 +115,9 @@ public class PlanSectionFragment extends Fragment {
 			final Context context = getActivity();
 			mInflater.inflate(R.layout.element_no_active_sprint_overlay, ((FrameLayout) mRootView.findViewById(R.id.root_view)), true);
 			((LinearLayout) mRootView.findViewById(R.id.no_sprint_overlay_textlayout)).setBackgroundResource(R.color.actionbar_blue);
+			String succeededPlans = getArguments().getString(MainActivity.SUCCEEDED_PLANS);
+			((TextView) mRootView.findViewById(R.id.sprint_success_textview)).setText("Edellisessä jaksossasi suunnitelmistasi " + succeededPlans + " toteutui. Tsemppiä!");
+			((TextView) mRootView.findViewById(R.id.sprint_success_textview)).setVisibility(View.VISIBLE);
 			((Button) mRootView.findViewById(R.id.start_new_sprint)).setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

@@ -5,6 +5,7 @@ import org.apps8os.motivator.R;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -48,11 +49,12 @@ public class StartGuideActivity extends Activity {
 	private void setButtons() {
 		final Resources res = getResources();
 		final Button nextButton = (Button) findViewById(R.id.guide_next_button);
+		final Context context = this;
 		nextButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (mViewPager.getCurrentItem() == 2) {
-					Intent intent = new Intent(StartGuideActivity.super, StartingSprintActivity.class);
+					Intent intent = new Intent(context, StartingSprintActivity.class);
 					startActivity(intent);
 					finish();
 				} else {

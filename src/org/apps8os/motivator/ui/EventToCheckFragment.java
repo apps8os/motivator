@@ -29,18 +29,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
+/**
+ * Fragment for the events in the CheckEventsActivity
+ * @author Toni Järvinen
+ *
+ */
 public class EventToCheckFragment extends Fragment {
 
 	private MotivatorEvent mEvent;
-	private Spinner mDrinksSpinner;
 	private Spinner mStartTimeSpinner;
 	private Spinner mEndTimeSpinner;
 	private Spinner mWithWhoSpinner;
+	private EditText mDrinkAmount;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -53,18 +58,10 @@ public class EventToCheckFragment extends Fragment {
 		LinearLayout rootView = (LinearLayout) inflater.inflate(R.layout.fragment_event_to_check, viewGroup, false);
 		
 		EventDataHandler eventHandler = new EventDataHandler(getActivity());
-		mDrinksSpinner = (Spinner) rootView.findViewById(R.id.planned_drinks_spinner);
 		mStartTimeSpinner = (Spinner) rootView.findViewById(R.id.start_time_spinner);
 		mEndTimeSpinner = (Spinner) rootView.findViewById(R.id.end_time_spinner);
 		mWithWhoSpinner = (Spinner) rootView.findViewById(R.id.with_who_spinner);
 		
-		
-		ArrayAdapter<CharSequence> drinkAdapter = ArrayAdapter.createFromResource(getActivity(),
-				R.array.how_much_answers, android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		drinkAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mDrinksSpinner.setAdapter(drinkAdapter);
-		mDrinksSpinner.setSelection(eventHandler.getRawFieldUnchecked(mEvent.getId(), EventDataHandler.KEY_PLANNED_AMOUNT_OF_DRINKS) + 1);
 		
 		ArrayAdapter<CharSequence> startAdapter = ArrayAdapter.createFromResource(getActivity(),
 				R.array.start_answers, android.R.layout.simple_spinner_item);
@@ -89,7 +86,7 @@ public class EventToCheckFragment extends Fragment {
 		
 		DayDataHandler dayHandler = new DayDataHandler(getActivity());
 		((TextView) rootView.findViewById(R.id.amount_of_drinks_yesterday)).setText(getString(R.string.you_marked) + " " + 
-				dayHandler.getDrinksForDay(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) + " " + 
+				dayHandler.getClickedDrinksForDay(System.currentTimeMillis() - TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) + " " + 
 				getString(R.string.drinks_yesterday_in_total));
 		
 		if (mEvent.getName().length() > 0) {
@@ -97,6 +94,10 @@ public class EventToCheckFragment extends Fragment {
 		} else {
 			((TextView) rootView.findViewById(R.id.name)).setVisibility(View.GONE);
 		}
+		
+		mDrinkAmount = (EditText) rootView.findViewById(R.id.amount_of_drinks_edit_text);
+		mDrinkAmount.setText("" + mEvent.getPlannedDrinks());
+		
 		return rootView;
 	}
 	
@@ -105,7 +106,7 @@ public class EventToCheckFragment extends Fragment {
 	 * @return the answers for this checked event.
 	 */
 	public int[] getAnswers() {
-		int[] answers = {mDrinksSpinner.getSelectedItemPosition() + 1, mStartTimeSpinner.getSelectedItemPosition(), 
+		int[] answers = {Integer.parseInt(mDrinkAmount.getText().toString()), mStartTimeSpinner.getSelectedItemPosition(), 
 				mEndTimeSpinner.getSelectedItemPosition(), mWithWhoSpinner.getSelectedItemPosition()};
 		return answers;
 	}

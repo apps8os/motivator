@@ -26,7 +26,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Represents the base class for database access. Here are implemented generally applicable methods for all tables.
- * Subclasses should specially handle the operations specific to a table.
+ * Subclasses should specially handle the operations specific to a table. All access to databases and cursors
+ * are done with these classes. The activities and other that use these classes only get objects as results, no direct
+ * access to the cursor or db.
  * @author Toni Järvinen
  *
  */
@@ -56,6 +58,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String KEY_CONTENT = "specific_content";		// A special column, which is specific for the different tables. Handled differently on subclasses.
 	protected static final String KEY_SPRINT_TITLE = "sprint_title";
 	protected static final String KEY_COMMENT = "comment";
+	protected static final String KEY_TOTAL_DAILY_DRINKS = "total_daily_drinks";
 	
 	protected static final String TABLE_NAME_QUESTIONNAIRE = "mood_answers";
 	protected static final String TABLE_NAME_EVENTS = "event_answers";
@@ -63,6 +66,8 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 	protected static final String TABLE_NAME_MOOD_LEVELS = "mood_table";
 	protected static final String TABLE_NAME_SPRINTS = "sprint_table";
 	protected static final String TABLE_NAME_DRINKS = "drink_table";
+	protected static final String TABLE_NAME_TOTAL_DRINKS = "total_drinks";
+	
 	
 	private static final String[] TABLE_NAMES = {TABLE_NAME_QUESTIONNAIRE, TABLE_NAME_EVENTS, TABLE_NAME_GOALS};
 	private static final String TABLE_CREATE_SPRINTS =
@@ -79,10 +84,19 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 			KEY_MOODLEVEL + " INTEGER, " +
 			KEY_CONTENT + " TEXT, " +
 			KEY_TIMESTAMP + " INTEGER);";
+	
+	
 	private static final String TABLE_CREATE_DRINKS =
 			"CREATE TABLE " + TABLE_NAME_DRINKS + " (" +
 	        KEY_ID + " INTEGER PRIMARY KEY, " +
 			KEY_TIMESTAMP + " INTEGER);";
+	
+	
+	private static final String TABLE_CREATE_TOTAL_DRINKS =
+			" CREATE TABLE " + TABLE_NAME_TOTAL_DRINKS + " (" +
+			KEY_ID + " INTEGER PRIMARY KEY, " +
+			KEY_TIMESTAMP + " INTEGER, " +
+			KEY_TOTAL_DAILY_DRINKS + " INTEGER);";
 	
 	protected SQLiteDatabase mDb;
 	
@@ -97,6 +111,7 @@ public class MotivatorDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(TABLE_CREATE_MOOD_LEVELS);
 		db.execSQL(TABLE_CREATE_SPRINTS);
 		db.execSQL(TABLE_CREATE_DRINKS);
+		db.execSQL(TABLE_CREATE_TOTAL_DRINKS);
 	}
 
 	@Override
